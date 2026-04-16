@@ -16,7 +16,7 @@ const RATE_PER_MINUTE   = 42;    // 試作分給 42円/分
 // Web アプリエントリーポイント
 // ----------------------------------------------------------
 function doGet() {
-  return HtmlService.createHtmlOutputFromFile('Index')
+  return HtmlService.createHtmlOutputFromFile('index')
     .setTitle('試作課 日報')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }

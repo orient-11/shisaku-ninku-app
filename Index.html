@@ -174,15 +174,15 @@ tr:hover td{background:#f7fafc}
     <div class="row">
       <div class="fg w2">
         <label>出勤時刻</label>
-        <input type="time" id="r-in" value="08:30" oninput="calcJikan()">
+        <input type="time" id="r-in" value="08:30" onchange="snapTime('r-in'); calcJikan()" oninput="calcJikan()">
       </div>
       <div class="fg w2">
         <label>退勤時刻</label>
-        <input type="time" id="r-out" value="17:30" oninput="calcJikan()">
+        <input type="time" id="r-out" value="17:45" onchange="snapTime('r-out'); calcJikan()" oninput="calcJikan()">
       </div>
       <div class="fg w2">
         <label>休憩(分)</label>
-        <input type="number" id="r-break" value="60" min="0" step="5" oninput="calcJikan()">
+        <input type="number" id="r-break" value="75" min="0" step="5" oninput="calcJikan()">
       </div>
     </div>
 
@@ -190,7 +190,7 @@ tr:hover td{background:#f7fafc}
     <div class="jikan-box" id="jikan-box">
       <div>
         <div class="label">実働時間</div>
-        <div class="sub" id="jikan-sub">8:30〜17:30 休憩60分</div>
+        <div class="sub" id="jikan-sub">8:30〜17:45 休憩75分</div>
       </div>
       <div>
         <div class="value" id="jikan-val">480分</div>
@@ -396,6 +396,14 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================================
 // 実働時間計算
 // ============================================================
+function snapTime(id) {
+  const el = document.getElementById(id);
+  if (!el.value) return;
+  const [h, m] = el.value.split(':').map(Number);
+  const total = h * 60 + Math.round(m / 5) * 5;
+  el.value = String(Math.floor(total / 60) % 24).padStart(2,'0') + ':' + String(total % 60).padStart(2,'0');
+}
+
 function calcJikan() {
   const inp   = document.getElementById('r-in').value;
   const out   = document.getElementById('r-out').value;
@@ -451,7 +459,7 @@ function addRow() {
       <div class="fg w2">
         <label>作業時間</label>
         <div class="min-wrap">
-          <input type="number" id="wm${idx}" class="wmi" min="0" step="10" placeholder="0"
+          <input type="number" id="wm${idx}" class="wmi" min="0" step="5" placeholder="0"
             oninput="updateTotal()">
         </div>
         <div class="min-hint" id="wh${idx}">0.00人工</div>
@@ -568,8 +576,8 @@ function resetForm() {
   document.getElementById('r-who').value = '';
   document.getElementById('r-date').value = today();
   document.getElementById('r-in').value   = '08:30';
-  document.getElementById('r-out').value  = '17:30';
-  document.getElementById('r-break').value = '60';
+  document.getElementById('r-out').value  = '17:45';
+  document.getElementById('r-break').value = '75';
   document.getElementById('wrows').innerHTML = '';
   S.rowIdx = 0;
   calcJikan();
