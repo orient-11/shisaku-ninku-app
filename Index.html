@@ -6,141 +6,147 @@
 <title>試作課 日報</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f0f4f8;color:#2d3748;font-size:15px;-webkit-tap-highlight-color:transparent}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f2f4f7;color:#1a202c;font-size:16px;-webkit-tap-highlight-color:transparent}
 
 /* ヘッダー */
-.hd{background:#1a73e8;color:#fff;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-.hd h1{font-size:17px;font-weight:700}
-.hd small{font-size:11px;opacity:.8;display:block;margin-top:2px}
-.setup-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:5px 13px;border-radius:20px;font-size:12px;cursor:pointer}
+.hd{background:linear-gradient(135deg,#1a73e8 0%,#1251b5 100%);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(26,115,232,.35)}
+.hd-left{display:flex;align-items:center;gap:10px}
+.hd h1{font-size:19px;font-weight:800;letter-spacing:-.02em}
+.hd small{font-size:12px;opacity:.75;display:block;margin-top:2px}
+.setup-btn{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:8px 16px;border-radius:22px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.02em;transition:background .15s}
+.setup-btn:active{background:rgba(255,255,255,.3)}
 
 /* タブ */
-.tabs{display:flex;background:#fff;border-bottom:2px solid #e2e8f0;overflow-x:auto}
-.tab{flex:1;min-width:68px;padding:11px 4px 9px;border:none;background:none;cursor:pointer;font-size:12px;font-weight:600;color:#718096;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;line-height:1.4}
-.tab .ic{display:block;font-size:18px;margin-bottom:2px}
+.tabs{display:flex;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.tab{flex:1;padding:13px 4px 11px;border:none;background:none;cursor:pointer;font-size:11px;font-weight:700;color:#9aa5b4;border-bottom:3px solid transparent;white-space:nowrap;line-height:1.3;transition:color .15s,border-color .15s;letter-spacing:.02em}
+.tab .ic{display:block;font-size:22px;margin-bottom:3px}
 .tab.on{color:#1a73e8;border-bottom-color:#1a73e8}
 
 /* メイン */
-.main{padding:14px;max-width:860px;margin:0 auto}
+.main{padding:16px;max-width:860px;margin:0 auto;padding-bottom:32px}
 .pn{display:none}.pn.on{display:block}
 
 /* カード */
-.card{background:#fff;border-radius:12px;padding:18px 16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
-.card-ttl{font-size:13px;font-weight:700;color:#4a5568;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0f4f8;display:flex;align-items:center;gap:7px}
+.card{background:#fff;border-radius:16px;padding:20px 18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.card-ttl{font-size:14px;font-weight:800;color:#2d3748;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #f0f4f8;display:flex;align-items:center;gap:8px;letter-spacing:.01em}
 
 /* フォーム */
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .fg{flex:1;min-width:130px}
-.fg.w2{min-width:100px;max-width:140px}
+.fg.w2{min-width:95px;max-width:140px}
 .fg.full{flex:1 0 100%}
-label{display:block;font-size:11px;font-weight:700;color:#718096;letter-spacing:.04em;margin-bottom:5px}
-select,input{width:100%;padding:10px 11px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;color:#2d3748;background:#f7fafc;font-family:inherit;transition:border .2s,box-shadow .2s;-webkit-appearance:none}
-select:focus,input:focus{outline:none;border-color:#1a73e8;box-shadow:0 0 0 3px rgba(26,115,232,.12);background:#fff}
+label{display:block;font-size:12px;font-weight:800;color:#718096;letter-spacing:.06em;margin-bottom:7px;text-transform:uppercase}
+select,input{width:100%;padding:14px 13px;border:2px solid #e8ecf0;border-radius:12px;font-size:16px;color:#1a202c;background:#f8fafc;font-family:inherit;transition:border .2s,box-shadow .2s,background .2s;-webkit-appearance:none;appearance:none}
+select:focus,input:focus{outline:none;border-color:#1a73e8;box-shadow:0 0 0 4px rgba(26,115,232,.1);background:#fff}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aa5b4' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
 
 /* 実働時間表示 */
-.jikan-box{background:#ebf8ff;border:1.5px solid #bee3f8;border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.jikan-box .label{font-size:12px;font-weight:700;color:#2c5282}
-.jikan-box .value{font-size:22px;font-weight:700;color:#1a73e8}
-.jikan-box .sub{font-size:11px;color:#4a90d9;margin-top:1px}
+.jikan-box{background:linear-gradient(135deg,#ebf8ff,#dbeafe);border:2px solid #bee3f8;border-radius:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.jikan-box .jlabel{font-size:12px;font-weight:800;color:#2c5282;letter-spacing:.06em;text-transform:uppercase}
+.jikan-box .value{font-size:28px;font-weight:900;color:#1a73e8;line-height:1}
+.jikan-box .sub{font-size:12px;color:#4a90d9;margin-top:4px}
+.jikan-box .jninku{font-size:12px;color:#4a90d9;text-align:right;margin-top:3px;font-weight:700}
 
 /* 作業行 */
-.wrow{background:#f7fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:13px 12px 10px;margin-bottom:10px;position:relative}
-.wrow .del{position:absolute;top:10px;right:10px;background:none;border:none;font-size:18px;color:#cbd5e0;cursor:pointer;padding:2px 6px;border-radius:4px;transition:color .15s;line-height:1}
-.wrow .del:hover{color:#e53e3e}
-.wrow .row{margin-bottom:8px}
+.wrow{background:#fff;border:2px solid #e8ecf0;border-radius:14px;padding:16px 14px 14px;margin-bottom:12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.wrow .del{position:absolute;top:12px;right:12px;background:#fee2e2;border:none;font-size:16px;color:#e53e3e;cursor:pointer;padding:6px 10px;border-radius:8px;transition:background .15s;line-height:1;font-weight:700}
+.wrow .del:active{background:#fecaca}
+.wrow .row{margin-bottom:10px}
 
 /* 分入力 */
 .min-wrap{position:relative}
-.min-wrap input{padding-right:30px;font-weight:700}
-.min-wrap::after{content:'分';position:absolute;right:11px;top:50%;transform:translateY(-50%);color:#718096;font-size:13px;pointer-events:none}
-.min-hint{font-size:11px;color:#718096;margin-top:3px}
-.min-hint.ok{color:#38a169;font-weight:700}
-.min-hint.over{color:#e53e3e;font-weight:700}
+.min-wrap input{padding-right:34px;font-weight:800;font-size:18px;text-align:center}
+.min-wrap::after{content:'分';position:absolute;right:13px;top:50%;transform:translateY(-50%);color:#9aa5b4;font-size:14px;font-weight:700;pointer-events:none}
+.min-hint{font-size:12px;color:#9aa5b4;margin-top:5px;text-align:center;font-weight:700}
 
 /* 合計バー */
-.total-card{border:2px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:14px;transition:border-color .3s}
-.total-card.ok{border-color:#38a169}
-.total-card.over{border-color:#e53e3e}
-.total-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
-.total-num{font-size:22px;font-weight:700;color:#2d3748}
+.total-card{background:#fff;border:2px solid #e8ecf0;border-radius:14px;padding:16px;margin-bottom:14px;transition:border-color .3s,box-shadow .3s;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.total-card.ok{border-color:#38a169;box-shadow:0 2px 12px rgba(56,161,105,.15)}
+.total-card.over{border-color:#e53e3e;box-shadow:0 2px 12px rgba(229,62,62,.15)}
+.total-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.total-num{font-size:28px;font-weight:900;color:#2d3748;line-height:1}
+.total-sub{font-size:12px;color:#9aa5b4;margin-top:3px;font-weight:600}
 .total-num.ok{color:#38a169}
 .total-num.over{color:#e53e3e}
-.total-hint{font-size:12px;color:#718096}
-.track{height:10px;background:#e2e8f0;border-radius:6px;overflow:hidden}
-.fill{height:100%;border-radius:6px;transition:width .3s,background .3s;background:#1a73e8;min-width:0}
-.fill.ok{background:#38a169}
-.fill.over{background:#e53e3e}
+.total-hint{font-size:13px;color:#9aa5b4;font-weight:700;text-align:right}
+.track{height:12px;background:#edf2f7;border-radius:8px;overflow:hidden}
+.fill{height:100%;border-radius:8px;transition:width .4s cubic-bezier(.4,0,.2,1),background .3s;background:#1a73e8;min-width:0}
+.fill.ok{background:linear-gradient(90deg,#38a169,#48bb78)}
+.fill.over{background:linear-gradient(90deg,#e53e3e,#fc8181)}
 
 /* ボタン */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 18px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
-.btn-p{background:#1a73e8;color:#fff}.btn-p:hover{background:#1557b0}
-.btn-s{background:#38a169;color:#fff}.btn-s:hover{background:#2f855a}
-.btn-d{background:#e53e3e;color:#fff}.btn-d:hover{background:#c53030}
-.btn-g{background:#f0f4f8;color:#4a5568}.btn-g:hover{background:#e2e8f0}
-.btn-sm{padding:5px 11px;font-size:12px}
-.btn-full{width:100%;padding:14px;font-size:15px}
-.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:13px 20px;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap;letter-spacing:.02em}
+.btn-p{background:#1a73e8;color:#fff;box-shadow:0 2px 8px rgba(26,115,232,.3)}.btn-p:active{background:#1251b5;transform:scale(.98)}
+.btn-s{background:#38a169;color:#fff;box-shadow:0 2px 8px rgba(56,161,105,.3)}.btn-s:active{background:#2f855a;transform:scale(.98)}
+.btn-d{background:#e53e3e;color:#fff}.btn-d:active{background:#c53030}
+.btn-g{background:#edf2f7;color:#4a5568;border:2px solid #e2e8f0}.btn-g:active{background:#e2e8f0}
+.btn-sm{padding:9px 16px;font-size:13px;border-radius:10px}
+.btn-full{width:100%;padding:17px;font-size:16px;border-radius:14px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none !important}
+
+/* 作業追加ボタン */
+.add-row-btn{width:100%;padding:15px;background:#f8fafc;border:2px dashed #cbd5e0;border-radius:14px;color:#718096;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;margin-bottom:14px;font-family:inherit}
+.add-row-btn:active{background:#edf2f7;border-color:#a0aec0}
 
 /* テーブル */
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:#f7fafc;padding:9px 11px;text-align:left;font-weight:700;color:#4a5568;border-bottom:2px solid #e2e8f0;white-space:nowrap}
-td{padding:9px 11px;border-bottom:1px solid #f0f4f8}
-tr:hover td{background:#f7fafc}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:#f8fafc;padding:11px 12px;text-align:left;font-weight:800;color:#4a5568;border-bottom:2px solid #e8ecf0;white-space:nowrap;font-size:12px;letter-spacing:.04em}
+td{padding:12px;border-bottom:1px solid #f0f4f8;font-size:14px}
+tr:last-child td{border-bottom:none}
+tr:active td{background:#f8fafc}
 
 /* クロス集計テーブル */
-.cross-table th.stage{text-align:center;font-size:11px;padding:7px 6px}
-.cross-table td.ninku{text-align:center;font-size:13px;font-weight:700;color:#1a73e8}
+.cross-table th.stage{text-align:center;font-size:11px;padding:8px 6px}
+.cross-table td.ninku{text-align:center;font-size:14px;font-weight:800;color:#1a73e8}
 .cross-table td.ninku.zero{color:#cbd5e0;font-weight:400}
-.cross-table td.total{background:#ebf8ff;font-weight:700;color:#1a73e8;text-align:center}
-.cross-table td.cost{background:#f0fff4;font-weight:700;color:#276749;text-align:right;white-space:nowrap}
+.cross-table td.total{background:#ebf8ff;font-weight:800;color:#1a73e8;text-align:center}
+.cross-table td.cost{background:#f0fff4;font-weight:800;color:#276749;text-align:right;white-space:nowrap}
 
 /* バッジ */
-.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.badge{display:inline-block;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:800}
 .b-bl{background:#ebf8ff;color:#2b6cb0}
 .b-gn{background:#f0fff4;color:#276749}
 .b-gy{background:#f0f4f8;color:#4a5568}
 .b-or{background:#fffaf0;color:#c05621}
 
 /* フィルター */
-.fbar{background:#f7fafc;border:1px solid #e2e8f0;border-radius:10px;padding:13px;margin-bottom:14px}
+.fbar{background:#f8fafc;border:2px solid #e8ecf0;border-radius:12px;padding:14px;margin-bottom:14px}
 
 /* 統計カード */
-.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px}
-.sc{border-radius:12px;padding:14px;text-align:center;color:#fff}
-.sc.bl{background:linear-gradient(135deg,#1a73e8,#1557b0)}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.sc{border-radius:14px;padding:16px;text-align:center;color:#fff}
+.sc.bl{background:linear-gradient(135deg,#1a73e8,#1251b5)}
 .sc.gn{background:linear-gradient(135deg,#38a169,#2f855a)}
 .sc.pp{background:linear-gradient(135deg,#805ad5,#6b46c1)}
 .sc.or{background:linear-gradient(135deg,#ed8936,#c05621)}
-.sv{font-size:26px;font-weight:700}
-.sl{font-size:11px;opacity:.85;margin-top:3px}
+.sv{font-size:28px;font-weight:900;line-height:1}
+.sl{font-size:12px;opacity:.85;margin-top:5px;font-weight:700}
 
 /* トースト */
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:#2d3748;color:#fff;padding:11px 22px;border-radius:30px;font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,.2);z-index:9999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-width:88vw;text-align:center}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(140px);background:#2d3748;color:#fff;padding:14px 24px;border-radius:32px;font-size:14px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.2);z-index:9999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);max-width:88vw;text-align:center}
 #toast.show{transform:translateX(-50%) translateY(0)}
 #toast.ok{background:#38a169}#toast.err{background:#e53e3e}#toast.warn{background:#ed8936}
 
 /* ローディング・空 */
-.ld{text-align:center;padding:32px;color:#a0aec0;font-size:13px}
-.sp{display:inline-block;width:26px;height:26px;border:3px solid #e2e8f0;border-top-color:#1a73e8;border-radius:50%;animation:sp .7s linear infinite;margin-bottom:8px}
+.ld{text-align:center;padding:36px;color:#a0aec0;font-size:14px}
+.sp{display:inline-block;width:28px;height:28px;border:3px solid #e2e8f0;border-top-color:#1a73e8;border-radius:50%;animation:sp .7s linear infinite;margin-bottom:10px}
 @keyframes sp{to{transform:rotate(360deg)}}
-.empty{text-align:center;padding:32px 16px;color:#a0aec0}
+.empty{text-align:center;padding:36px 16px;color:#a0aec0;font-size:14px}
 
-@media(max-width:560px){
-  .main{padding:10px}
-  .sg{grid-template-columns:1fr 1fr}
-  .cross-table th.stage{font-size:10px;padding:6px 4px}
-  .cross-table td{padding:7px 6px}
-}
+/* セクション区切り */
+.section-gap{height:6px}
 </style>
 </head>
 <body>
 
 <!-- ヘッダー -->
 <header class="hd">
-  <div>
-    <h1>🧵 試作課 日報</h1>
-    <small>作業時間・人工管理</small>
+  <div class="hd-left">
+    <div>
+      <h1>🧵 試作課 日報</h1>
+      <small>作業時間・人工管理</small>
+    </div>
   </div>
   <button class="setup-btn" onclick="runSetup()">初期設定</button>
 </header>
@@ -173,11 +179,11 @@ tr:hover td{background:#f7fafc}
     </div>
     <div class="row">
       <div class="fg w2">
-        <label>出勤時刻</label>
+        <label>出勤</label>
         <input type="time" id="r-in" value="08:30" onchange="snapTime('r-in'); calcJikan()" oninput="calcJikan()">
       </div>
       <div class="fg w2">
-        <label>退勤時刻</label>
+        <label>退勤</label>
         <input type="time" id="r-out" value="17:45" onchange="snapTime('r-out'); calcJikan()" oninput="calcJikan()">
       </div>
       <div class="fg w2">
@@ -186,15 +192,14 @@ tr:hover td{background:#f7fafc}
       </div>
     </div>
 
-    <!-- 実働時間表示 -->
-    <div class="jikan-box" id="jikan-box">
+    <div class="jikan-box">
       <div>
-        <div class="label">実働時間</div>
+        <div class="jlabel">実働時間</div>
         <div class="sub" id="jikan-sub">8:30〜17:45 休憩75分</div>
       </div>
-      <div>
-        <div class="value" id="jikan-val">480分</div>
-        <div style="font-size:11px;color:#4a90d9;text-align:right" id="jikan-ninku">= 1.00人工</div>
+      <div style="text-align:right">
+        <div class="value" id="jikan-val">555分</div>
+        <div class="jninku" id="jikan-ninku">= 1.16人工</div>
       </div>
     </div>
   </div>
@@ -204,18 +209,16 @@ tr:hover td{background:#f7fafc}
     <div class="total-head">
       <div>
         <div class="total-num" id="t-num">0分</div>
-        <div style="font-size:11px;color:#718096">入力済み作業時間</div>
+        <div class="total-sub">入力済み作業時間</div>
       </div>
-      <div class="total-hint" id="t-hint">残り 480分 を入力してください</div>
+      <div class="total-hint" id="t-hint">残り 555分</div>
     </div>
     <div class="track"><div class="fill" id="t-fill" style="width:0%"></div></div>
   </div>
 
   <!-- 作業行 -->
   <div id="wrows"></div>
-  <button class="btn btn-g btn-full" onclick="addRow()" style="margin-bottom:14px">
-    ＋ 作業を追加する
-  </button>
+  <button class="add-row-btn" onclick="addRow()">＋ 作業を追加する</button>
 
   <!-- 提出ボタン -->
   <button class="btn btn-s btn-full" id="submit-btn" onclick="submitReport()">
@@ -236,6 +239,8 @@ tr:hover td{background:#f7fafc}
         <div class="fg"><label>製品</label>
           <select id="h-prod"><option value="">すべて</option></select>
         </div>
+      </div>
+      <div class="row">
         <div class="fg"><label>ステージ</label>
           <select id="h-stage"><option value="">すべて</option></select>
         </div>
@@ -244,8 +249,8 @@ tr:hover td{background:#f7fafc}
         <div class="fg"><label>期間（開始）</label><input type="date" id="h-from"></div>
         <div class="fg"><label>期間（終了）</label><input type="date" id="h-to"></div>
       </div>
-      <div style="display:flex;gap:8px;margin-top:4px">
-        <button class="btn btn-p btn-sm" onclick="loadHistory()">検索</button>
+      <div style="display:flex;gap:10px;margin-top:6px">
+        <button class="btn btn-p btn-sm" onclick="loadHistory()" style="flex:1">検索</button>
         <button class="btn btn-g btn-sm" onclick="clearHist()">クリア</button>
       </div>
     </div>
@@ -278,6 +283,8 @@ tr:hover td{background:#f7fafc}
         <div class="fg"><label>製品</label>
           <select id="s-prod"><option value="">すべて</option></select>
         </div>
+      </div>
+      <div class="row">
         <div class="fg"><label>ステージ</label>
           <select id="s-stage"><option value="">すべて</option></select>
         </div>
@@ -286,20 +293,18 @@ tr:hover td{background:#f7fafc}
         <div class="fg"><label>期間（開始）</label><input type="date" id="s-from"></div>
         <div class="fg"><label>期間（終了）</label><input type="date" id="s-to"></div>
       </div>
-      <button class="btn btn-p btn-sm" onclick="loadSummary()" style="margin-top:4px">集計する</button>
+      <button class="btn btn-p btn-sm btn-full" onclick="loadSummary()" style="margin-top:4px">集計する</button>
     </div>
   </div>
 
-  <!-- 統計カード -->
   <div id="s-stats" class="sg" style="display:none"></div>
 
-  <!-- 製品×ステージ クロス集計 -->
   <div class="card" id="s-cross-card" style="display:none">
     <div class="card-ttl">📋 製品 × ステージ 人工集計表</div>
     <div class="tw">
       <table class="cross-table" id="s-cross-table"></table>
     </div>
-    <div style="font-size:11px;color:#718096;margin-top:10px">
+    <div style="font-size:12px;color:#9aa5b4;margin-top:12px">
       ※ 人工数 = 作業時間(分) ÷ 480　／　労務費 = 作業時間(分) × 42円
     </div>
   </div>
@@ -308,7 +313,6 @@ tr:hover td{background:#f7fafc}
 <!-- ============ TAB 4: 設定 ============ -->
 <div id="tab-settings" class="pn">
 
-  <!-- 職人管理 -->
   <div class="card">
     <div class="card-ttl">👷 職人管理</div>
     <div class="row">
@@ -320,10 +324,9 @@ tr:hover td{background:#f7fafc}
       </div>
     </div>
     <button class="btn btn-p btn-sm" onclick="addCraftsman()">追加</button>
-    <div id="list-c" style="margin-top:14px" class="ld">読み込み中...</div>
+    <div id="list-c" style="margin-top:16px" class="ld">読み込み中...</div>
   </div>
 
-  <!-- 製品管理 -->
   <div class="card">
     <div class="card-ttl">👜 製品管理</div>
     <div class="row">
@@ -338,6 +341,8 @@ tr:hover td{background:#f7fafc}
       <div class="fg"><label>企画名称</label>
         <input type="text" id="p-plan" placeholder="XA新型ショルダー など">
       </div>
+    </div>
+    <div class="row">
       <div class="fg"><label>ステータス</label>
         <select id="p-status">
           <option>進行中</option><option>完了</option><option>保留</option>
@@ -345,13 +350,12 @@ tr:hover td{background:#f7fafc}
       </div>
     </div>
     <button class="btn btn-p btn-sm" onclick="addSchedule()">追加</button>
-    <div id="list-p" style="margin-top:14px" class="ld">読み込み中...</div>
+    <div id="list-p" style="margin-top:16px" class="ld">読み込み中...</div>
   </div>
 
-  <!-- ステージ管理 -->
   <div class="card">
     <div class="card-ttl">🔢 ステージ管理</div>
-    <p style="font-size:12px;color:#718096;margin-bottom:12px">
+    <p style="font-size:13px;color:#9aa5b4;margin-bottom:14px">
       初期値: モック / 1st / 2nd / 最終（展示会）/ 色増し前修正 / 試験体 / ショー用
     </p>
     <div class="row">
@@ -360,7 +364,7 @@ tr:hover td{background:#f7fafc}
       </div>
     </div>
     <button class="btn btn-p btn-sm" onclick="addStage()">追加</button>
-    <div id="list-st" style="margin-top:14px" class="ld">読み込み中...</div>
+    <div id="list-st" style="margin-top:16px" class="ld">読み込み中...</div>
   </div>
 
 </div>
@@ -369,14 +373,8 @@ tr:hover td{background:#f7fafc}
 <div id="toast"></div>
 
 <script>
-// ============================================================
-// 状態
-// ============================================================
 const S = { craftsmen:[], schedules:[], stages:[], rowIdx:0 };
 
-// ============================================================
-// 初期化
-// ============================================================
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('r-date').value = today();
   calcJikan();
@@ -393,9 +391,6 @@ document.addEventListener('DOMContentLoaded', () => {
     .getInitialData();
 });
 
-// ============================================================
-// 実働時間計算
-// ============================================================
 function snapTime(id) {
   const el = document.getElementById(id);
   if (!el.value) return;
@@ -405,10 +400,10 @@ function snapTime(id) {
 }
 
 function calcJikan() {
-  const inp   = document.getElementById('r-in').value;
-  const out   = document.getElementById('r-out').value;
-  const brk   = Number(document.getElementById('r-break').value)||0;
-  const min   = calcMin(inp, out, brk);
+  const inp = document.getElementById('r-in').value;
+  const out = document.getElementById('r-out').value;
+  const brk = Number(document.getElementById('r-break').value)||0;
+  const min = calcMin(inp, out, brk);
   document.getElementById('jikan-val').textContent   = min + '分';
   document.getElementById('jikan-ninku').textContent = '= ' + (min/480).toFixed(2) + '人工';
   document.getElementById('jikan-sub').textContent   = `${inp}〜${out} 休憩${brk}分`;
@@ -430,9 +425,6 @@ function getJikan() {
   );
 }
 
-// ============================================================
-// 作業行 追加・削除
-// ============================================================
 function addRow() {
   const idx = S.rowIdx++;
   const div = document.createElement('div');
@@ -456,6 +448,8 @@ function addRow() {
           ${S.stages.map(s=>`<option>${esc(s.name)}</option>`).join('')}
         </select>
       </div>
+    </div>
+    <div class="row">
       <div class="fg w2">
         <label>作業時間</label>
         <div class="min-wrap">
@@ -464,10 +458,10 @@ function addRow() {
         </div>
         <div class="min-hint" id="wh${idx}">0.00人工</div>
       </div>
-    </div>
-    <div class="fg full" style="margin-top:4px">
-      <label>メモ（任意）</label>
-      <input type="text" id="wmemo${idx}" placeholder="作業内容・特記事項">
+      <div class="fg">
+        <label>メモ（任意）</label>
+        <input type="text" id="wmemo${idx}" placeholder="作業内容・特記事項">
+      </div>
     </div>
   `;
   document.getElementById('wrows').appendChild(div);
@@ -480,22 +474,15 @@ function delRow(idx) {
   updateTotal();
 }
 
-// ============================================================
-// 合計バー更新
-// ============================================================
 function updateTotal() {
-  const jikan  = getJikan();
+  const jikan = getJikan();
   let total = 0;
   document.querySelectorAll('.wmi').forEach(inp => {
-    const v = Math.max(0, Number(inp.value)||0);
+    const val = Math.max(0, Number(inp.value)||0);
     const idx = inp.id.replace('wm','');
     const hint = document.getElementById('wh'+idx);
-    if (hint) {
-      const n = (v/480).toFixed(2);
-      hint.textContent = v > 0 ? `${n}人工` : '0.00人工';
-      hint.className = 'min-hint';
-    }
-    total += v;
+    if (hint) hint.textContent = val > 0 ? `${(val/480).toFixed(2)}人工` : '0.00人工';
+    total += val;
   });
 
   const pct     = jikan > 0 ? Math.min(100, total / jikan * 100) : (total > 0 ? 100 : 0);
@@ -513,12 +500,12 @@ function updateTotal() {
     numEl.className  = 'total-num ok';
     fillEl.className = 'fill ok';
     cardEl.className = 'total-card ok';
-    hint.textContent = '✔ 実働時間と一致しています';
+    hint.textContent = '✔ ぴったり！';
   } else if (total > jikan) {
     numEl.className  = 'total-num over';
     fillEl.className = 'fill over';
     cardEl.className = 'total-card over';
-    hint.textContent = `⚠ ${total - jikan}分 超過しています`;
+    hint.textContent = `⚠ ${total - jikan}分 超過`;
   } else {
     numEl.className  = 'total-num';
     fillEl.className = 'fill';
@@ -527,9 +514,6 @@ function updateTotal() {
   }
 }
 
-// ============================================================
-// 日報提出
-// ============================================================
 function submitReport() {
   const who    = document.getElementById('r-who').value;
   const date   = document.getElementById('r-date').value;
@@ -584,16 +568,10 @@ function resetForm() {
   addRow();
 }
 
-// ============================================================
-// 履歴
-// ============================================================
 function loadHistory() {
-  const p = [
-    v('h-who'), v('h-prod'), v('h-stage'), v('h-from'), v('h-to')
-  ];
+  const p = [v('h-who'), v('h-prod'), v('h-stage'), v('h-from'), v('h-to')];
   document.getElementById('h-body').innerHTML =
     '<tr><td colspan="8" class="ld"><div class="sp"></div><br>読み込み中...</td></tr>';
-
   google.script.run
     .withSuccessHandler(logs => {
       const tb = document.getElementById('h-body');
@@ -607,10 +585,10 @@ function loadHistory() {
           <td><span class="badge b-bl">${esc(l.craftsmanName)}</span></td>
           <td>${esc(l.productName)}</td>
           <td><span class="badge b-gy">${esc(l.stageName)}</span></td>
-          <td style="font-weight:700">${l.minutes}分</td>
-          <td style="color:#1a73e8;font-weight:700">${Number(l.ninkuCount).toFixed(3)}</td>
-          <td style="color:#276749">¥${Number(l.cost).toLocaleString()}</td>
-          <td style="color:#718096;font-size:12px">${esc(l.memo)}</td>
+          <td style="font-weight:800">${l.minutes}分</td>
+          <td style="color:#1a73e8;font-weight:800">${Number(l.ninkuCount).toFixed(3)}</td>
+          <td style="color:#276749;font-weight:700">¥${Number(l.cost).toLocaleString()}</td>
+          <td style="color:#9aa5b4;font-size:13px">${esc(l.memo)}</td>
         </tr>
       `).join('');
     })
@@ -622,9 +600,6 @@ function clearHist() {
   ['h-who','h-prod','h-stage','h-from','h-to'].forEach(id => { document.getElementById(id).value=''; });
 }
 
-// ============================================================
-// 集計（製品×ステージ クロス集計）
-// ============================================================
 function loadSummary() {
   const p = [v('s-who'), v('s-prod'), v('s-stage'), v('s-from'), v('s-to')];
   google.script.run
@@ -636,7 +611,6 @@ function loadSummary() {
       const totNinku = rows.reduce((s,r) => s + r.totalNinku, 0);
       const totCost  = rows.reduce((s,r) => s + r.totalCost, 0);
 
-      // 統計カード
       const sc = document.getElementById('s-stats');
       sc.style.display = 'grid';
       sc.innerHTML = `
@@ -646,9 +620,6 @@ function loadSummary() {
         <div class="sc pp"><div class="sv">${rows.length}</div><div class="sl">製品数</div></div>
       `;
 
-      // クロス集計テーブル
-      const table = document.getElementById('s-cross-table');
-      // ヘッダー行
       const allStages = stages.concat(
         rows.flatMap(r => Object.keys(r.stages)).filter(st => !stages.includes(st))
       );
@@ -665,16 +636,14 @@ function loadSummary() {
           <td><strong>${esc(row.productName)}</strong></td>
           ${allStages.map(st => {
             const m = row.stages[st] || 0;
-            const n = m > 0 ? (m/480).toFixed(2) : '—';
-            return `<td class="ninku${m===0?' zero':''}">${n}</td>`;
+            return `<td class="ninku${m===0?' zero':''}">${m > 0 ? (m/480).toFixed(2) : '—'}</td>`;
           }).join('')}
           <td class="total">${row.totalNinku.toFixed(2)}</td>
           <td class="cost">¥${row.totalCost.toLocaleString()}</td>
         </tr>`;
       });
 
-      // 合計行
-      html += `<tr style="background:#f0f4f8;font-weight:700">
+      html += `<tr style="background:#f0f4f8;font-weight:800">
         <td>【合計】</td>
         ${allStages.map(st => {
           const m = rows.reduce((s,r) => s+(r.stages[st]||0), 0);
@@ -682,19 +651,15 @@ function loadSummary() {
         }).join('')}
         <td class="total">${totNinku.toFixed(2)}</td>
         <td class="cost">¥${totCost.toLocaleString()}</td>
-      </tr>`;
+      </tr></tbody>`;
 
-      html += '</tbody>';
-      table.innerHTML = html;
+      document.getElementById('s-cross-table').innerHTML = html;
       document.getElementById('s-cross-card').style.display = 'block';
     })
     .withFailureHandler(() => toast('集計失敗','err'))
     .getSummary(...p);
 }
 
-// ============================================================
-// 設定: マスター管理
-// ============================================================
 function addCraftsman() {
   const name = document.getElementById('c-name').value.trim();
   if (!name) { toast('名前を入力してください','err'); return; }
@@ -721,17 +686,12 @@ function delSchedule(name) { if(!confirm(`「${name}」を削除しますか？`
 function delStage(name)    { if(!confirm(`「${name}」を削除しますか？`))return; google.script.run.withSuccessHandler(r=>{toast(r.message,r.success?'ok':'err');if(r.success)reload();}).deleteStage(name); }
 
 function renderLists() {
-  // 職人
   document.getElementById('list-c').innerHTML = S.craftsmen.length
     ? mTable(['ID','名前','備考'], S.craftsmen.map(c=>[c.id, `<strong>${esc(c.name)}</strong>`, esc(c.note), `<button class="btn btn-d btn-sm" onclick="delCraftsman('${esc(c.name)}')">削除</button>`]))
     : '<div class="empty">未登録</div>';
-
-  // 製品
   document.getElementById('list-p').innerHTML = S.schedules.length
     ? mTable(['製品名','ブランド','企画名称','状態'], S.schedules.map(s=>[`<strong>${esc(s.name)}</strong>`, esc(s.brand), esc(s.plan), `<span class="badge ${s.status==='完了'?'b-gn':'b-bl'}">${esc(s.status)}</span>`, `<button class="btn btn-d btn-sm" onclick="delSchedule('${esc(s.name)}')">削除</button>`]))
     : '<div class="empty">未登録</div>';
-
-  // ステージ
   document.getElementById('list-st').innerHTML = S.stages.length
     ? mTable(['順番','ステージ名'], S.stages.map((s,i)=>[i+1, `<strong>${esc(s.name)}</strong>`, `<button class="btn btn-d btn-sm" onclick="delStage('${esc(s.name)}')">削除</button>`]))
     : '<div class="empty">未登録</div>';
@@ -744,9 +704,6 @@ function mTable(headers, rows) {
   </table></div>`;
 }
 
-// ============================================================
-// セレクト更新
-// ============================================================
 function fillAll() {
   fill('r-who',  S.craftsmen.map(c=>c.name), '-- 選択 --');
   ['h-who','s-who'].forEach(id => fill(id, S.craftsmen.map(c=>c.name), 'すべて'));
@@ -763,9 +720,6 @@ function fill(id, items, placeholder) {
   el.value = cur;
 }
 
-// ============================================================
-// 初期設定
-// ============================================================
 function runSetup() {
   if (!confirm('初期設定を実行します。よろしいですか？')) return;
   google.script.run
@@ -779,7 +733,6 @@ function reload() {
     .withSuccessHandler(d => {
       S.craftsmen = d.craftsmen||[]; S.schedules = d.schedules||[]; S.stages = d.stages||[];
       fillAll(); renderLists();
-      // 作業行内のセレクトも更新
       document.querySelectorAll('.ws').forEach(sel => {
         const cur = sel.value;
         sel.innerHTML = '<option value="">-- 選択 --</option>' + S.schedules.map(s=>`<option>${esc(s.name)}</option>`).join('');
@@ -794,9 +747,6 @@ function reload() {
     .getInitialData();
 }
 
-// ============================================================
-// タブ切り替え
-// ============================================================
 function sw(name, btn) {
   document.querySelectorAll('.pn').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
@@ -804,9 +754,6 @@ function sw(name, btn) {
   btn.classList.add('on');
 }
 
-// ============================================================
-// ユーティリティ
-// ============================================================
 function today() {
   const d=new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
