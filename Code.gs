@@ -1,15 +1,16 @@
 // ============================================================
-// 試作課 日報型 人工管理アプリ - Google Apps Script
+// 試作課 日報アプリ（分入力・出退勤連携版）
 // ============================================================
 
 const SHEETS = {
   CRAFTSMEN:  '職人',
   SCHEDULES:  'スケジュール',
-  PROCESSES:  '工程',
-  DAILY_LOGS: '日報ログ'
+  STAGES:     'ステージ',
+  LOGS:       '日報ログ'
 };
 
-const WORK_HOURS_PER_DAY = 8;  // 1人工 = 8時間
+const MINUTES_PER_NINKU = 480;   // 1人工 = 8時間 = 480分
+const RATE_PER_MINUTE   = 42;    // 試作分給 42円/分
 
 // ----------------------------------------------------------
 // Web アプリエントリーポイント
@@ -26,64 +27,55 @@ function doGet() {
 function setup() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  // 職人シート
-  let sheet = getOrCreateSheet(ss, SHEETS.CRAFTSMEN);
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['ID', '名前', '備考']);
-    styleHeader(sheet, 3);
-    sheet.setColumnWidth(1, 60);
-    sheet.setColumnWidth(2, 150);
-    sheet.setColumnWidth(3, 200);
+  // 職人
+  let s = getOrCreate(ss, SHEETS.CRAFTSMEN);
+  if (s.getLastRow() === 0) {
+    s.appendRow(['ID', '名前', '備考']);
+    header(s, 3);
   }
 
-  // スケジュールシート
-  sheet = getOrCreateSheet(ss, SHEETS.SCHEDULES);
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['ID', '案件名', '開始日', '終了日', 'ステータス', '備考']);
-    styleHeader(sheet, 6);
-    sheet.setColumnWidth(2, 220);
+  // スケジュール（製品名）
+  s = getOrCreate(ss, SHEETS.SCHEDULES);
+  if (s.getLastRow() === 0) {
+    s.appendRow(['ID', '製品名', 'ブランド', '企画名称', 'ステータス', '備考']);
+    header(s, 6);
+    s.setColumnWidth(2, 220);
+    s.setColumnWidth(3, 150);
+    s.setColumnWidth(4, 180);
   }
 
-  // 工程マスターシート
-  sheet = getOrCreateSheet(ss, SHEETS.PROCESSES);
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['ID', '工程名', '備考']);
-    styleHeader(sheet, 3);
-    // デフォルト工程を挿入
+  // ステージマスター
+  s = getOrCreate(ss, SHEETS.STAGES);
+  if (s.getLastRow() === 0) {
+    s.appendRow(['ID', 'ステージ名', '順番']);
+    header(s, 3);
     const defaults = [
-      ['P001', 'パターン作成', ''],
-      ['P002', '仮縫い', ''],
-      ['P003', '本縫い', ''],
-      ['P004', '裁断', ''],
-      ['P005', '仕上げ', ''],
-      ['P006', '検品・確認', ''],
-      ['P007', '打合せ・修正', ''],
-      ['P008', 'その他', '']
+      ['ST1', 'モック',       1],
+      ['ST2', '1st',          2],
+      ['ST3', '2nd',          3],
+      ['ST4', '最終（展示会）', 4],
+      ['ST5', '色増し前修正', 5],
+      ['ST6', '試験体',       6],
+      ['ST7', 'ショー用',     7],
     ];
-    defaults.forEach(row => sheet.appendRow(row));
-    sheet.setColumnWidth(2, 160);
+    defaults.forEach(r => s.appendRow(r));
   }
 
-  // 日報ログシート
-  sheet = getOrCreateSheet(ss, SHEETS.DAILY_LOGS);
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow([
-      'ID', '日付', '職人名', '案件名', '工程',
-      '割合(%)', '時間数(h)', '人工数', 'メモ', '提出日時'
+  // 日報ログ
+  s = getOrCreate(ss, SHEETS.LOGS);
+  if (s.getLastRow() === 0) {
+    s.appendRow([
+      'ID', '日付', '職人名',
+      '出勤時刻', '退勤時刻', '休憩(分)', '実働(分)',
+      '製品名', 'ステージ', '作業時間(分)', '人工数', '労務費(円)',
+      'メモ', '提出日時'
     ]);
-    styleHeader(sheet, 10);
-    sheet.setColumnWidth(2, 100);
-    sheet.setColumnWidth(3, 120);
-    sheet.setColumnWidth(4, 200);
-    sheet.setColumnWidth(5, 120);
-    sheet.setColumnWidth(6, 80);
-    sheet.setColumnWidth(7, 80);
-    sheet.setColumnWidth(8, 80);
-    sheet.setColumnWidth(9, 200);
-    sheet.setColumnWidth(10, 150);
+    header(s, 14);
+    [2,3,8,9,13].forEach(c => s.setColumnWidth(c, 120));
+    s.setColumnWidth(8, 200);
   }
 
-  return { success: true, message: 'セットアップが完了しました。' };
+  return { success: true, message: 'セットアップ完了しました。' };
 }
 
 // ----------------------------------------------------------
@@ -92,79 +84,70 @@ function setup() {
 function getInitialData() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   return {
-    craftsmen:  getCraftsmen(ss),
-    schedules:  getSchedules(ss),
-    processes:  getProcesses(ss)
+    craftsmen: getCraftsmen(ss),
+    schedules: getSchedules(ss),
+    stages:    getStages(ss)
   };
 }
 
 function getCraftsmen(ss) {
   ss = ss || SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(SHEETS.CRAFTSMEN);
-  if (!sheet || sheet.getLastRow() <= 1) return [];
-  return sheet.getRange(2, 1, sheet.getLastRow() - 1, 3)
-    .getValues().filter(r => r[1])
-    .map(r => ({ id: r[0], name: r[1], note: r[2] }));
+  const s = ss.getSheetByName(SHEETS.CRAFTSMEN);
+  if (!s || s.getLastRow() <= 1) return [];
+  return s.getRange(2, 1, s.getLastRow()-1, 3).getValues()
+    .filter(r => r[1]).map(r => ({ id:r[0], name:r[1], note:r[2] }));
 }
 
 function getSchedules(ss) {
   ss = ss || SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(SHEETS.SCHEDULES);
-  if (!sheet || sheet.getLastRow() <= 1) return [];
-  return sheet.getRange(2, 1, sheet.getLastRow() - 1, 6)
-    .getValues().filter(r => r[1])
-    .map(r => ({
-      id: r[0], name: r[1],
-      startDate: r[2] ? Utilities.formatDate(new Date(r[2]), 'Asia/Tokyo', 'yyyy/MM/dd') : '',
-      endDate:   r[3] ? Utilities.formatDate(new Date(r[3]), 'Asia/Tokyo', 'yyyy/MM/dd') : '',
-      status:    r[4] || '進行中',
-      note:      r[5]
+  const s = ss.getSheetByName(SHEETS.SCHEDULES);
+  if (!s || s.getLastRow() <= 1) return [];
+  return s.getRange(2, 1, s.getLastRow()-1, 6).getValues()
+    .filter(r => r[1]).map(r => ({
+      id:r[0], name:r[1], brand:r[2], plan:r[3], status:r[4]||'進行中', note:r[5]
     }));
 }
 
-function getProcesses(ss) {
+function getStages(ss) {
   ss = ss || SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(SHEETS.PROCESSES);
-  if (!sheet || sheet.getLastRow() <= 1) return [];
-  return sheet.getRange(2, 1, sheet.getLastRow() - 1, 3)
-    .getValues().filter(r => r[1])
-    .map(r => ({ id: r[0], name: r[1], note: r[2] }));
+  const s = ss.getSheetByName(SHEETS.STAGES);
+  if (!s || s.getLastRow() <= 1) return [];
+  return s.getRange(2, 1, s.getLastRow()-1, 3).getValues()
+    .filter(r => r[1])
+    .sort((a,b) => a[2]-b[2])
+    .map(r => ({ id:r[0], name:r[1], order:r[2] }));
 }
 
 // ----------------------------------------------------------
 // 日報提出
 // ----------------------------------------------------------
-function submitDailyReport(craftsmanName, dateStr, rows, dailyMemo) {
-  if (!craftsmanName) return { success: false, message: '職人名を選択してください。' };
-  if (!dateStr)       return { success: false, message: '日付を入力してください。' };
-  if (!rows || rows.length === 0) return { success: false, message: '作業行を1件以上追加してください。' };
+function submitReport(craftsmanName, dateStr, clockIn, clockOut, breakMin, rows, memo) {
+  if (!craftsmanName) return { success:false, message:'職人名を選択してください。' };
+  if (!dateStr)       return { success:false, message:'日付を入力してください。' };
+  if (!rows || rows.length === 0) return { success:false, message:'作業行を1件以上入力してください。' };
 
-  // 割合の合計チェック（警告のみ、保存はする）
-  const totalPct = rows.reduce((s, r) => s + (Number(r.pct) || 0), 0);
-  const warning = (totalPct !== 100)
-    ? `※ 割合の合計が ${totalPct}% です（100%推奨）。`
+  const actualMin  = calcActualMinutes(clockIn, clockOut, Number(breakMin)||0);
+  const totalInput = rows.reduce((s,r) => s + (Number(r.minutes)||0), 0);
+
+  const warning = (actualMin > 0 && totalInput !== actualMin)
+    ? `※ 入力合計 ${totalInput}分 ／ 実働 ${actualMin}分（差: ${totalInput - actualMin}分）`
     : null;
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(SHEETS.DAILY_LOGS);
-  const submittedAt = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy/MM/dd HH:mm:ss');
+  const sheet = ss.getSheetByName(SHEETS.LOGS);
+  const submittedAt = fmt(new Date(), 'yyyy/MM/dd HH:mm:ss');
 
   rows.forEach(row => {
-    const pct     = Number(row.pct) || 0;
-    const hours   = parseFloat((pct / 100 * WORK_HOURS_PER_DAY).toFixed(2));
-    const ninkuCount = parseFloat((hours / WORK_HOURS_PER_DAY).toFixed(3));
-    const logId   = Utilities.getUuid();
-
+    const min    = Number(row.minutes) || 0;
+    const ninku  = parseFloat((min / MINUTES_PER_NINKU).toFixed(4));
+    const cost   = Math.round(min * RATE_PER_MINUTE);
     sheet.appendRow([
-      logId,
-      dateStr,
-      craftsmanName,
-      row.scheduleName || '（案件なし）',
-      row.processName  || '',
-      pct,
-      hours,
-      ninkuCount,
-      row.memo || dailyMemo || '',
+      Utilities.getUuid(),
+      dateStr, craftsmanName,
+      clockIn||'', clockOut||'', Number(breakMin)||0, actualMin,
+      row.productName||'', row.stageName||'',
+      min, ninku, cost,
+      row.memo || memo || '',
       submittedAt
     ]);
   });
@@ -172,129 +155,140 @@ function submitDailyReport(craftsmanName, dateStr, rows, dailyMemo) {
   return {
     success: true,
     warning: warning,
-    message: `${craftsmanName} の日報を提出しました（${rows.length}件）。${warning || ''}`
+    message: `提出しました（${rows.length}件）。${warning||''}`
   };
 }
 
 // ----------------------------------------------------------
-// 日報ログ取得
+// 実働分計算
 // ----------------------------------------------------------
-function getLogs(filterCraftsman, filterSchedule, filterProcess, filterDateFrom, filterDateTo) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(SHEETS.DAILY_LOGS);
-  if (!sheet || sheet.getLastRow() <= 1) return [];
-
-  let logs = sheet.getRange(2, 1, sheet.getLastRow() - 1, 10)
-    .getValues().filter(r => r[0])
-    .map(r => ({
-      id: r[0], date: r[1], craftsmanName: r[2], scheduleName: r[3],
-      processName: r[4], pct: r[5], hours: r[6], ninkuCount: r[7],
-      memo: r[8], submittedAt: r[9]
-    }));
-
-  if (filterCraftsman) logs = logs.filter(l => l.craftsmanName === filterCraftsman);
-  if (filterSchedule)  logs = logs.filter(l => l.scheduleName  === filterSchedule);
-  if (filterProcess)   logs = logs.filter(l => l.processName   === filterProcess);
-  if (filterDateFrom)  logs = logs.filter(l => String(l.date)  >= filterDateFrom);
-  if (filterDateTo)    logs = logs.filter(l => String(l.date)  <= filterDateTo);
-
-  return logs.reverse().slice(0, 300);
+function calcActualMinutes(clockIn, clockOut, breakMin) {
+  if (!clockIn || !clockOut) return 0;
+  try {
+    const [ih, im] = clockIn.split(':').map(Number);
+    const [oh, om] = clockOut.split(':').map(Number);
+    const total = (oh * 60 + om) - (ih * 60 + im);
+    return Math.max(0, total - (breakMin||0));
+  } catch(e) { return 0; }
 }
 
 // ----------------------------------------------------------
-// 集計取得
+// ログ取得
 // ----------------------------------------------------------
-function getSummary(filterCraftsman, filterSchedule, filterProcess, filterDateFrom, filterDateTo) {
-  const logs = getLogs(filterCraftsman, filterSchedule, filterProcess, filterDateFrom, filterDateTo);
+function getLogs(fCraftsman, fProduct, fStage, fFrom, fTo) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const s  = ss.getSheetByName(SHEETS.LOGS);
+  if (!s || s.getLastRow() <= 1) return [];
 
-  // 職人 × 案件 × 工程 でグループ集計
+  let rows = s.getRange(2, 1, s.getLastRow()-1, 14).getValues()
+    .filter(r => r[0])
+    .map(r => ({
+      id:r[0], date:String(r[1]), craftsmanName:r[2],
+      clockIn:r[3], clockOut:r[4], breakMin:r[5], actualMin:r[6],
+      productName:r[7], stageName:r[8],
+      minutes:r[9], ninkuCount:r[10], cost:r[11],
+      memo:r[12], submittedAt:String(r[13])
+    }));
+
+  if (fCraftsman) rows = rows.filter(r => r.craftsmanName === fCraftsman);
+  if (fProduct)   rows = rows.filter(r => r.productName   === fProduct);
+  if (fStage)     rows = rows.filter(r => r.stageName     === fStage);
+  if (fFrom)      rows = rows.filter(r => r.date >= fFrom);
+  if (fTo)        rows = rows.filter(r => r.date <= fTo);
+
+  return rows.reverse().slice(0, 300);
+}
+
+// ----------------------------------------------------------
+// 集計（製品 × ステージ クロス集計）
+// ----------------------------------------------------------
+function getSummary(fCraftsman, fProduct, fStage, fFrom, fTo) {
+  const logs   = getLogs(fCraftsman, fProduct, fStage, fFrom, fTo);
+  const stages = getStages().map(s => s.name);
+
+  // 製品ごとにステージ別に集計
   const map = {};
   logs.forEach(log => {
-    const key = `${log.craftsmanName}||${log.scheduleName}||${log.processName}`;
-    if (!map[key]) {
-      map[key] = {
-        craftsmanName: log.craftsmanName,
-        scheduleName:  log.scheduleName,
-        processName:   log.processName,
-        totalHours:    0,
-        totalNinku:    0,
-        count:         0
-      };
+    const p = log.productName || '（製品名なし）';
+    if (!map[p]) {
+      map[p] = { productName: p, stages:{}, totalMin:0, totalCost:0 };
+      stages.forEach(st => map[p].stages[st] = 0);
     }
-    map[key].totalHours += Number(log.hours) || 0;
-    map[key].count++;
+    const m = Number(log.minutes)||0;
+    if (map[p].stages[log.stageName] !== undefined) {
+      map[p].stages[log.stageName] += m;
+    } else {
+      map[p].stages[log.stageName] = m;
+    }
+    map[p].totalMin  += m;
+    map[p].totalCost += Number(log.cost)||0;
   });
 
-  return Object.values(map).map(s => ({
-    ...s,
-    totalHours:  parseFloat(s.totalHours.toFixed(2)),
-    totalNinku:  parseFloat((s.totalHours / WORK_HOURS_PER_DAY).toFixed(3))
-  })).sort((a, b) => b.totalHours - a.totalHours);
+  return {
+    stages: stages,
+    rows: Object.values(map)
+      .sort((a,b) => b.totalMin - a.totalMin)
+      .map(r => ({
+        productName: r.productName,
+        stages: r.stages,
+        totalMin:  r.totalMin,
+        totalNinku: parseFloat((r.totalMin / MINUTES_PER_NINKU).toFixed(2)),
+        totalCost:  r.totalCost
+      }))
+  };
 }
 
 // ----------------------------------------------------------
 // マスター管理
 // ----------------------------------------------------------
 function addCraftsman(name, note) {
-  if (!name) return { success: false, message: '名前を入力してください。' };
+  if (!name) return { success:false, message:'名前を入力してください。' };
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(SHEETS.CRAFTSMEN);
-  const id = 'C' + String(sheet.getLastRow()).padStart(3, '0');
-  sheet.appendRow([id, name, note || '']);
-  return { success: true, message: `${name} を追加しました。` };
+  const s  = ss.getSheetByName(SHEETS.CRAFTSMEN);
+  s.appendRow(['C'+String(s.getLastRow()).padStart(3,'0'), name, note||'']);
+  return { success:true, message:`${name} を追加しました。` };
 }
+function deleteCraftsman(name) { return delRow(SHEETS.CRAFTSMEN, 2, name); }
 
-function deleteCraftsman(name) {
-  return deleteRowByColumn(SHEETS.CRAFTSMEN, 2, name, '職人');
-}
-
-function addSchedule(name, startDate, endDate, status, note) {
-  if (!name) return { success: false, message: '案件名を入力してください。' };
+function addSchedule(name, brand, plan, status) {
+  if (!name) return { success:false, message:'製品名を入力してください。' };
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(SHEETS.SCHEDULES);
-  const id = 'S' + String(sheet.getLastRow()).padStart(3, '0');
-  sheet.appendRow([id, name, startDate || '', endDate || '', status || '進行中', note || '']);
-  return { success: true, message: `「${name}」を追加しました。` };
+  const s  = ss.getSheetByName(SHEETS.SCHEDULES);
+  s.appendRow(['S'+String(s.getLastRow()).padStart(3,'0'), name, brand||'', plan||'', status||'進行中', '']);
+  return { success:true, message:`「${name}」を追加しました。` };
 }
+function deleteSchedule(name) { return delRow(SHEETS.SCHEDULES, 2, name); }
 
-function deleteSchedule(name) {
-  return deleteRowByColumn(SHEETS.SCHEDULES, 2, name, '案件');
-}
-
-function addProcess(name, note) {
-  if (!name) return { success: false, message: '工程名を入力してください。' };
+function addStage(name) {
+  if (!name) return { success:false, message:'ステージ名を入力してください。' };
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(SHEETS.PROCESSES);
-  const id = 'P' + String(sheet.getLastRow()).padStart(3, '0');
-  sheet.appendRow([id, name, note || '']);
-  return { success: true, message: `工程「${name}」を追加しました。` };
+  const s  = ss.getSheetByName(SHEETS.STAGES);
+  const order = s.getLastRow();
+  s.appendRow(['ST'+order, name, order]);
+  return { success:true, message:`ステージ「${name}」を追加しました。` };
 }
-
-function deleteProcess(name) {
-  return deleteRowByColumn(SHEETS.PROCESSES, 2, name, '工程');
-}
+function deleteStage(name) { return delRow(SHEETS.STAGES, 2, name); }
 
 // ----------------------------------------------------------
 // ユーティリティ
 // ----------------------------------------------------------
-function getOrCreateSheet(ss, name) {
+function getOrCreate(ss, name) {
   return ss.getSheetByName(name) || ss.insertSheet(name);
 }
-
-function styleHeader(sheet, colCount) {
-  const range = sheet.getRange(1, 1, 1, colCount);
-  range.setFontWeight('bold');
-  range.setBackground('#1a73e8');
-  range.setFontColor('#ffffff');
+function header(s, n) {
+  const r = s.getRange(1,1,1,n);
+  r.setFontWeight('bold').setBackground('#1a73e8').setFontColor('#fff');
 }
-
-function deleteRowByColumn(sheetName, colIndex, value, label) {
+function fmt(d, pattern) {
+  return Utilities.formatDate(d, 'Asia/Tokyo', pattern);
+}
+function delRow(sheetName, col, val) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(sheetName);
-  if (!sheet || sheet.getLastRow() <= 1) return { success: false, message: 'データがありません。' };
-  const data = sheet.getRange(2, colIndex, sheet.getLastRow() - 1, 1).getValues();
-  const idx  = data.findIndex(r => r[0] === value);
-  if (idx === -1) return { success: false, message: `${label}「${value}」が見つかりません。` };
-  sheet.deleteRow(idx + 2);
-  return { success: true, message: `${label}「${value}」を削除しました。` };
+  const s  = ss.getSheetByName(sheetName);
+  if (!s || s.getLastRow() <= 1) return { success:false, message:'データがありません。' };
+  const data = s.getRange(2, col, s.getLastRow()-1, 1).getValues();
+  const idx  = data.findIndex(r => r[0] === val);
+  if (idx === -1) return { success:false, message:`「${val}」が見つかりません。` };
+  s.deleteRow(idx + 2);
+  return { success:true, message:`「${val}」を削除しました。` };
 }

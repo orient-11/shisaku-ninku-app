@@ -5,618 +5,362 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>試作課 日報</title>
 <style>
-/* ===== リセット ===== */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
-  background: #f0f4f8;
-  color: #2d3748;
-  font-size: 15px;
-  min-height: 100vh;
-  -webkit-tap-highlight-color: transparent;
-}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f0f4f8;color:#2d3748;font-size:15px;-webkit-tap-highlight-color:transparent}
 
-/* ===== ヘッダー ===== */
-.header {
-  background: #1a73e8;
-  color: #fff;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-.header h1 { font-size: 17px; font-weight: 700; }
-.header .sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
-.setup-btn {
-  background: rgba(255,255,255,0.2);
-  border: 1px solid rgba(255,255,255,0.4);
-  color: #fff;
-  padding: 5px 13px;
-  border-radius: 20px;
-  font-size: 12px;
-  cursor: pointer;
-}
+/* ヘッダー */
+.hd{background:#1a73e8;color:#fff;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.hd h1{font-size:17px;font-weight:700}
+.hd small{font-size:11px;opacity:.8;display:block;margin-top:2px}
+.setup-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:5px 13px;border-radius:20px;font-size:12px;cursor:pointer}
 
-/* ===== タブ ===== */
-.tabs {
-  display: flex;
-  background: #fff;
-  border-bottom: 2px solid #e2e8f0;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.tab {
-  flex: 1;
-  min-width: 72px;
-  padding: 11px 6px 9px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-  color: #718096;
-  border-bottom: 3px solid transparent;
-  margin-bottom: -2px;
-  transition: all 0.2s;
-  white-space: nowrap;
-  line-height: 1.4;
-}
-.tab .icon { display: block; font-size: 18px; margin-bottom: 2px; }
-.tab.active { color: #1a73e8; border-bottom-color: #1a73e8; }
+/* タブ */
+.tabs{display:flex;background:#fff;border-bottom:2px solid #e2e8f0;overflow-x:auto}
+.tab{flex:1;min-width:68px;padding:11px 4px 9px;border:none;background:none;cursor:pointer;font-size:12px;font-weight:600;color:#718096;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;line-height:1.4}
+.tab .ic{display:block;font-size:18px;margin-bottom:2px}
+.tab.on{color:#1a73e8;border-bottom-color:#1a73e8}
 
-/* ===== メイン ===== */
-.main { padding: 14px; max-width: 860px; margin: 0 auto; }
-.panel { display: none; }
-.panel.active { display: block; }
+/* メイン */
+.main{padding:14px;max-width:860px;margin:0 auto}
+.pn{display:none}.pn.on{display:block}
 
-/* ===== カード ===== */
-.card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 18px 16px;
-  margin-bottom: 14px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-}
-.card-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: #4a5568;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #f0f4f8;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
+/* カード */
+.card{background:#fff;border-radius:12px;padding:18px 16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.card-ttl{font-size:13px;font-weight:700;color:#4a5568;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0f4f8;display:flex;align-items:center;gap:7px}
 
-/* ===== フォーム ===== */
-.row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-.fg { flex: 1; min-width: 140px; }
-.fg.full { flex: 1 0 100%; }
-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 700;
-  color: #718096;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 5px;
-}
-select, input[type="text"], input[type="date"], input[type="number"], textarea {
-  width: 100%;
-  padding: 10px 11px;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 14px;
-  color: #2d3748;
-  background: #f7fafc;
-  font-family: inherit;
-  transition: border 0.2s, box-shadow 0.2s;
-  -webkit-appearance: none;
-}
-select:focus, input:focus, textarea:focus {
-  outline: none;
-  border-color: #1a73e8;
-  box-shadow: 0 0 0 3px rgba(26,115,232,0.12);
-  background: #fff;
-}
-textarea { resize: vertical; min-height: 52px; }
+/* フォーム */
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.fg{flex:1;min-width:130px}
+.fg.w2{min-width:100px;max-width:140px}
+.fg.full{flex:1 0 100%}
+label{display:block;font-size:11px;font-weight:700;color:#718096;letter-spacing:.04em;margin-bottom:5px}
+select,input{width:100%;padding:10px 11px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:14px;color:#2d3748;background:#f7fafc;font-family:inherit;transition:border .2s,box-shadow .2s;-webkit-appearance:none}
+select:focus,input:focus{outline:none;border-color:#1a73e8;box-shadow:0 0 0 3px rgba(26,115,232,.12);background:#fff}
 
-/* ===== ボタン ===== */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 9px 18px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s;
-  font-family: inherit;
-  white-space: nowrap;
-}
-.btn-primary  { background: #1a73e8; color: #fff; }
-.btn-primary:hover  { background: #1557b0; }
-.btn-success  { background: #38a169; color: #fff; }
-.btn-success:hover  { background: #2f855a; }
-.btn-danger   { background: #e53e3e; color: #fff; }
-.btn-danger:hover   { background: #c53030; }
-.btn-ghost    { background: #f0f4f8; color: #4a5568; }
-.btn-ghost:hover    { background: #e2e8f0; }
-.btn-sm { padding: 5px 11px; font-size: 12px; }
-.btn-full { width: 100%; padding: 13px; font-size: 15px; margin-top: 6px; }
-.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+/* 実働時間表示 */
+.jikan-box{background:#ebf8ff;border:1.5px solid #bee3f8;border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.jikan-box .label{font-size:12px;font-weight:700;color:#2c5282}
+.jikan-box .value{font-size:22px;font-weight:700;color:#1a73e8}
+.jikan-box .sub{font-size:11px;color:#4a90d9;margin-top:1px}
 
-/* ===== 日報の作業行 ===== */
-.work-row {
-  background: #f7fafc;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 13px 12px 10px;
-  margin-bottom: 10px;
-  position: relative;
-}
-.work-row .row { margin-bottom: 8px; }
-.work-row .del-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: #cbd5e0;
-  cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 4px;
-  transition: color 0.15s;
-}
-.work-row .del-btn:hover { color: #e53e3e; }
+/* 作業行 */
+.wrow{background:#f7fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:13px 12px 10px;margin-bottom:10px;position:relative}
+.wrow .del{position:absolute;top:10px;right:10px;background:none;border:none;font-size:18px;color:#cbd5e0;cursor:pointer;padding:2px 6px;border-radius:4px;transition:color .15s;line-height:1}
+.wrow .del:hover{color:#e53e3e}
+.wrow .row{margin-bottom:8px}
 
-/* パーセント入力 */
-.pct-wrap { position: relative; }
-.pct-wrap input { padding-right: 28px; }
-.pct-wrap::after { content: '%'; position: absolute; right: 11px; top: 50%; transform: translateY(-50%); color: #718096; font-size: 13px; pointer-events: none; }
+/* 分入力 */
+.min-wrap{position:relative}
+.min-wrap input{padding-right:30px;font-weight:700}
+.min-wrap::after{content:'分';position:absolute;right:11px;top:50%;transform:translateY(-50%);color:#718096;font-size:13px;pointer-events:none}
+.min-hint{font-size:11px;color:#718096;margin-top:3px}
+.min-hint.ok{color:#38a169;font-weight:700}
+.min-hint.over{color:#e53e3e;font-weight:700}
 
-/* プログレスバー（行内） */
-.row-bar {
-  height: 5px;
-  background: #e2e8f0;
-  border-radius: 3px;
-  overflow: hidden;
-  margin-top: 4px;
-}
-.row-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.3s;
-  background: #1a73e8;
-}
+/* 合計バー */
+.total-card{border:2px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:14px;transition:border-color .3s}
+.total-card.ok{border-color:#38a169}
+.total-card.over{border-color:#e53e3e}
+.total-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+.total-num{font-size:22px;font-weight:700;color:#2d3748}
+.total-num.ok{color:#38a169}
+.total-num.over{color:#e53e3e}
+.total-hint{font-size:12px;color:#718096}
+.track{height:10px;background:#e2e8f0;border-radius:6px;overflow:hidden}
+.fill{height:100%;border-radius:6px;transition:width .3s,background .3s;background:#1a73e8;min-width:0}
+.fill.ok{background:#38a169}
+.fill.over{background:#e53e3e}
 
-/* ===== 合計バー ===== */
-.total-bar-card {
-  background: #fff;
-  border: 2px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 14px 14px 10px;
-  margin-bottom: 14px;
-}
-.total-bar-card.over  { border-color: #e53e3e; }
-.total-bar-card.ok    { border-color: #38a169; }
-.total-bar-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 8px;
-}
-.total-bar-label .pct-num {
-  font-size: 22px;
-  font-weight: 700;
-  color: #2d3748;
-}
-.total-bar-label .pct-num.ok   { color: #38a169; }
-.total-bar-label .pct-num.over { color: #e53e3e; }
-.total-bar-label .pct-hint {
-  font-size: 12px;
-  color: #718096;
-}
-.total-track {
-  height: 10px;
-  background: #e2e8f0;
-  border-radius: 6px;
-  overflow: hidden;
-}
-.total-fill {
-  height: 100%;
-  border-radius: 6px;
-  transition: width 0.3s, background 0.3s;
-  background: #1a73e8;
-}
-.total-fill.ok   { background: #38a169; }
-.total-fill.over { background: #e53e3e; }
+/* ボタン */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 18px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
+.btn-p{background:#1a73e8;color:#fff}.btn-p:hover{background:#1557b0}
+.btn-s{background:#38a169;color:#fff}.btn-s:hover{background:#2f855a}
+.btn-d{background:#e53e3e;color:#fff}.btn-d:hover{background:#c53030}
+.btn-g{background:#f0f4f8;color:#4a5568}.btn-g:hover{background:#e2e8f0}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-full{width:100%;padding:14px;font-size:15px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
 
-/* 色パレット（作業行ごとの色） */
-.color-0 { background: #1a73e8; }
-.color-1 { background: #38a169; }
-.color-2 { background: #ed8936; }
-.color-3 { background: #805ad5; }
-.color-4 { background: #e53e3e; }
-.color-5 { background: #0bc5ea; }
-.color-6 { background: #d69e2e; }
-.color-7 { background: #e879a0; }
+/* テーブル */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#f7fafc;padding:9px 11px;text-align:left;font-weight:700;color:#4a5568;border-bottom:2px solid #e2e8f0;white-space:nowrap}
+td{padding:9px 11px;border-bottom:1px solid #f0f4f8}
+tr:hover td{background:#f7fafc}
 
-/* ===== 日報プレビュー（提出後） ===== */
-.report-preview {
-  background: #f7fafc;
-  border-radius: 10px;
-  padding: 16px;
-}
-.preview-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.preview-label {
-  flex: 0 0 auto;
-  width: 120px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #2d3748;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.preview-label .proc { font-size: 11px; font-weight: 400; color: #718096; display: block; }
-.preview-bar-wrap { flex: 1; }
-.preview-bar {
-  height: 16px;
-  border-radius: 4px;
-  transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  min-width: 4px;
-}
-.preview-pct {
-  flex: 0 0 auto;
-  font-size: 13px;
-  font-weight: 700;
-  color: #2d3748;
-  width: 36px;
-  text-align: right;
-}
-.preview-detail {
-  font-size: 11px;
-  color: #718096;
-  width: 90px;
-  text-align: right;
-  white-space: nowrap;
-}
+/* クロス集計テーブル */
+.cross-table th.stage{text-align:center;font-size:11px;padding:7px 6px}
+.cross-table td.ninku{text-align:center;font-size:13px;font-weight:700;color:#1a73e8}
+.cross-table td.ninku.zero{color:#cbd5e0;font-weight:400}
+.cross-table td.total{background:#ebf8ff;font-weight:700;color:#1a73e8;text-align:center}
+.cross-table td.cost{background:#f0fff4;font-weight:700;color:#276749;text-align:right;white-space:nowrap}
 
-/* ===== テーブル ===== */
-.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th {
-  background: #f7fafc;
-  padding: 9px 11px;
-  text-align: left;
-  font-weight: 700;
-  color: #4a5568;
-  border-bottom: 2px solid #e2e8f0;
-  white-space: nowrap;
-}
-td { padding: 9px 11px; border-bottom: 1px solid #f0f4f8; }
-tr:hover td { background: #f7fafc; }
-.badge {
-  display: inline-block;
-  padding: 2px 9px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
-}
-.badge-blue  { background: #ebf8ff; color: #2b6cb0; }
-.badge-green { background: #f0fff4; color: #276749; }
-.badge-gray  { background: #f0f4f8; color: #4a5568; }
-.badge-orange{ background: #fffaf0; color: #c05621; }
+/* バッジ */
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.b-bl{background:#ebf8ff;color:#2b6cb0}
+.b-gn{background:#f0fff4;color:#276749}
+.b-gy{background:#f0f4f8;color:#4a5568}
+.b-or{background:#fffaf0;color:#c05621}
 
-/* ===== サマリーカード群 ===== */
-.stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px; margin-bottom: 16px; }
-.stat-card {
-  border-radius: 12px;
-  padding: 14px;
-  text-align: center;
-  color: #fff;
-}
-.stat-card.blue   { background: linear-gradient(135deg, #1a73e8, #1557b0); }
-.stat-card.green  { background: linear-gradient(135deg, #38a169, #2f855a); }
-.stat-card.purple { background: linear-gradient(135deg, #805ad5, #6b46c1); }
-.stat-card.orange { background: linear-gradient(135deg, #ed8936, #c05621); }
-.stat-val   { font-size: 26px; font-weight: 700; }
-.stat-label { font-size: 11px; opacity: 0.85; margin-top: 3px; }
+/* フィルター */
+.fbar{background:#f7fafc;border:1px solid #e2e8f0;border-radius:10px;padding:13px;margin-bottom:14px}
 
-/* ===== フィルターバー ===== */
-.filter-bar { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 13px; margin-bottom: 14px; }
-.filter-bar .row { margin-bottom: 8px; }
-.filter-bar .row:last-child { margin-bottom: 0; }
+/* 統計カード */
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.sc{border-radius:12px;padding:14px;text-align:center;color:#fff}
+.sc.bl{background:linear-gradient(135deg,#1a73e8,#1557b0)}
+.sc.gn{background:linear-gradient(135deg,#38a169,#2f855a)}
+.sc.pp{background:linear-gradient(135deg,#805ad5,#6b46c1)}
+.sc.or{background:linear-gradient(135deg,#ed8936,#c05621)}
+.sv{font-size:26px;font-weight:700}
+.sl{font-size:11px;opacity:.85;margin-top:3px}
 
-/* ===== トースト ===== */
-#toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(120px);
-  background: #2d3748;
-  color: #fff;
-  padding: 11px 22px;
-  border-radius: 30px;
-  font-size: 13px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  z-index: 9999;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  max-width: 88vw;
-  text-align: center;
-}
-#toast.show { transform: translateX(-50%) translateY(0); }
-#toast.ok  { background: #38a169; }
-#toast.err { background: #e53e3e; }
-#toast.warn { background: #ed8936; }
+/* トースト */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:#2d3748;color:#fff;padding:11px 22px;border-radius:30px;font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,.2);z-index:9999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-width:88vw;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.ok{background:#38a169}#toast.err{background:#e53e3e}#toast.warn{background:#ed8936}
 
-/* ===== ローディング ===== */
-.loading { text-align: center; padding: 32px; color: #a0aec0; font-size: 13px; }
-.spin { display: inline-block; width: 26px; height: 26px; border: 3px solid #e2e8f0; border-top-color: #1a73e8; border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 8px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.empty { text-align: center; padding: 36px 16px; color: #a0aec0; }
-.empty .ei { font-size: 44px; margin-bottom: 10px; }
+/* ローディング・空 */
+.ld{text-align:center;padding:32px;color:#a0aec0;font-size:13px}
+.sp{display:inline-block;width:26px;height:26px;border:3px solid #e2e8f0;border-top-color:#1a73e8;border-radius:50%;animation:sp .7s linear infinite;margin-bottom:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:32px 16px;color:#a0aec0}
 
-/* ===== レスポンシブ ===== */
-@media (max-width: 560px) {
-  .main { padding: 10px; }
-  .preview-label { width: 90px; }
-  .preview-detail { width: 70px; font-size: 10px; }
-  .stat-grid { grid-template-columns: 1fr 1fr; }
+@media(max-width:560px){
+  .main{padding:10px}
+  .sg{grid-template-columns:1fr 1fr}
+  .cross-table th.stage{font-size:10px;padding:6px 4px}
+  .cross-table td{padding:7px 6px}
 }
 </style>
 </head>
 <body>
 
-<header class="header">
+<!-- ヘッダー -->
+<header class="hd">
   <div>
     <h1>🧵 試作課 日報</h1>
-    <div class="sub">作業時間・人工管理システム</div>
+    <small>作業時間・人工管理</small>
   </div>
   <button class="setup-btn" onclick="runSetup()">初期設定</button>
 </header>
 
+<!-- タブ -->
 <nav class="tabs">
-  <button class="tab active" onclick="switchTab('report', this)">
-    <span class="icon">📝</span>日報入力
-  </button>
-  <button class="tab" onclick="switchTab('history', this)">
-    <span class="icon">📋</span>履歴
-  </button>
-  <button class="tab" onclick="switchTab('summary', this)">
-    <span class="icon">📊</span>集計
-  </button>
-  <button class="tab" onclick="switchTab('settings', this)">
-    <span class="icon">⚙️</span>設定
-  </button>
+  <button class="tab on" onclick="sw('report',this)"><span class="ic">📝</span>日報入力</button>
+  <button class="tab"    onclick="sw('history',this)"><span class="ic">📋</span>履歴</button>
+  <button class="tab"    onclick="sw('summary',this)"><span class="ic">📊</span>集計</button>
+  <button class="tab"    onclick="sw('settings',this)"><span class="ic">⚙️</span>設定</button>
 </nav>
 
 <main class="main">
 
-<!-- ====================================================
-     TAB 1: 日報入力
-===================================================== -->
-<div id="tab-report" class="panel active">
+<!-- ============ TAB 1: 日報入力 ============ -->
+<div id="tab-report" class="pn on">
 
-  <!-- ヘッダー情報 -->
+  <!-- 基本情報 -->
   <div class="card">
-    <div class="card-title">👷 今日の日報を記録する</div>
+    <div class="card-ttl">👷 基本情報</div>
     <div class="row">
       <div class="fg">
-        <label>職人を選ぶ</label>
-        <select id="r-craftsman">
-          <option value="">-- 選択してください --</option>
-        </select>
+        <label>職人</label>
+        <select id="r-who"><option value="">-- 選択 --</option></select>
       </div>
       <div class="fg">
-        <label>日付</label>
+        <label>作業日</label>
         <input type="date" id="r-date">
+      </div>
+    </div>
+    <div class="row">
+      <div class="fg w2">
+        <label>出勤時刻</label>
+        <input type="time" id="r-in" value="08:30" oninput="calcJikan()">
+      </div>
+      <div class="fg w2">
+        <label>退勤時刻</label>
+        <input type="time" id="r-out" value="17:30" oninput="calcJikan()">
+      </div>
+      <div class="fg w2">
+        <label>休憩(分)</label>
+        <input type="number" id="r-break" value="60" min="0" step="5" oninput="calcJikan()">
+      </div>
+    </div>
+
+    <!-- 実働時間表示 -->
+    <div class="jikan-box" id="jikan-box">
+      <div>
+        <div class="label">実働時間</div>
+        <div class="sub" id="jikan-sub">8:30〜17:30 休憩60分</div>
+      </div>
+      <div>
+        <div class="value" id="jikan-val">480分</div>
+        <div style="font-size:11px;color:#4a90d9;text-align:right" id="jikan-ninku">= 1.00人工</div>
       </div>
     </div>
   </div>
 
   <!-- 合計バー -->
-  <div class="total-bar-card" id="total-bar-card">
-    <div class="total-bar-label">
+  <div class="total-card" id="tc">
+    <div class="total-head">
       <div>
-        <div class="pct-num" id="total-pct-num">0%</div>
-        <div style="font-size:11px;color:#718096;">入力済み割合</div>
+        <div class="total-num" id="t-num">0分</div>
+        <div style="font-size:11px;color:#718096">入力済み作業時間</div>
       </div>
-      <div class="pct-hint" id="total-hint">残り 100% を入力してください</div>
+      <div class="total-hint" id="t-hint">残り 480分 を入力してください</div>
     </div>
-    <div class="total-track">
-      <div class="total-fill" id="total-fill" style="width:0%"></div>
-    </div>
+    <div class="track"><div class="fill" id="t-fill" style="width:0%"></div></div>
   </div>
 
-  <!-- 作業行リスト -->
-  <div id="work-rows-wrap"></div>
-
-  <!-- 行追加ボタン -->
-  <button class="btn btn-ghost btn-full" onclick="addWorkRow()" id="add-row-btn">
+  <!-- 作業行 -->
+  <div id="wrows"></div>
+  <button class="btn btn-g btn-full" onclick="addRow()" style="margin-bottom:14px">
     ＋ 作業を追加する
   </button>
 
-  <!-- 日次メモ -->
-  <div class="card" style="margin-top:12px">
-    <div class="card-title">📌 本日のメモ（任意）</div>
-    <textarea id="r-daily-memo" placeholder="今日全体の特記事項・申し送りなど"></textarea>
-  </div>
-
   <!-- 提出ボタン -->
-  <button class="btn btn-success btn-full" onclick="submitReport()" id="submit-btn">
+  <button class="btn btn-s btn-full" id="submit-btn" onclick="submitReport()">
     ✔ 日報を提出する
   </button>
 
 </div>
 
-<!-- ====================================================
-     TAB 2: 履歴
-===================================================== -->
-<div id="tab-history" class="panel">
-
+<!-- ============ TAB 2: 履歴 ============ -->
+<div id="tab-history" class="pn">
   <div class="card">
-    <div class="card-title">🔍 絞り込み</div>
-    <div class="filter-bar">
+    <div class="card-ttl">🔍 絞り込み</div>
+    <div class="fbar">
       <div class="row">
         <div class="fg"><label>職人</label>
-          <select id="h-craftsman"><option value="">すべて</option></select>
+          <select id="h-who"><option value="">すべて</option></select>
         </div>
-        <div class="fg"><label>案件</label>
-          <select id="h-schedule"><option value="">すべて</option></select>
+        <div class="fg"><label>製品</label>
+          <select id="h-prod"><option value="">すべて</option></select>
+        </div>
+        <div class="fg"><label>ステージ</label>
+          <select id="h-stage"><option value="">すべて</option></select>
         </div>
       </div>
       <div class="row">
-        <div class="fg"><label>工程</label>
-          <select id="h-process"><option value="">すべて</option></select>
-        </div>
-        <div class="fg"><label>期間（開始）</label>
-          <input type="date" id="h-date-from">
-        </div>
-        <div class="fg"><label>期間（終了）</label>
-          <input type="date" id="h-date-to">
-        </div>
+        <div class="fg"><label>期間（開始）</label><input type="date" id="h-from"></div>
+        <div class="fg"><label>期間（終了）</label><input type="date" id="h-to"></div>
       </div>
       <div style="display:flex;gap:8px;margin-top:4px">
-        <button class="btn btn-primary btn-sm" onclick="loadHistory()">検索</button>
-        <button class="btn btn-ghost btn-sm" onclick="clearHistFilter()">クリア</button>
+        <button class="btn btn-p btn-sm" onclick="loadHistory()">検索</button>
+        <button class="btn btn-g btn-sm" onclick="clearHist()">クリア</button>
       </div>
     </div>
   </div>
-
   <div class="card">
-    <div class="card-title">作業履歴</div>
-    <div class="table-wrap">
+    <div class="card-ttl">作業履歴</div>
+    <div class="tw">
       <table>
         <thead>
-          <tr>
-            <th>日付</th><th>職人</th><th>案件</th><th>工程</th>
-            <th>割合</th><th>時間</th><th>人工数</th><th>メモ</th>
-          </tr>
+          <tr><th>日付</th><th>職人</th><th>製品</th><th>ステージ</th>
+              <th>作業時間</th><th>人工数</th><th>労務費</th><th>メモ</th></tr>
         </thead>
-        <tbody id="history-body">
-          <tr><td colspan="8" class="loading">上の検索ボタンを押してください</td></tr>
+        <tbody id="h-body">
+          <tr><td colspan="8" class="ld">検索ボタンを押してください</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
 
-<!-- ====================================================
-     TAB 3: 集計
-===================================================== -->
-<div id="tab-summary" class="panel">
-
+<!-- ============ TAB 3: 集計 ============ -->
+<div id="tab-summary" class="pn">
   <div class="card">
-    <div class="card-title">🔍 集計フィルター</div>
-    <div class="filter-bar">
+    <div class="card-ttl">🔍 集計フィルター</div>
+    <div class="fbar">
       <div class="row">
         <div class="fg"><label>職人</label>
-          <select id="s-craftsman"><option value="">すべて</option></select>
+          <select id="s-who"><option value="">すべて</option></select>
         </div>
-        <div class="fg"><label>案件</label>
-          <select id="s-schedule"><option value="">すべて</option></select>
+        <div class="fg"><label>製品</label>
+          <select id="s-prod"><option value="">すべて</option></select>
         </div>
-        <div class="fg"><label>工程</label>
-          <select id="s-process"><option value="">すべて</option></select>
+        <div class="fg"><label>ステージ</label>
+          <select id="s-stage"><option value="">すべて</option></select>
         </div>
       </div>
       <div class="row">
-        <div class="fg"><label>期間（開始）</label>
-          <input type="date" id="s-date-from">
-        </div>
-        <div class="fg"><label>期間（終了）</label>
-          <input type="date" id="s-date-to">
-        </div>
+        <div class="fg"><label>期間（開始）</label><input type="date" id="s-from"></div>
+        <div class="fg"><label>期間（終了）</label><input type="date" id="s-to"></div>
       </div>
-      <button class="btn btn-primary btn-sm" onclick="loadSummary()" style="margin-top:4px">集計する</button>
+      <button class="btn btn-p btn-sm" onclick="loadSummary()" style="margin-top:4px">集計する</button>
     </div>
   </div>
 
-  <div id="sum-stats" class="stat-grid" style="display:none"></div>
+  <!-- 統計カード -->
+  <div id="s-stats" class="sg" style="display:none"></div>
 
-  <div class="card" id="sum-table-card" style="display:none">
-    <div class="card-title">職人 × 案件 × 工程 集計</div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>職人</th><th>案件</th><th>工程</th><th>合計時間</th><th>人工数</th><th>日数</th></tr>
-        </thead>
-        <tbody id="sum-body"></tbody>
-      </table>
+  <!-- 製品×ステージ クロス集計 -->
+  <div class="card" id="s-cross-card" style="display:none">
+    <div class="card-ttl">📋 製品 × ステージ 人工集計表</div>
+    <div class="tw">
+      <table class="cross-table" id="s-cross-table"></table>
+    </div>
+    <div style="font-size:11px;color:#718096;margin-top:10px">
+      ※ 人工数 = 作業時間(分) ÷ 480　／　労務費 = 作業時間(分) × 42円
     </div>
   </div>
 </div>
 
-<!-- ====================================================
-     TAB 4: 設定
-===================================================== -->
-<div id="tab-settings" class="panel">
+<!-- ============ TAB 4: 設定 ============ -->
+<div id="tab-settings" class="pn">
 
   <!-- 職人管理 -->
   <div class="card">
-    <div class="card-title">👷 職人管理</div>
+    <div class="card-ttl">👷 職人管理</div>
     <div class="row">
       <div class="fg"><label>名前</label>
-        <input type="text" id="add-c-name" placeholder="田中 太郎">
+        <input type="text" id="c-name" placeholder="田中 太郎">
       </div>
       <div class="fg"><label>備考</label>
-        <input type="text" id="add-c-note" placeholder="担当工程など">
+        <input type="text" id="c-note" placeholder="担当工程など">
       </div>
     </div>
-    <button class="btn btn-primary btn-sm" onclick="addCraftsman()">追加</button>
-    <div id="list-craftsmen" style="margin-top:14px" class="loading">読み込み中...</div>
+    <button class="btn btn-p btn-sm" onclick="addCraftsman()">追加</button>
+    <div id="list-c" style="margin-top:14px" class="ld">読み込み中...</div>
   </div>
 
-  <!-- スケジュール管理 -->
+  <!-- 製品管理 -->
   <div class="card">
-    <div class="card-title">📁 案件管理</div>
+    <div class="card-ttl">👜 製品管理</div>
     <div class="row">
-      <div class="fg full"><label>案件名</label>
-        <input type="text" id="add-s-name" placeholder="2024秋冬 トートバッグ A">
+      <div class="fg full"><label>製品名</label>
+        <input type="text" id="p-name" placeholder="例: バナナショルダー">
       </div>
     </div>
     <div class="row">
-      <div class="fg"><label>開始日</label><input type="date" id="add-s-start"></div>
-      <div class="fg"><label>終了日</label><input type="date" id="add-s-end"></div>
+      <div class="fg"><label>ブランド</label>
+        <input type="text" id="p-brand" placeholder="TSUCHIYA など">
+      </div>
+      <div class="fg"><label>企画名称</label>
+        <input type="text" id="p-plan" placeholder="XA新型ショルダー など">
+      </div>
       <div class="fg"><label>ステータス</label>
-        <select id="add-s-status">
+        <select id="p-status">
           <option>進行中</option><option>完了</option><option>保留</option>
         </select>
       </div>
     </div>
-    <button class="btn btn-primary btn-sm" onclick="addSchedule()">追加</button>
-    <div id="list-schedules" style="margin-top:14px" class="loading">読み込み中...</div>
+    <button class="btn btn-p btn-sm" onclick="addSchedule()">追加</button>
+    <div id="list-p" style="margin-top:14px" class="ld">読み込み中...</div>
   </div>
 
-  <!-- 工程管理 -->
+  <!-- ステージ管理 -->
   <div class="card">
-    <div class="card-title">🔧 工程管理</div>
+    <div class="card-ttl">🔢 ステージ管理</div>
+    <p style="font-size:12px;color:#718096;margin-bottom:12px">
+      初期値: モック / 1st / 2nd / 最終（展示会）/ 色増し前修正 / 試験体 / ショー用
+    </p>
     <div class="row">
-      <div class="fg"><label>工程名</label>
-        <input type="text" id="add-p-name" placeholder="例: 芯材貼り">
-      </div>
-      <div class="fg"><label>備考</label>
-        <input type="text" id="add-p-note" placeholder="メモ">
+      <div class="fg"><label>ステージ名</label>
+        <input type="text" id="st-name" placeholder="例: 量産前確認">
       </div>
     </div>
-    <button class="btn btn-primary btn-sm" onclick="addProcess()">追加</button>
-    <div id="list-processes" style="margin-top:14px" class="loading">読み込み中...</div>
+    <button class="btn btn-p btn-sm" onclick="addStage()">追加</button>
+    <div id="list-st" style="margin-top:14px" class="ld">読み込み中...</div>
   </div>
 
 </div>
@@ -628,469 +372,446 @@ tr:hover td { background: #f7fafc; }
 // ============================================================
 // 状態
 // ============================================================
-const st = {
-  craftsmen: [], schedules: [], processes: [],
-  workRowCount: 0
-};
-
-const COLORS = ['#1a73e8','#38a169','#ed8936','#805ad5','#e53e3e','#0bc5ea','#d69e2e','#e879a0'];
+const S = { craftsmen:[], schedules:[], stages:[], rowIdx:0 };
 
 // ============================================================
 // 初期化
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
-  // 今日の日付をセット
-  document.getElementById('r-date').value = todayStr();
-  loadInitial();
-});
-
-function loadInitial() {
+  document.getElementById('r-date').value = today();
+  calcJikan();
   google.script.run
     .withSuccessHandler(d => {
-      st.craftsmen = d.craftsmen || [];
-      st.schedules = d.schedules || [];
-      st.processes = d.processes || [];
-      fillSelects();
-      renderMasterLists();
-      addWorkRow(); // 最初の行を追加
+      S.craftsmen = d.craftsmen || [];
+      S.schedules = d.schedules || [];
+      S.stages    = d.stages    || [];
+      fillAll();
+      renderLists();
+      addRow();
     })
-    .withFailureHandler(() => {
-      toast('データ取得に失敗しました。「初期設定」を実行してください。', 'err');
-    })
+    .withFailureHandler(() => toast('読み込み失敗。「初期設定」を押してください。','err'))
     .getInitialData();
+});
+
+// ============================================================
+// 実働時間計算
+// ============================================================
+function calcJikan() {
+  const inp   = document.getElementById('r-in').value;
+  const out   = document.getElementById('r-out').value;
+  const brk   = Number(document.getElementById('r-break').value)||0;
+  const min   = calcMin(inp, out, brk);
+  document.getElementById('jikan-val').textContent   = min + '分';
+  document.getElementById('jikan-ninku').textContent = '= ' + (min/480).toFixed(2) + '人工';
+  document.getElementById('jikan-sub').textContent   = `${inp}〜${out} 休憩${brk}分`;
+  updateTotal();
+}
+
+function calcMin(inp, out, brk) {
+  if (!inp || !out) return 480;
+  const [ih,im] = inp.split(':').map(Number);
+  const [oh,om] = out.split(':').map(Number);
+  return Math.max(0, (oh*60+om) - (ih*60+im) - (brk||0));
+}
+
+function getJikan() {
+  return calcMin(
+    document.getElementById('r-in').value,
+    document.getElementById('r-out').value,
+    Number(document.getElementById('r-break').value)||0
+  );
 }
 
 // ============================================================
-// セレクト類をすべて更新
+// 作業行 追加・削除
 // ============================================================
-function fillSelects() {
-  // 日報入力
-  fillSel('r-craftsman', st.craftsmen.map(c => c.name), '-- 選択してください --');
-  // フィルター (複数)
-  ['h-craftsman','s-craftsman'].forEach(id => fillSel(id, st.craftsmen.map(c=>c.name), 'すべて', true));
-  ['h-schedule', 's-schedule'].forEach(id => fillSel(id, st.schedules.map(s=>s.name),  'すべて', true));
-  ['h-process',  's-process' ].forEach(id => fillSel(id, st.processes.map(p=>p.name),  'すべて', true));
-  // 既存の作業行の工程セレクトも更新
-  document.querySelectorAll('.proc-sel').forEach(sel => {
-    const cur = sel.value;
-    fillSel(sel.id, st.processes.map(p=>p.name), '-- 工程を選ぶ --');
-    sel.value = cur;
-  });
-  document.querySelectorAll('.sched-sel').forEach(sel => {
-    const cur = sel.value;
-    fillSel(sel.id, st.schedules.map(s=>s.name), '-- 案件を選ぶ --');
-    sel.value = cur;
-  });
-}
-
-function fillSel(id, items, placeholder, hasBlank) {
-  const sel = document.getElementById(id);
-  if (!sel) return;
-  const cur = sel.value;
-  sel.innerHTML = `<option value="">${placeholder}</option>`;
-  items.forEach(name => {
-    const o = document.createElement('option');
-    o.value = o.textContent = name;
-    sel.appendChild(o);
-  });
-  sel.value = cur;
-}
-
-// ============================================================
-// 作業行の追加
-// ============================================================
-function addWorkRow() {
-  const idx = st.workRowCount++;
-  const color = COLORS[idx % COLORS.length];
-  const wrap = document.getElementById('work-rows-wrap');
-
+function addRow() {
+  const idx = S.rowIdx++;
   const div = document.createElement('div');
-  div.className = 'work-row';
-  div.id = 'wr-' + idx;
+  div.className = 'wrow';
+  div.id = 'wr' + idx;
   div.dataset.idx = idx;
   div.innerHTML = `
-    <button class="del-btn" onclick="removeWorkRow(${idx})" title="削除">✕</button>
+    <button class="del" onclick="delRow(${idx})" title="削除">✕</button>
     <div class="row">
       <div class="fg">
-        <label>案件</label>
-        <select id="wr-sched-${idx}" class="sched-sel" onchange="updateBars()">
-          <option value="">-- 案件を選ぶ --</option>
-          ${st.schedules.map(s => `<option>${esc(s.name)}</option>`).join('')}
+        <label>製品名</label>
+        <select id="wp${idx}" class="ws">
+          <option value="">-- 選択 --</option>
+          ${S.schedules.map(s=>`<option>${esc(s.name)}</option>`).join('')}
         </select>
       </div>
       <div class="fg">
-        <label>工程</label>
-        <select id="wr-proc-${idx}" class="proc-sel" onchange="updateBars()">
-          <option value="">-- 工程を選ぶ --</option>
-          ${st.processes.map(p => `<option>${esc(p.name)}</option>`).join('')}
+        <label>ステージ</label>
+        <select id="wst${idx}" class="wss">
+          <option value="">-- 選択 --</option>
+          ${S.stages.map(s=>`<option>${esc(s.name)}</option>`).join('')}
         </select>
       </div>
-      <div class="fg" style="max-width:90px">
-        <label>割合</label>
-        <div class="pct-wrap">
-          <input type="number" id="wr-pct-${idx}" class="pct-input"
-            min="0" max="100" step="5" placeholder="0"
-            oninput="updateBars()">
+      <div class="fg w2">
+        <label>作業時間</label>
+        <div class="min-wrap">
+          <input type="number" id="wm${idx}" class="wmi" min="0" step="10" placeholder="0"
+            oninput="updateTotal()">
         </div>
+        <div class="min-hint" id="wh${idx}">0.00人工</div>
       </div>
     </div>
-    <div class="row-bar">
-      <div class="row-bar-fill" id="wr-bar-${idx}" style="width:0%;background:${color}"></div>
-    </div>
-    <div style="margin-top:7px">
+    <div class="fg full" style="margin-top:4px">
       <label>メモ（任意）</label>
-      <input type="text" id="wr-memo-${idx}" placeholder="この作業の内容・特記事項">
+      <input type="text" id="wmemo${idx}" placeholder="作業内容・特記事項">
     </div>
   `;
-  wrap.appendChild(div);
-  updateBars();
+  document.getElementById('wrows').appendChild(div);
+  updateTotal();
 }
 
-function removeWorkRow(idx) {
-  const el = document.getElementById('wr-' + idx);
+function delRow(idx) {
+  const el = document.getElementById('wr' + idx);
   if (el) el.remove();
-  updateBars();
+  updateTotal();
 }
 
 // ============================================================
-// 合計バーの更新
+// 合計バー更新
 // ============================================================
-function updateBars() {
-  const pctInputs = document.querySelectorAll('.pct-input');
+function updateTotal() {
+  const jikan  = getJikan();
   let total = 0;
-  pctInputs.forEach(inp => {
-    const v = Math.min(100, Math.max(0, Number(inp.value) || 0));
-    const idx = inp.id.replace('wr-pct-', '');
-    const bar = document.getElementById('wr-bar-' + idx);
-    if (bar) bar.style.width = v + '%';
+  document.querySelectorAll('.wmi').forEach(inp => {
+    const v = Math.max(0, Number(inp.value)||0);
+    const idx = inp.id.replace('wm','');
+    const hint = document.getElementById('wh'+idx);
+    if (hint) {
+      const n = (v/480).toFixed(2);
+      hint.textContent = v > 0 ? `${n}人工` : '0.00人工';
+      hint.className = 'min-hint';
+    }
     total += v;
   });
 
-  const numEl  = document.getElementById('total-pct-num');
-  const fillEl = document.getElementById('total-fill');
-  const hintEl = document.getElementById('total-hint');
-  const cardEl = document.getElementById('total-bar-card');
+  const pct     = jikan > 0 ? Math.min(100, total / jikan * 100) : (total > 0 ? 100 : 0);
+  const remains = jikan - total;
 
-  numEl.textContent = total + '%';
-  const pct = Math.min(100, total);
-  fillEl.style.width = pct + '%';
+  document.getElementById('t-num').textContent  = total + '分';
+  document.getElementById('t-fill').style.width = pct + '%';
 
-  numEl.className = 'pct-num ' + (total === 100 ? 'ok' : total > 100 ? 'over' : '');
-  fillEl.className = 'total-fill ' + (total === 100 ? 'ok' : total > 100 ? 'over' : '');
-  cardEl.className = 'total-bar-card ' + (total === 100 ? 'ok' : total > 100 ? 'over' : '');
+  const numEl  = document.getElementById('t-num');
+  const fillEl = document.getElementById('t-fill');
+  const cardEl = document.getElementById('tc');
+  const hint   = document.getElementById('t-hint');
 
-  if (total === 100)      hintEl.textContent = '✔ 合計 100% — 完了です';
-  else if (total > 100)   hintEl.textContent = `⚠ 合計 ${total}% — 100%を超えています`;
-  else                    hintEl.textContent = `残り ${100 - total}% を入力してください`;
+  if (total === jikan && jikan > 0) {
+    numEl.className  = 'total-num ok';
+    fillEl.className = 'fill ok';
+    cardEl.className = 'total-card ok';
+    hint.textContent = '✔ 実働時間と一致しています';
+  } else if (total > jikan) {
+    numEl.className  = 'total-num over';
+    fillEl.className = 'fill over';
+    cardEl.className = 'total-card over';
+    hint.textContent = `⚠ ${total - jikan}分 超過しています`;
+  } else {
+    numEl.className  = 'total-num';
+    fillEl.className = 'fill';
+    cardEl.className = 'total-card';
+    hint.textContent = jikan > 0 ? `残り ${remains}分` : '';
+  }
 }
 
 // ============================================================
 // 日報提出
 // ============================================================
 function submitReport() {
-  const craftsmanName = document.getElementById('r-craftsman').value;
-  const dateStr       = document.getElementById('r-date').value;
-  const dailyMemo     = document.getElementById('r-daily-memo').value;
+  const who    = document.getElementById('r-who').value;
+  const date   = document.getElementById('r-date').value;
+  const clockIn  = document.getElementById('r-in').value;
+  const clockOut = document.getElementById('r-out').value;
+  const brk    = document.getElementById('r-break').value;
 
-  if (!craftsmanName) { toast('職人を選択してください', 'err'); return; }
-  if (!dateStr)        { toast('日付を入力してください', 'err'); return; }
+  if (!who)  { toast('職人を選択してください','err'); return; }
+  if (!date) { toast('日付を入力してください','err'); return; }
 
-  // 作業行を収集
   const rows = [];
-  document.querySelectorAll('.work-row').forEach(wr => {
+  document.querySelectorAll('.wrow').forEach(wr => {
     const idx = wr.dataset.idx;
-    const pct = Number(document.getElementById(`wr-pct-${idx}`)?.value) || 0;
-    if (pct <= 0) return;
+    const m   = Number(document.getElementById(`wm${idx}`)?.value)||0;
+    if (m <= 0) return;
     rows.push({
-      scheduleName: document.getElementById(`wr-sched-${idx}`)?.value || '',
-      processName:  document.getElementById(`wr-proc-${idx}`)?.value  || '',
-      pct:          pct,
-      memo:         document.getElementById(`wr-memo-${idx}`)?.value  || ''
+      productName: document.getElementById(`wp${idx}`)?.value  || '',
+      stageName:   document.getElementById(`wst${idx}`)?.value || '',
+      minutes:     m,
+      memo:        document.getElementById(`wmemo${idx}`)?.value || ''
     });
   });
 
-  if (rows.length === 0) { toast('割合を入力した作業行がありません', 'err'); return; }
+  if (!rows.length) { toast('作業時間を入力した行がありません','err'); return; }
 
   const btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  btn.textContent = '提出中...';
+  btn.disabled = true; btn.textContent = '提出中...';
 
   google.script.run
     .withSuccessHandler(res => {
-      btn.disabled = false;
-      btn.textContent = '✔ 日報を提出する';
-      if (!res.success) { toast(res.message, 'err'); return; }
+      btn.disabled = false; btn.textContent = '✔ 日報を提出する';
+      if (!res.success) { toast(res.message,'err'); return; }
       toast(res.message, res.warning ? 'warn' : 'ok');
-      showPreview(craftsmanName, dateStr, rows);
       resetForm();
     })
     .withFailureHandler(() => {
-      btn.disabled = false;
-      btn.textContent = '✔ 日報を提出する';
-      toast('提出に失敗しました', 'err');
+      btn.disabled = false; btn.textContent = '✔ 日報を提出する';
+      toast('提出に失敗しました','err');
     })
-    .submitDailyReport(craftsmanName, dateStr, rows, dailyMemo);
+    .submitReport(who, date, clockIn, clockOut, brk, rows, '');
 }
 
 function resetForm() {
-  document.getElementById('r-craftsman').value = '';
-  document.getElementById('r-date').value = todayStr();
-  document.getElementById('r-daily-memo').value = '';
-  document.getElementById('work-rows-wrap').innerHTML = '';
-  st.workRowCount = 0;
-  addWorkRow();
-  updateBars();
-}
-
-// ============================================================
-// 提出後プレビュー（バー表示）
-// ============================================================
-function showPreview(craftsmanName, dateStr, rows) {
-  const existing = document.getElementById('preview-card');
-  if (existing) existing.remove();
-
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.id = 'preview-card';
-  const totalHours = rows.reduce((s, r) => s + r.pct / 100 * 8, 0);
-  const totalNinku = (totalHours / 8).toFixed(3);
-
-  card.innerHTML = `
-    <div class="card-title">✅ 提出済み日報 — ${esc(craftsmanName)} / ${esc(dateStr)}</div>
-    <div class="report-preview" id="preview-body"></div>
-    <div style="margin-top:10px;font-size:12px;color:#718096;text-align:right">
-      合計: <strong>${totalHours.toFixed(1)}h</strong> ／ <strong>${totalNinku} 人工</strong>
-    </div>
-  `;
-  document.getElementById('tab-report').insertBefore(card, document.querySelector('.card'));
-
-  const body = card.querySelector('#preview-body');
-  rows.forEach((r, i) => {
-    const color = COLORS[i % COLORS.length];
-    const hours = (r.pct / 100 * 8).toFixed(1);
-    const ninku = (r.pct / 100).toFixed(2);
-    const row = document.createElement('div');
-    row.className = 'preview-row';
-    row.innerHTML = `
-      <div class="preview-label">
-        ${esc(r.scheduleName || '（案件なし）')}
-        <span class="proc">${esc(r.processName)}</span>
-      </div>
-      <div class="preview-bar-wrap">
-        <div class="preview-bar" style="width:${r.pct}%;background:${color}"></div>
-      </div>
-      <div class="preview-pct">${r.pct}%</div>
-      <div class="preview-detail">${hours}h / ${ninku}人工</div>
-    `;
-    body.appendChild(row);
-  });
+  document.getElementById('r-who').value = '';
+  document.getElementById('r-date').value = today();
+  document.getElementById('r-in').value   = '08:30';
+  document.getElementById('r-out').value  = '17:30';
+  document.getElementById('r-break').value = '60';
+  document.getElementById('wrows').innerHTML = '';
+  S.rowIdx = 0;
+  calcJikan();
+  addRow();
 }
 
 // ============================================================
 // 履歴
 // ============================================================
 function loadHistory() {
-  const params = [
-    document.getElementById('h-craftsman').value || null,
-    document.getElementById('h-schedule').value  || null,
-    document.getElementById('h-process').value   || null,
-    document.getElementById('h-date-from').value || null,
-    document.getElementById('h-date-to').value   || null
+  const p = [
+    v('h-who'), v('h-prod'), v('h-stage'), v('h-from'), v('h-to')
   ];
-  document.getElementById('history-body').innerHTML =
-    '<tr><td colspan="8" class="loading"><div class="spin"></div><br>読み込み中...</td></tr>';
+  document.getElementById('h-body').innerHTML =
+    '<tr><td colspan="8" class="ld"><div class="sp"></div><br>読み込み中...</td></tr>';
 
   google.script.run
     .withSuccessHandler(logs => {
-      const tb = document.getElementById('history-body');
-      if (!logs || logs.length === 0) {
+      const tb = document.getElementById('h-body');
+      if (!logs?.length) {
         tb.innerHTML = '<tr><td colspan="8" class="empty">該当データなし</td></tr>';
         return;
       }
       tb.innerHTML = logs.map(l => `
         <tr>
-          <td>${esc(String(l.date))}</td>
-          <td><span class="badge badge-blue">${esc(l.craftsmanName)}</span></td>
-          <td>${esc(l.scheduleName)}</td>
-          <td><span class="badge badge-gray">${esc(l.processName)}</span></td>
-          <td style="font-weight:700;color:#1a73e8">${l.pct}%</td>
-          <td>${Number(l.hours).toFixed(1)}h</td>
-          <td><strong>${Number(l.ninkuCount).toFixed(3)}</strong></td>
+          <td>${esc(l.date)}</td>
+          <td><span class="badge b-bl">${esc(l.craftsmanName)}</span></td>
+          <td>${esc(l.productName)}</td>
+          <td><span class="badge b-gy">${esc(l.stageName)}</span></td>
+          <td style="font-weight:700">${l.minutes}分</td>
+          <td style="color:#1a73e8;font-weight:700">${Number(l.ninkuCount).toFixed(3)}</td>
+          <td style="color:#276749">¥${Number(l.cost).toLocaleString()}</td>
           <td style="color:#718096;font-size:12px">${esc(l.memo)}</td>
         </tr>
       `).join('');
     })
-    .withFailureHandler(() => toast('履歴の取得に失敗しました', 'err'))
-    .getLogs(...params);
+    .withFailureHandler(() => toast('履歴取得失敗','err'))
+    .getLogs(...p);
 }
 
-function clearHistFilter() {
-  ['h-craftsman','h-schedule','h-process','h-date-from','h-date-to']
-    .forEach(id => { document.getElementById(id).value = ''; });
+function clearHist() {
+  ['h-who','h-prod','h-stage','h-from','h-to'].forEach(id => { document.getElementById(id).value=''; });
 }
 
 // ============================================================
-// 集計
+// 集計（製品×ステージ クロス集計）
 // ============================================================
 function loadSummary() {
-  const params = [
-    document.getElementById('s-craftsman').value || null,
-    document.getElementById('s-schedule').value  || null,
-    document.getElementById('s-process').value   || null,
-    document.getElementById('s-date-from').value || null,
-    document.getElementById('s-date-to').value   || null
-  ];
-
+  const p = [v('s-who'), v('s-prod'), v('s-stage'), v('s-from'), v('s-to')];
   google.script.run
     .withSuccessHandler(data => {
-      if (!data || !data.length) { toast('集計データがありません', 'err'); return; }
+      if (!data?.rows?.length) { toast('集計データなし','err'); return; }
 
-      const totH = data.reduce((s,d) => s + Number(d.totalHours), 0);
-      const totN = data.reduce((s,d) => s + Number(d.totalNinku), 0);
-      const uniq = new Set(data.map(d => d.craftsmanName)).size;
-      const projUniq = new Set(data.map(d => d.scheduleName)).size;
+      const { stages, rows } = data;
+      const totMin   = rows.reduce((s,r) => s + r.totalMin, 0);
+      const totNinku = rows.reduce((s,r) => s + r.totalNinku, 0);
+      const totCost  = rows.reduce((s,r) => s + r.totalCost, 0);
 
-      const stats = document.getElementById('sum-stats');
-      stats.style.display = 'grid';
-      stats.innerHTML = `
-        <div class="stat-card blue"><div class="stat-val">${totN.toFixed(2)}</div><div class="stat-label">合計人工数</div></div>
-        <div class="stat-card green"><div class="stat-val">${totH.toFixed(1)}h</div><div class="stat-label">合計作業時間</div></div>
-        <div class="stat-card purple"><div class="stat-val">${uniq}</div><div class="stat-label">稼働職人数</div></div>
-        <div class="stat-card orange"><div class="stat-val">${projUniq}</div><div class="stat-label">対象案件数</div></div>
+      // 統計カード
+      const sc = document.getElementById('s-stats');
+      sc.style.display = 'grid';
+      sc.innerHTML = `
+        <div class="sc bl"><div class="sv">${totNinku.toFixed(2)}</div><div class="sl">合計人工数</div></div>
+        <div class="sc gn"><div class="sv">${(totMin/60).toFixed(1)}h</div><div class="sl">合計作業時間</div></div>
+        <div class="sc or"><div class="sv">¥${Math.round(totCost/10000)}万</div><div class="sl">合計労務費</div></div>
+        <div class="sc pp"><div class="sv">${rows.length}</div><div class="sl">製品数</div></div>
       `;
 
-      const tb = document.getElementById('sum-body');
-      tb.innerHTML = data.map(r => `
-        <tr>
-          <td><span class="badge badge-blue">${esc(r.craftsmanName)}</span></td>
-          <td>${esc(r.scheduleName)}</td>
-          <td><span class="badge badge-gray">${esc(r.processName)}</span></td>
-          <td>${r.totalHours}h</td>
-          <td><strong style="color:#1a73e8;font-size:15px">${r.totalNinku}</strong> 人工</td>
-          <td style="color:#718096">${r.count}日</td>
-        </tr>
-      `).join('');
-      document.getElementById('sum-table-card').style.display = 'block';
+      // クロス集計テーブル
+      const table = document.getElementById('s-cross-table');
+      // ヘッダー行
+      const allStages = stages.concat(
+        rows.flatMap(r => Object.keys(r.stages)).filter(st => !stages.includes(st))
+      );
+
+      let html = `<thead><tr>
+        <th>製品名</th>
+        ${allStages.map(st=>`<th class="stage">${esc(st)}</th>`).join('')}
+        <th class="stage">合計人工</th>
+        <th class="stage">労務費</th>
+      </tr></thead><tbody>`;
+
+      rows.forEach(row => {
+        html += `<tr>
+          <td><strong>${esc(row.productName)}</strong></td>
+          ${allStages.map(st => {
+            const m = row.stages[st] || 0;
+            const n = m > 0 ? (m/480).toFixed(2) : '—';
+            return `<td class="ninku${m===0?' zero':''}">${n}</td>`;
+          }).join('')}
+          <td class="total">${row.totalNinku.toFixed(2)}</td>
+          <td class="cost">¥${row.totalCost.toLocaleString()}</td>
+        </tr>`;
+      });
+
+      // 合計行
+      html += `<tr style="background:#f0f4f8;font-weight:700">
+        <td>【合計】</td>
+        ${allStages.map(st => {
+          const m = rows.reduce((s,r) => s+(r.stages[st]||0), 0);
+          return `<td class="ninku">${m>0?(m/480).toFixed(2):'—'}</td>`;
+        }).join('')}
+        <td class="total">${totNinku.toFixed(2)}</td>
+        <td class="cost">¥${totCost.toLocaleString()}</td>
+      </tr>`;
+
+      html += '</tbody>';
+      table.innerHTML = html;
+      document.getElementById('s-cross-card').style.display = 'block';
     })
-    .withFailureHandler(() => toast('集計に失敗しました', 'err'))
-    .getSummary(...params);
+    .withFailureHandler(() => toast('集計失敗','err'))
+    .getSummary(...p);
 }
 
 // ============================================================
 // 設定: マスター管理
 // ============================================================
 function addCraftsman() {
-  const name = document.getElementById('add-c-name').value.trim();
-  const note = document.getElementById('add-c-note').value.trim();
-  if (!name) { toast('名前を入力してください', 'err'); return; }
+  const name = document.getElementById('c-name').value.trim();
+  if (!name) { toast('名前を入力してください','err'); return; }
   google.script.run
-    .withSuccessHandler(r => { toast(r.message, r.success?'ok':'err'); if(r.success){document.getElementById('add-c-name').value=''; loadInitial();} })
-    .addCraftsman(name, note);
-}
-function deleteCraftsman(name) {
-  if(!confirm(`「${name}」を削除しますか？`)) return;
-  google.script.run.withSuccessHandler(r=>{toast(r.message,r.success?'ok':'err');if(r.success)loadInitial();}).deleteCraftsman(name);
+    .withSuccessHandler(r => { toast(r.message,r.success?'ok':'err'); if(r.success){document.getElementById('c-name').value=''; reload();} })
+    .addCraftsman(name, document.getElementById('c-note').value.trim());
 }
 function addSchedule() {
-  const name = document.getElementById('add-s-name').value.trim();
-  if (!name) { toast('案件名を入力してください', 'err'); return; }
-  const s = document.getElementById('add-s-start').value;
-  const e = document.getElementById('add-s-end').value;
-  const st2 = document.getElementById('add-s-status').value;
+  const name = document.getElementById('p-name').value.trim();
+  if (!name) { toast('製品名を入力してください','err'); return; }
   google.script.run
-    .withSuccessHandler(r => { toast(r.message, r.success?'ok':'err'); if(r.success){document.getElementById('add-s-name').value=''; loadInitial();} })
-    .addSchedule(name, s, e, st2, '');
+    .withSuccessHandler(r => { toast(r.message,r.success?'ok':'err'); if(r.success){document.getElementById('p-name').value=''; reload();} })
+    .addSchedule(name, v('p-brand'), v('p-plan'), v('p-status'));
 }
-function deleteSchedule(name) {
-  if(!confirm(`「${name}」を削除しますか？`)) return;
-  google.script.run.withSuccessHandler(r=>{toast(r.message,r.success?'ok':'err');if(r.success)loadInitial();}).deleteSchedule(name);
-}
-function addProcess() {
-  const name = document.getElementById('add-p-name').value.trim();
-  const note = document.getElementById('add-p-note').value.trim();
-  if (!name) { toast('工程名を入力してください', 'err'); return; }
+function addStage() {
+  const name = document.getElementById('st-name').value.trim();
+  if (!name) { toast('ステージ名を入力してください','err'); return; }
   google.script.run
-    .withSuccessHandler(r => { toast(r.message, r.success?'ok':'err'); if(r.success){document.getElementById('add-p-name').value=''; loadInitial();} })
-    .addProcess(name, note);
+    .withSuccessHandler(r => { toast(r.message,r.success?'ok':'err'); if(r.success){document.getElementById('st-name').value=''; reload();} })
+    .addStage(name);
 }
-function deleteProcess(name) {
-  if(!confirm(`工程「${name}」を削除しますか？`)) return;
-  google.script.run.withSuccessHandler(r=>{toast(r.message,r.success?'ok':'err');if(r.success)loadInitial();}).deleteProcess(name);
-}
+function delCraftsman(name){ if(!confirm(`「${name}」を削除しますか？`))return; google.script.run.withSuccessHandler(r=>{toast(r.message,r.success?'ok':'err');if(r.success)reload();}).deleteCraftsman(name); }
+function delSchedule(name) { if(!confirm(`「${name}」を削除しますか？`))return; google.script.run.withSuccessHandler(r=>{toast(r.message,r.success?'ok':'err');if(r.success)reload();}).deleteSchedule(name); }
+function delStage(name)    { if(!confirm(`「${name}」を削除しますか？`))return; google.script.run.withSuccessHandler(r=>{toast(r.message,r.success?'ok':'err');if(r.success)reload();}).deleteStage(name); }
 
-function renderMasterLists() {
-  // 職人リスト
-  const cl = document.getElementById('list-craftsmen');
-  cl.innerHTML = st.craftsmen.length ? masterTable(
-    ['ID','名前','備考'],
-    st.craftsmen.map(c => [c.id, `<strong>${esc(c.name)}</strong>`, esc(c.note),
-      `<button class="btn btn-danger btn-sm" onclick="deleteCraftsman('${esc(c.name)}')">削除</button>`])
-  ) : '<div class="empty"><p>職人が未登録です</p></div>';
+function renderLists() {
+  // 職人
+  document.getElementById('list-c').innerHTML = S.craftsmen.length
+    ? mTable(['ID','名前','備考'], S.craftsmen.map(c=>[c.id, `<strong>${esc(c.name)}</strong>`, esc(c.note), `<button class="btn btn-d btn-sm" onclick="delCraftsman('${esc(c.name)}')">削除</button>`]))
+    : '<div class="empty">未登録</div>';
 
-  // 案件リスト
-  const sl = document.getElementById('list-schedules');
-  sl.innerHTML = st.schedules.length ? masterTable(
-    ['案件名','開始日','終了日','状態'],
-    st.schedules.map(s => [
-      `<strong>${esc(s.name)}</strong>`, esc(s.startDate), esc(s.endDate),
-      `<span class="badge ${s.status==='完了'?'badge-green':'badge-blue'}">${esc(s.status)}</span>`,
-      `<button class="btn btn-danger btn-sm" onclick="deleteSchedule('${esc(s.name)}')">削除</button>`])
-  ) : '<div class="empty"><p>案件が未登録です</p></div>';
+  // 製品
+  document.getElementById('list-p').innerHTML = S.schedules.length
+    ? mTable(['製品名','ブランド','企画名称','状態'], S.schedules.map(s=>[`<strong>${esc(s.name)}</strong>`, esc(s.brand), esc(s.plan), `<span class="badge ${s.status==='完了'?'b-gn':'b-bl'}">${esc(s.status)}</span>`, `<button class="btn btn-d btn-sm" onclick="delSchedule('${esc(s.name)}')">削除</button>`]))
+    : '<div class="empty">未登録</div>';
 
-  // 工程リスト
-  const pl = document.getElementById('list-processes');
-  pl.innerHTML = st.processes.length ? masterTable(
-    ['ID','工程名','備考'],
-    st.processes.map(p => [p.id, `<strong>${esc(p.name)}</strong>`, esc(p.note),
-      `<button class="btn btn-danger btn-sm" onclick="deleteProcess('${esc(p.name)}')">削除</button>`])
-  ) : '<div class="empty"><p>工程が未登録です</p></div>';
+  // ステージ
+  document.getElementById('list-st').innerHTML = S.stages.length
+    ? mTable(['順番','ステージ名'], S.stages.map((s,i)=>[i+1, `<strong>${esc(s.name)}</strong>`, `<button class="btn btn-d btn-sm" onclick="delStage('${esc(s.name)}')">削除</button>`]))
+    : '<div class="empty">未登録</div>';
 }
 
-function masterTable(headers, rows) {
-  return `<div class="table-wrap"><table>
+function mTable(headers, rows) {
+  return `<div class="tw"><table>
     <thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}<th></th></tr></thead>
     <tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
   </table></div>`;
 }
 
 // ============================================================
+// セレクト更新
+// ============================================================
+function fillAll() {
+  fill('r-who',  S.craftsmen.map(c=>c.name), '-- 選択 --');
+  ['h-who','s-who'].forEach(id => fill(id, S.craftsmen.map(c=>c.name), 'すべて'));
+  ['h-prod','s-prod'].forEach(id => fill(id, S.schedules.map(s=>s.name), 'すべて'));
+  ['h-stage','s-stage'].forEach(id => fill(id, S.stages.map(s=>s.name), 'すべて'));
+}
+
+function fill(id, items, placeholder) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const cur = el.value;
+  el.innerHTML = `<option value="">${placeholder}</option>`;
+  items.forEach(n => { const o=document.createElement('option'); o.value=o.textContent=n; el.appendChild(o); });
+  el.value = cur;
+}
+
+// ============================================================
 // 初期設定
 // ============================================================
 function runSetup() {
-  if (!confirm('シートの初期設定を実行します。よろしいですか？')) return;
+  if (!confirm('初期設定を実行します。よろしいですか？')) return;
   google.script.run
-    .withSuccessHandler(r => { toast(r.message, 'ok'); loadInitial(); })
-    .withFailureHandler(() => toast('初期設定に失敗しました', 'err'))
+    .withSuccessHandler(r => { toast(r.message,'ok'); reload(); })
+    .withFailureHandler(() => toast('初期設定失敗','err'))
     .setup();
+}
+
+function reload() {
+  google.script.run
+    .withSuccessHandler(d => {
+      S.craftsmen = d.craftsmen||[]; S.schedules = d.schedules||[]; S.stages = d.stages||[];
+      fillAll(); renderLists();
+      // 作業行内のセレクトも更新
+      document.querySelectorAll('.ws').forEach(sel => {
+        const cur = sel.value;
+        sel.innerHTML = '<option value="">-- 選択 --</option>' + S.schedules.map(s=>`<option>${esc(s.name)}</option>`).join('');
+        sel.value = cur;
+      });
+      document.querySelectorAll('.wss').forEach(sel => {
+        const cur = sel.value;
+        sel.innerHTML = '<option value="">-- 選択 --</option>' + S.stages.map(s=>`<option>${esc(s.name)}</option>`).join('');
+        sel.value = cur;
+      });
+    })
+    .getInitialData();
 }
 
 // ============================================================
 // タブ切り替え
 // ============================================================
-function switchTab(name, btn) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  btn.classList.add('active');
+function sw(name, btn) {
+  document.querySelectorAll('.pn').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+name).classList.add('on');
+  btn.classList.add('on');
 }
 
 // ============================================================
 // ユーティリティ
 // ============================================================
-function todayStr() {
-  const d = new Date();
+function today() {
+  const d=new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
+function v(id) { return document.getElementById(id)?.value||null; }
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
-let toastTmr;
+let _tt;
 function toast(msg, type) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'show ' + (type||'');
-  clearTimeout(toastTmr);
-  toastTmr = setTimeout(() => el.className = '', 3800);
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='show '+(type||'');
+  clearTimeout(_tt); _tt=setTimeout(()=>el.className='',3800);
 }
 </script>
 </body>
