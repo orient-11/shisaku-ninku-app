@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>試作課 日報 — プレビュー</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f0f6f6;color:#1a202c;font-size:15px;-webkit-tap-highlight-color:transparent}
+
+/* ヘッダー */
+.hd{background:linear-gradient(135deg,#0BBDC4 0%,#0896A0 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(11,189,196,.35)}
+.hd h1{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.hd small{font-size:12px;opacity:.8;display:block;margin-top:1px}
+.setup-btn{background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.5);color:#fff;padding:8px 18px;border-radius:22px;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s}
+.setup-btn:hover{background:rgba(255,255,255,.3)}
+
+/* タブ */
+.tabs{display:flex;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.tab{flex:1;padding:12px 4px 10px;border:none;background:none;cursor:pointer;font-size:12px;font-weight:700;color:#6b7a8d;border-bottom:3px solid transparent;white-space:nowrap;line-height:1.3;transition:color .15s,border-color .15s;letter-spacing:.02em}
+.tab .ic{display:block;font-size:20px;margin-bottom:2px}
+.tab.on{color:#0BBDC4;border-bottom-color:#0BBDC4}
+.tab:hover:not(.on){color:#2d3748}
+
+/* メイン */
+.main{padding:20px 24px;max-width:1100px;margin:0 auto;padding-bottom:40px}
+.pn{display:none}.pn.on{display:block}
+
+/* カード */
+.card{background:#fff;border-radius:16px;padding:20px 22px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.card-ttl{font-size:14px;font-weight:800;color:#2d3748;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #d6eef0;display:flex;align-items:center;gap:8px;letter-spacing:.01em}
+
+/* ===================== */
+/* 基本情報 PC 1行レイアウト */
+/* ===================== */
+.info-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.info-field{display:flex;flex-direction:column;gap:6px}
+.info-field.f-who  {flex:2;min-width:140px}
+.info-field.f-date {flex:2;min-width:140px}
+.info-field.f-time {flex:1;min-width:100px}
+.info-field.f-break{flex:0 0 90px}
+label{font-size:11px;font-weight:800;color:#4a5568;letter-spacing:.06em;text-transform:uppercase}
+select,input[type="date"],input[type="time"],input[type="number"],input[type="text"]{
+  width:100%;padding:11px 12px;border:2px solid #ccdcde;border-radius:10px;font-size:15px;
+  color:#1a202c;background:#f5fbfb;font-family:inherit;transition:border .2s,box-shadow .2s;
+  -webkit-appearance:none;appearance:none}
+select:focus,input:focus{outline:none;border-color:#0BBDC4;box-shadow:0 0 0 3px rgba(11,189,196,.12);background:#fff}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a8d' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+
+/* 実働時間インライン */
+.info-jikan{background:linear-gradient(135deg,#e0f7f8,#c8eff1);border:2px solid #8dd8db;border-radius:12px;padding:11px 18px;white-space:nowrap;display:flex;flex-direction:column;justify-content:center;gap:2px;flex-shrink:0}
+.ij-label{font-size:10px;font-weight:800;color:#0A6B70;letter-spacing:.07em;text-transform:uppercase}
+.ij-val{font-size:30px;font-weight:900;color:#0BBDC4;line-height:1;letter-spacing:-.02em}
+.ij-sub{font-size:12px;color:#2a9099;font-weight:700}
+.ij-detail{font-size:10px;color:#2a9099;margin-top:2px}
+
+/* ===================== */
+/* ボタン                */
+/* ===================== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 20px;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap;letter-spacing:.02em}
+.btn-p{background:#0BBDC4;color:#fff;box-shadow:0 2px 8px rgba(11,189,196,.35)}.btn-p:hover{background:#0BBDC4cc}
+.btn-s{background:#38a169;color:#fff;box-shadow:0 2px 8px rgba(56,161,105,.3)}.btn-s:hover{background:#2f855a}
+.btn-d{background:#e53e3e;color:#fff}.btn-d:hover{background:#c53030}
+.btn-g{background:#edf5f5;color:#2d3748;border:2px solid #b0cfd2}.btn-g:hover{background:#d6eef0}
+.btn-sm{padding:8px 14px;font-size:12px;border-radius:8px}
+.btn-full{width:100%;padding:15px;font-size:15px;border-radius:12px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* テーブル */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:#edf8f9;padding:10px 12px;text-align:left;font-weight:800;color:#2d3748;border-bottom:2px solid #b0cfd2;white-space:nowrap;font-size:12px;letter-spacing:.04em}
+td{padding:11px 12px;border-bottom:1px solid #d6eef0;font-size:14px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f5fbfb}
+
+/* クロス集計 */
+.cross-table th.stage{text-align:center;font-size:11px;padding:8px 6px}
+.cross-table td.ninku{text-align:center;font-weight:800;color:#0BBDC4}
+.cross-table td.ninku.zero{color:#8aa5a8;font-weight:400}
+.cross-table td.total{background:#e0f7f8;font-weight:800;color:#0A6B70;text-align:center}
+.cross-table td.cost{background:#f0fff4;font-weight:800;color:#276749;text-align:right;white-space:nowrap}
+
+/* バッジ */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:800}
+.b-bl{background:#e0f7f8;color:#0A6B70}
+.b-gn{background:#f0fff4;color:#276749}
+.b-gy{background:#e8ecef;color:#2d3748}
+
+/* フィルター */
+.fbar{background:#f5fbfb;border:2px solid #b0cfd2;border-radius:12px;padding:14px;margin-bottom:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.fg{flex:1;min-width:120px}
+
+/* 統計カード */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.sc{border-radius:14px;padding:16px;text-align:center;color:#fff}
+.sc.bl{background:linear-gradient(135deg,#0BBDC4,#0896A0)}
+.sc.gn{background:linear-gradient(135deg,#38a169,#2f855a)}
+.sc.pp{background:linear-gradient(135deg,#7C5CBF,#5e43a0)}
+.sc.or{background:linear-gradient(135deg,#C87455,#a85a3a)}
+.sv{font-size:28px;font-weight:900;line-height:1}
+.sl{font-size:12px;opacity:.9;margin-top:5px;font-weight:700}
+
+/* トースト */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(140px);background:#2d3748;color:#fff;padding:12px 24px;border-radius:32px;font-size:14px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.2);z-index:9999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-width:80vw;text-align:center;pointer-events:none}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.ok{background:#38a169}#toast.err{background:#e53e3e}#toast.warn{background:#C87455}
+
+/* ローディング・空 */
+.ld{text-align:center;padding:36px;color:#6b7a8d;font-size:14px}
+.empty{text-align:center;padding:36px;color:#6b7a8d;font-size:14px}
+
+/* ===================== */
+/* タイムライン          */
+/* ===================== */
+.tl-hint{font-size:11px;font-weight:600;color:#6b7a8d;margin-left:auto}
+
+/* 横並びブロックエリア */
+.tl-cols-wrap{overflow-x:auto;padding-bottom:8px}
+.tl-cols{display:flex;gap:10px;align-items:flex-end;min-width:max-content;padding:4px 2px 2px}
+
+/* 個別の列 */
+.tl-col{display:flex;flex-direction:column;align-items:center;gap:8px;width:90px;flex-shrink:0;user-select:none;-webkit-user-select:none}
+
+/* 色付きブロック */
+.tl-block{
+  width:100%;border-radius:12px;position:relative;overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,.18);cursor:pointer;
+  transition:box-shadow .15s;
+}
+.tl-block:hover{box-shadow:0 4px 18px rgba(0,0,0,.25)}
+.tl-block-inner{padding:10px 8px 26px;color:#fff;overflow:hidden;height:calc(100% - 0px)}
+.tl-block-name{font-size:12px;font-weight:800;line-height:1.3;word-break:break-all}
+.tl-block-stage{font-size:11px;opacity:.85;margin-top:3px;line-height:1.3}
+.tl-block-ninku{font-size:11px;opacity:.8;margin-top:4px}
+
+/* ドラッグハンドル */
+.tl-handle{
+  position:absolute;bottom:0;left:0;right:0;height:24px;
+  background:rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;
+  cursor:ns-resize;touch-action:none;
+}
+.tl-handle::after{content:'';display:block;width:26px;height:3px;background:rgba(255,255,255,.75);border-radius:2px}
+
+/* 列フッター */
+.tl-col-foot{font-size:13px;font-weight:900;color:#2d3748;text-align:center;line-height:1.3}
+.tl-col-foot small{display:block;font-size:10px;font-weight:600;color:#6b7a8d;margin-top:1px}
+
+/* 追加ボタン列（固定高さ） */
+.tl-col-add{
+  width:90px;height:120px;flex-shrink:0;
+  border:2.5px dashed #8dd8db;border-radius:12px;background:#f5fbfb;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;color:#2a9099;font-weight:700;gap:4px;
+  transition:background .15s,border-color .15s;
+}
+.tl-col-add:hover{background:#d6eef0;border-color:#0BBDC4}
+.tl-col-add-icon{font-size:26px;line-height:1}
+.tl-col-add-text{font-size:11px;font-weight:700}
+
+/* ===================== */
+/* 合計 vs 実働 比較     */
+/* ===================== */
+.tl-compare{
+  display:flex;align-items:stretch;margin-top:16px;
+  border-radius:14px;overflow:hidden;border:2px solid #d6eef0;
+}
+.tl-cmp-side{flex:1;padding:16px 20px;text-align:center}
+.tl-cmp-side.used{background:linear-gradient(135deg,#e0f7f8,#c8eff1)}
+.tl-cmp-side.jikan{background:#f5fbfb}
+.tl-cmp-label{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.tl-cmp-side.used .tl-cmp-label{color:#0A6B70}
+.tl-cmp-side.jikan .tl-cmp-label{color:#6b7a8d}
+.tl-cmp-val{font-size:34px;font-weight:900;line-height:1;letter-spacing:-.02em}
+.tl-cmp-side.used .tl-cmp-val{color:#0BBDC4}
+.tl-cmp-side.jikan .tl-cmp-val{color:#2d3748}
+.tl-cmp-val.over{color:#e53e3e}
+.tl-cmp-sub{font-size:12px;font-weight:700;margin-top:5px}
+.tl-cmp-side.used .tl-cmp-sub{color:#2a9099}
+.tl-cmp-side.jikan .tl-cmp-sub{color:#6b7a8d}
+.tl-cmp-divider{width:2px;background:#d6eef0;flex-shrink:0}
+.tl-cmp-diff{
+  background:#fff;padding:14px 16px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:90px;
+}
+.tl-cmp-diff-val{font-size:16px;font-weight:900;color:#2d3748}
+.tl-cmp-diff-label{font-size:10px;font-weight:700;color:#6b7a8d;margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
+.tl-cmp-diff.ok .tl-cmp-diff-val{color:#38a169}
+.tl-cmp-diff.over .tl-cmp-diff-val{color:#e53e3e}
+
+/* 凡例 */
+.tl-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid #d6eef0}
+.tl-leg-item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#2d3748}
+.tl-leg-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+
+/* ===================== */
+/* モーダル              */
+/* ===================== */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:400;display:none;align-items:center;justify-content:center}
+.modal-bg.show{display:flex}
+.modal-sheet{background:#fff;border-radius:16px;padding:28px 28px 32px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(0,0,0,.2);animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal-ttl{font-size:17px;font-weight:800;color:#2d3748;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.modal-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0}
+.modal-field{margin-bottom:14px}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions .btn{flex:1}
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<header class="hd">
+  <div>
+    <h1>🧵 試作課 日報</h1>
+    <small>作業時間・人工管理</small>
+  </div>
+  <button class="setup-btn" onclick="toast('※ プレビュー版です','warn')">初期設定</button>
+</header>
+
+<!-- タブ -->
+<nav class="tabs">
+  <button class="tab on" onclick="sw('report',this)"><span class="ic">📝</span>日報入力</button>
+  <button class="tab"    onclick="sw('history',this)"><span class="ic">📋</span>履歴</button>
+  <button class="tab"    onclick="sw('summary',this)"><span class="ic">📊</span>集計</button>
+  <button class="tab"    onclick="sw('settings',this)"><span class="ic">⚙️</span>設定</button>
+</nav>
+
+<main class="main">
+
+<!-- ============ TAB 1: 日報入力 ============ -->
+<div id="tab-report" class="pn on">
+
+  <!-- 基本情報：PC 1行レイアウト -->
+  <div class="card">
+    <div class="card-ttl">👷 基本情報</div>
+    <div class="info-row">
+      <!-- 職人 -->
+      <div class="info-field f-who">
+        <label>職人</label>
+        <select id="r-who">
+          <option value="">-- 選択 --</option>
+          <option>田中 太郎</option>
+          <option>佐藤 花子</option>
+          <option>鈴木 一郎</option>
+        </select>
+      </div>
+      <!-- 作業日 -->
+      <div class="info-field f-date">
+        <label>作業日</label>
+        <input type="date" id="r-date">
+      </div>
+      <!-- 出勤 -->
+      <div class="info-field f-time">
+        <label>出勤</label>
+        <input type="time" id="r-in" value="08:30"
+          onchange="snapTime('r-in');calcJikan()" oninput="calcJikan()">
+      </div>
+      <!-- 退勤 -->
+      <div class="info-field f-time">
+        <label>退勤</label>
+        <input type="time" id="r-out" value="17:45"
+          onchange="snapTime('r-out');calcJikan()" oninput="calcJikan()">
+      </div>
+      <!-- 休憩 -->
+      <div class="info-field f-break">
+        <label>休憩(分)</label>
+        <input type="number" id="r-break" value="75" min="0" step="5" oninput="calcJikan()">
+      </div>
+      <!-- 実働時間（インライン表示） -->
+      <div class="info-jikan">
+        <div class="ij-label">実働時間</div>
+        <div class="ij-val" id="jikan-val">555分</div>
+        <div class="ij-sub" id="jikan-ninku">1.16人工</div>
+        <div class="ij-detail" id="jikan-sub">8:30〜17:45 休憩75分</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- タイムライン -->
+  <div class="card">
+    <div class="card-ttl">
+      ⏱ 作業タイムライン
+      <span class="tl-hint">クリック→追加 / 編集　ブロック下端ドラッグ→時間調整</span>
+    </div>
+
+    <div class="tl-cols-wrap">
+      <div class="tl-cols" id="tl-cols"></div>
+    </div>
+
+    <!-- 合計 vs 実働 比較 -->
+    <div class="tl-compare">
+      <div class="tl-cmp-side used">
+        <div class="tl-cmp-label">作業合計</div>
+        <div class="tl-cmp-val" id="cmp-used">0分</div>
+        <div class="tl-cmp-sub" id="cmp-used-sub">0.00人工</div>
+      </div>
+      <div class="tl-cmp-divider"></div>
+      <div class="tl-cmp-diff" id="cmp-diff">
+        <div class="tl-cmp-diff-val" id="cmp-diff-val">—</div>
+        <div class="tl-cmp-diff-label" id="cmp-diff-label">残り</div>
+      </div>
+      <div class="tl-cmp-divider"></div>
+      <div class="tl-cmp-side jikan">
+        <div class="tl-cmp-label">実働時間</div>
+        <div class="tl-cmp-val" id="cmp-jikan">555分</div>
+        <div class="tl-cmp-sub" id="cmp-jikan-sub">1.16人工</div>
+      </div>
+    </div>
+
+    <div class="tl-legend" id="tl-legend"></div>
+  </div>
+
+  <!-- 提出ボタン -->
+  <button class="btn btn-s btn-full" onclick="demoSubmit()">✔ 日報を提出する</button>
+
+</div>
+
+<!-- ============ TAB 2: 履歴 ============ -->
+<div id="tab-history" class="pn">
+  <div class="card">
+    <div class="card-ttl">🔍 絞り込み</div>
+    <div class="fbar">
+      <div class="row">
+        <div class="fg"><label>職人</label><select><option>すべて</option><option>田中 太郎</option><option>佐藤 花子</option></select></div>
+        <div class="fg"><label>製品</label><select><option>すべて</option><option>バナナショルダー</option><option>ミニトート</option></select></div>
+        <div class="fg"><label>ステージ</label><select><option>すべて</option><option>モック</option><option>1st</option><option>2nd</option></select></div>
+        <div class="fg"><label>期間（開始）</label><input type="date"></div>
+        <div class="fg"><label>期間（終了）</label><input type="date"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button class="btn btn-p btn-sm" onclick="loadDemoHistory()" style="flex:1">検索</button>
+        <button class="btn btn-g btn-sm">クリア</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-ttl">作業履歴</div>
+    <div class="tw"><table>
+      <thead><tr><th>日付</th><th>職人</th><th>製品</th><th>ステージ</th><th>作業時間</th><th>人工数</th><th>労務費</th><th>メモ</th></tr></thead>
+      <tbody id="h-body"><tr><td colspan="8" class="ld">検索ボタンを押してください</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ============ TAB 3: 集計 ============ -->
+<div id="tab-summary" class="pn">
+  <div class="card">
+    <div class="card-ttl">🔍 集計フィルター</div>
+    <div class="fbar">
+      <div class="row">
+        <div class="fg"><label>職人</label><select><option>すべて</option><option>田中 太郎</option></select></div>
+        <div class="fg"><label>製品</label><select><option>すべて</option><option>バナナショルダー</option></select></div>
+        <div class="fg"><label>ステージ</label><select><option>すべて</option><option>モック</option></select></div>
+        <div class="fg"><label>期間（開始）</label><input type="date"></div>
+        <div class="fg"><label>期間（終了）</label><input type="date"></div>
+      </div>
+      <button class="btn btn-p btn-sm" onclick="loadDemoSummary()" style="margin-top:4px">集計する</button>
+    </div>
+  </div>
+  <div id="s-stats" class="sg" style="display:none"></div>
+  <div class="card" id="s-cross-card" style="display:none">
+    <div class="card-ttl">📋 製品 × ステージ 人工集計表</div>
+    <div class="tw"><table class="cross-table" id="s-cross-table"></table></div>
+    <div style="font-size:12px;color:#6b7a8d;margin-top:12px">※ 人工数 = 作業時間(分) ÷ 480　／　労務費 = 作業時間(分) × 42円</div>
+  </div>
+</div>
+
+<!-- ============ TAB 4: 設定 ============ -->
+<div id="tab-settings" class="pn">
+  <div class="card">
+    <div class="card-ttl">👷 職人管理</div>
+    <div class="row">
+      <div class="fg"><label>名前</label><input type="text" placeholder="田中 太郎"></div>
+      <div class="fg"><label>備考</label><input type="text" placeholder="担当工程など"></div>
+    </div>
+    <button class="btn btn-p btn-sm" onclick="toast('追加しました（プレビュー）','ok')">追加</button>
+    <div style="margin-top:16px"><div class="tw"><table>
+      <thead><tr><th>ID</th><th>名前</th><th>備考</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>田中 太郎</strong></td><td>裁断担当</td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+        <tr><td>2</td><td><strong>佐藤 花子</strong></td><td>縫製担当</td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+        <tr><td>3</td><td><strong>鈴木 一郎</strong></td><td>仕上げ担当</td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+      </tbody>
+    </table></div></div>
+  </div>
+  <div class="card">
+    <div class="card-ttl">👜 製品管理</div>
+    <div class="row">
+      <div class="fg" style="flex:3"><label>製品名</label><input type="text" placeholder="例: バナナショルダー"></div>
+      <div class="fg"><label>ブランド</label><input type="text" placeholder="TSUCHIYA など"></div>
+      <div class="fg"><label>企画名称</label><input type="text" placeholder="XA新型ショルダー など"></div>
+      <div class="fg"><label>ステータス</label><select><option>進行中</option><option>完了</option><option>保留</option></select></div>
+    </div>
+    <button class="btn btn-p btn-sm" onclick="toast('追加しました（プレビュー）','ok')">追加</button>
+    <div style="margin-top:16px"><div class="tw"><table>
+      <thead><tr><th>製品名</th><th>ブランド</th><th>状態</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><strong>バナナショルダー</strong></td><td>TSUCHIYA</td><td><span class="badge b-bl">進行中</span></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+        <tr><td><strong>ミニトート</strong></td><td>TSUCHIYA</td><td><span class="badge b-bl">進行中</span></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+        <tr><td><strong>クラッチバッグ</strong></td><td>別注</td><td><span class="badge b-gn">完了</span></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+      </tbody>
+    </table></div></div>
+  </div>
+  <div class="card">
+    <div class="card-ttl">🔢 ステージ管理</div>
+    <div class="row">
+      <div class="fg"><label>ステージ名</label><input type="text" placeholder="例: 量産前確認"></div>
+    </div>
+    <button class="btn btn-p btn-sm" onclick="toast('追加しました（プレビュー）','ok')">追加</button>
+    <div style="margin-top:16px"><div class="tw"><table>
+      <thead><tr><th>順番</th><th>ステージ名</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>モック</strong></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+        <tr><td>2</td><td><strong>1st</strong></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+        <tr><td>3</td><td><strong>2nd</strong></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+        <tr><td>4</td><td><strong>最終（展示会）</strong></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+      </tbody>
+    </table></div></div>
+  </div>
+</div>
+</main>
+
+<!-- モーダル（PC中央表示） -->
+<div class="modal-bg" id="modal-bg" onclick="bgClose(event)">
+  <div class="modal-sheet">
+    <div class="modal-ttl">
+      <div class="modal-dot" id="modal-dot"></div>
+      <span id="modal-title">作業を追加</span>
+    </div>
+    <div class="modal-field">
+      <label>製品名</label>
+      <select id="m-prod" style="margin-top:6px">
+        <option value="">-- 選択 --</option>
+        <option>バナナショルダー</option>
+        <option>ミニトート</option>
+        <option>クラッチバッグ</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>ステージ</label>
+      <select id="m-stage" style="margin-top:6px">
+        <option value="">-- 選択 --</option>
+        <option>モック</option>
+        <option>1st</option>
+        <option>2nd</option>
+        <option>最終（展示会）</option>
+        <option>色増し前修正</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>メモ（任意）</label>
+      <input type="text" id="m-memo" placeholder="作業内容・特記事項" style="margin-top:6px">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-p" onclick="saveBlock()">保存</button>
+      <button class="btn btn-g" onclick="closeModal()">キャンセル</button>
+      <button class="btn btn-d" id="modal-del" style="display:none" onclick="deleteBlock()">削除</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ===================== */
+/* 定数・状態             */
+/* ===================== */
+const COLORS   = ['#0BBDC4','#C87455','#7C5CBF','#F5C540','#38a169','#e74c3c','#3498db','#e67e22','#16a085','#8e44ad'];
+const BASE_H   = 300; // 実働時間 = BASE_H px（スケール基準）
+
+let tlRows        = [];
+let nextId        = 1;
+let colorIdx      = 0;
+let editingId     = null;
+let dragState     = null;
+let recentlyDragged = false; // ドラッグ後のクリック誤発火防止
+
+/* ===================== */
+/* 初期化                */
+/* ===================== */
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('r-date').value = today();
+  calcJikan();
+
+  // タイムラインのイベント委任（一度だけ登録）
+  const cols = document.getElementById('tl-cols');
+  cols.addEventListener('click',      onColClick);
+  cols.addEventListener('mousedown',  onColPointerDown);
+  cols.addEventListener('touchstart', onColPointerDown, {passive:false});
+});
+
+/* ===================== */
+/* 時間計算              */
+/* ===================== */
+function snapTime(id) {
+  const el = document.getElementById(id);
+  if (!el.value) return;
+  const [h,m] = el.value.split(':').map(Number);
+  const t = h*60 + Math.round(m/5)*5;
+  el.value = pad(Math.floor(t/60)%24)+':'+pad(t%60);
+}
+
+function calcJikan() {
+  const inp = document.getElementById('r-in').value;
+  const out = document.getElementById('r-out').value;
+  const brk = Number(document.getElementById('r-break').value)||0;
+  const min = calcMin(inp, out, brk);
+  document.getElementById('jikan-val').textContent   = min + '分';
+  document.getElementById('jikan-ninku').textContent = (min/480).toFixed(2) + '人工';
+  document.getElementById('jikan-sub').textContent   = `${inp}〜${out} 休憩${brk}分`;
+  renderTimeline();
+}
+
+function calcMin(inp, out, brk) {
+  if (!inp||!out) return 480;
+  const [ih,im] = inp.split(':').map(Number);
+  const [oh,om] = out.split(':').map(Number);
+  return Math.max(0, (oh*60+om)-(ih*60+im)-(brk||0));
+}
+
+function getJikan() {
+  return calcMin(
+    document.getElementById('r-in').value,
+    document.getElementById('r-out').value,
+    Number(document.getElementById('r-break').value)||0
+  );
+}
+
+/* ===================== */
+/* タイムライン描画      */
+/* ===================== */
+function renderTimeline() {
+  const totalMin = getJikan();
+  const scale    = totalMin > 0 ? BASE_H / totalMin : 1; // px per min
+
+  const cols = document.getElementById('tl-cols');
+  cols.innerHTML = '';
+
+  tlRows.forEach(row => {
+    const rawH   = row.minutes * scale;
+    const h      = Math.max(56, Math.round(rawH));
+    const tall   = h >= 100;
+    const mid    = h >= 72;
+
+    const col = document.createElement('div');
+    col.className  = 'tl-col';
+    col.dataset.id = row.id;
+    col.innerHTML  = `
+      <div class="tl-block" style="height:${h}px;background:${row.color};"
+           data-action="edit" data-id="${row.id}">
+        <div class="tl-block-inner">
+          <div class="tl-block-name">${esc(row.productName||'未設定')}</div>
+          ${mid  ? `<div class="tl-block-stage">${esc(row.stageName||'—')}</div>` : ''}
+          ${tall ? `<div class="tl-block-ninku">${(row.minutes/480).toFixed(2)}人工</div>` : ''}
+        </div>
+        <div class="tl-handle" data-action="resize" data-id="${row.id}"></div>
+      </div>
+      <div class="tl-col-foot">
+        ${row.minutes}分
+        <small>${(row.minutes/480).toFixed(2)}人工</small>
+      </div>
+    `;
+    cols.appendChild(col);
+  });
+
+  // 追加ボタン: 高さ固定（ブロックの高さに連動しない）
+  const addBtn = document.createElement('div');
+  addBtn.className    = 'tl-col-add';
+  addBtn.dataset.action = 'add';
+  addBtn.innerHTML    = `
+    <div class="tl-col-add-icon">＋</div>
+    <div class="tl-col-add-text">作業追加</div>
+  `;
+  cols.appendChild(addBtn);
+
+  updateCompare();
+  renderLegend();
+}
+
+function renderLegend() {
+  const leg = document.getElementById('tl-legend');
+  if (!tlRows.length) { leg.innerHTML = ''; return; }
+  leg.innerHTML = tlRows.map(r => `
+    <div class="tl-leg-item">
+      <div class="tl-leg-dot" style="background:${r.color}"></div>
+      <span>${esc(r.productName||'未設定')} / ${esc(r.stageName||'—')}</span>
+    </div>
+  `).join('');
+}
+
+function updateCompare() {
+  const totalMin = getJikan();
+  const usedMin  = tlRows.reduce((s,r) => s+r.minutes, 0);
+  const diff     = totalMin - usedMin;
+
+  document.getElementById('cmp-used').textContent     = usedMin + '分';
+  document.getElementById('cmp-used-sub').textContent = (usedMin/480).toFixed(2) + '人工';
+  document.getElementById('cmp-jikan').textContent    = totalMin + '分';
+  document.getElementById('cmp-jikan-sub').textContent = (totalMin/480).toFixed(2) + '人工';
+
+  const usedEl  = document.getElementById('cmp-used');
+  const diffBox = document.getElementById('cmp-diff');
+  const diffVal = document.getElementById('cmp-diff-val');
+  const diffLbl = document.getElementById('cmp-diff-label');
+
+  if (usedMin === totalMin && totalMin > 0) {
+    usedEl.className  = 'tl-cmp-val';
+    diffBox.className = 'tl-cmp-diff ok';
+    diffVal.textContent = '✔';
+    diffLbl.textContent = 'ぴったり';
+  } else if (usedMin > totalMin) {
+    usedEl.className  = 'tl-cmp-val over';
+    diffBox.className = 'tl-cmp-diff over';
+    diffVal.textContent = '+' + (usedMin - totalMin) + '分';
+    diffLbl.textContent = '残業';
+  } else {
+    usedEl.className  = 'tl-cmp-val';
+    diffBox.className = 'tl-cmp-diff';
+    diffVal.textContent = diff > 0 ? diff + '分' : '—';
+    diffLbl.textContent = '残り';
+  }
+}
+
+/* ===================== */
+/* ドラッグ操作          */
+/* ===================== */
+function onColPointerDown(e) {
+  const el = e.target.closest('[data-action="resize"]');
+  if (!el) return;
+  e.preventDefault();
+  e.stopPropagation();
+
+  // 既存ドラッグがあればクリーンアップ
+  if (dragState) {
+    document.removeEventListener('mousemove', onDragMove);
+    document.removeEventListener('touchmove', onDragMove);
+    document.removeEventListener('mouseup',   onDragEnd);
+    document.removeEventListener('touchend',  onDragEnd);
+  }
+
+  const clientY  = e.touches ? e.touches[0].clientY : e.clientY;
+  const rowId    = parseInt(el.dataset.id);
+  const row      = tlRows.find(r => r.id === rowId);
+  if (!row) return;
+
+  const totalMin = getJikan();
+  const scale    = totalMin > 0 ? BASE_H / totalMin : 1;
+
+  dragState = { rowId, startY:clientY, startMin:row.minutes, scale, moved:false };
+
+  document.addEventListener('mousemove', onDragMove);
+  document.addEventListener('touchmove', onDragMove, {passive:false});
+  document.addEventListener('mouseup',   onDragEnd);
+  document.addEventListener('touchend',  onDragEnd);
+}
+
+function onDragMove(e) {
+  if (!dragState) return;
+  e.preventDefault();
+
+  const clientY  = e.touches ? e.touches[0].clientY : e.clientY;
+  const {rowId, startY, startMin, scale} = dragState;
+  const deltaY   = clientY - startY;
+  const deltaMin = Math.round(deltaY / scale / 5) * 5;
+
+  if (Math.abs(deltaMin) >= 5) dragState.moved = true;
+
+  const row = tlRows.find(r => r.id === rowId);
+  if (!row) return;
+  row.minutes = Math.max(5, startMin + deltaMin); // 残業対応: 上限なし
+  renderTimeline();
+}
+
+function onDragEnd(e) {
+  if (!dragState) return;
+  // ドラッグが実際に動いた場合のみフラグを立てる（クリック誤発火防止）
+  if (dragState.moved) recentlyDragged = true;
+  dragState = null;
+
+  document.removeEventListener('mousemove', onDragMove);
+  document.removeEventListener('touchmove', onDragMove);
+  document.removeEventListener('mouseup',   onDragEnd);
+  document.removeEventListener('touchend',  onDragEnd);
+}
+
+/* ===================== */
+/* クリック操作（委任）  */
+/* ===================== */
+function onColClick(e) {
+  // ドラッグ直後のクリックは無視
+  if (recentlyDragged) { recentlyDragged = false; return; }
+  // ドラッグ中のクリックは無視
+  if (dragState) return;
+
+  const actionEl = e.target.closest('[data-action]');
+  if (!actionEl) return;
+
+  const action = actionEl.dataset.action;
+  const id     = parseInt(actionEl.dataset.id);
+
+  if (action === 'resize') return; // ハンドルクリックは無視
+  if (action === 'edit' && !isNaN(id)) openEditModal(id);
+  else if (action === 'add')           openAddModal();
+}
+
+/* ===================== */
+/* モーダル操作          */
+/* ===================== */
+function openAddModal() {
+  editingId = null;
+  const color = COLORS[colorIdx % COLORS.length];
+  document.getElementById('modal-title').textContent     = '作業を追加';
+  document.getElementById('modal-dot').style.background  = color;
+  document.getElementById('m-prod').value  = '';
+  document.getElementById('m-stage').value = '';
+  document.getElementById('m-memo').value  = '';
+  document.getElementById('modal-del').style.display = 'none';
+  document.getElementById('modal-bg').classList.add('show');
+}
+
+function openEditModal(id) {
+  const row = tlRows.find(r => r.id === id);
+  if (!row) return;
+  editingId = id;
+  document.getElementById('modal-title').textContent     = '作業を編集';
+  document.getElementById('modal-dot').style.background  = row.color;
+  document.getElementById('m-prod').value  = row.productName;
+  document.getElementById('m-stage').value = row.stageName;
+  document.getElementById('m-memo').value  = row.memo || '';
+  document.getElementById('modal-del').style.display = '';
+  document.getElementById('modal-bg').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('show');
+}
+
+function bgClose(e) {
+  if (e.target === document.getElementById('modal-bg')) closeModal();
+}
+
+function saveBlock() {
+  const prod  = document.getElementById('m-prod').value.trim();
+  const stage = document.getElementById('m-stage').value.trim();
+  const memo  = document.getElementById('m-memo').value.trim();
+  if (!prod)  { toast('製品名を選択してください','err'); return; }
+  if (!stage) { toast('ステージを選択してください','err'); return; }
+
+  if (editingId === null) {
+    const totalMin = getJikan();
+    const usedMin  = tlRows.reduce((s,r) => s+r.minutes, 0);
+    const remain   = Math.max(5, totalMin - usedMin);
+    const defMin   = Math.min(remain, Math.max(5, Math.round(remain / 2 / 5) * 5));
+    const color    = COLORS[colorIdx % COLORS.length];
+    colorIdx++;
+    tlRows.push({id:nextId++, productName:prod, stageName:stage, minutes:defMin, color, memo});
+    toast(`追加しました（${defMin}分）`, 'ok');
+  } else {
+    const row = tlRows.find(r => r.id === editingId);
+    if (row) { row.productName=prod; row.stageName=stage; row.memo=memo; }
+    toast('更新しました', 'ok');
+  }
+
+  closeModal();
+  renderTimeline();
+}
+
+function deleteBlock() {
+  tlRows = tlRows.filter(r => r.id !== editingId);
+  closeModal();
+  renderTimeline();
+  toast('削除しました', 'warn');
+}
+
+/* ===================== */
+/* 提出                  */
+/* ===================== */
+function demoSubmit() {
+  if (!document.getElementById('r-who').value) { toast('職人を選択してください','err'); return; }
+  if (!tlRows.length) { toast('作業を追加してください','err'); return; }
+  toast('日報を提出しました！（プレビュー動作）','ok');
+}
+
+/* ===================== */
+/* タブ切替              */
+/* ===================== */
+function sw(name, btn) {
+  document.querySelectorAll('.pn').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+  document.getElementById('tab-'+name).classList.add('on');
+  btn.classList.add('on');
+}
+
+/* ===================== */
+/* 履歴・集計（デモ）    */
+/* ===================== */
+function loadDemoHistory() {
+  const data = [
+    {date:'2026-04-17',craftsmanName:'田中 太郎',productName:'バナナショルダー',stageName:'1st',  minutes:180,ninkuCount:0.375,cost:7560, memo:'本体縫製'},
+    {date:'2026-04-17',craftsmanName:'佐藤 花子',productName:'ミニトート',      stageName:'モック',minutes:240,ninkuCount:0.500,cost:10080,memo:'パターン確認'},
+    {date:'2026-04-16',craftsmanName:'鈴木 一郎',productName:'クラッチバッグ',  stageName:'2nd',  minutes:120,ninkuCount:0.250,cost:5040, memo:'仕上げ確認'},
+    {date:'2026-04-16',craftsmanName:'田中 太郎',productName:'バナナショルダー',stageName:'モック',minutes:300,ninkuCount:0.625,cost:12600,memo:'型紙作成'},
+    {date:'2026-04-15',craftsmanName:'佐藤 花子',productName:'クラッチバッグ',  stageName:'1st',  minutes:210,ninkuCount:0.438,cost:8820, memo:''},
+  ];
+  document.getElementById('h-body').innerHTML = data.map(l=>`
+    <tr>
+      <td>${l.date}</td>
+      <td><span class="badge b-bl">${l.craftsmanName}</span></td>
+      <td>${l.productName}</td>
+      <td><span class="badge b-gy">${l.stageName}</span></td>
+      <td style="font-weight:800">${l.minutes}分</td>
+      <td style="color:#0BBDC4;font-weight:800">${l.ninkuCount.toFixed(3)}</td>
+      <td style="color:#276749;font-weight:700">¥${l.cost.toLocaleString()}</td>
+      <td style="color:#6b7a8d;font-size:13px">${l.memo||'—'}</td>
+    </tr>
+  `).join('');
+}
+
+function loadDemoSummary() {
+  document.getElementById('s-stats').style.display = 'grid';
+  document.getElementById('s-stats').innerHTML = `
+    <div class="sc bl"><div class="sv">8.24</div><div class="sl">合計人工数</div></div>
+    <div class="sc gn"><div class="sv">65.9h</div><div class="sl">合計作業時間</div></div>
+    <div class="sc or"><div class="sv">¥17万</div><div class="sl">合計労務費</div></div>
+    <div class="sc pp"><div class="sv">3</div><div class="sl">製品数</div></div>
+  `;
+  const stages = ['モック','1st','2nd','最終（展示会）'];
+  const rows = [
+    {productName:'バナナショルダー',stages:{モック:300,'1st':480,'2nd':240,'最終（展示会）':480},totalNinku:3.125,totalCost:63000},
+    {productName:'ミニトート',      stages:{モック:480,'1st':360,'2nd':0,  '最終（展示会）':0},  totalNinku:1.750,totalCost:35280},
+    {productName:'クラッチバッグ',  stages:{モック:120,'1st':210,'2nd':120,'最終（展示会）':240},totalNinku:1.438,totalCost:28980},
+  ];
+  const totNinku = rows.reduce((s,r)=>s+r.totalNinku,0);
+  const totCost  = rows.reduce((s,r)=>s+r.totalCost,0);
+  let html = `<thead><tr><th>製品名</th>${stages.map(st=>`<th class="stage">${st}</th>`).join('')}<th class="stage">合計人工</th><th class="stage">労務費</th></tr></thead><tbody>`;
+  rows.forEach(row=>{
+    html+=`<tr><td><strong>${row.productName}</strong></td>${stages.map(st=>{const m=row.stages[st]||0;return`<td class="ninku${m===0?' zero':''}">${m>0?(m/480).toFixed(2):'—'}</td>`}).join('')}<td class="total">${row.totalNinku.toFixed(2)}</td><td class="cost">¥${row.totalCost.toLocaleString()}</td></tr>`;
+  });
+  html+=`<tr style="background:#d6eef0;font-weight:800"><td>【合計】</td>${stages.map(st=>{const m=rows.reduce((s,r)=>s+(r.stages[st]||0),0);return`<td class="ninku">${m>0?(m/480).toFixed(2):'—'}</td>`}).join('')}<td class="total">${totNinku.toFixed(2)}</td><td class="cost">¥${totCost.toLocaleString()}</td></tr></tbody>`;
+  document.getElementById('s-cross-table').innerHTML = html;
+  document.getElementById('s-cross-card').style.display = 'block';
+}
+
+/* ===================== */
+/* ユーティリティ        */
+/* ===================== */
+function today() {
+  const d=new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function pad(n){ return String(n).padStart(2,'0'); }
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+let _tt;
+function toast(msg, type) {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='show '+(type||'');
+  clearTimeout(_tt); _tt=setTimeout(()=>el.className='',3800);
+}
+</script>
+</body>
+</html>
