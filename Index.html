@@ -6,12 +6,6 @@
 <title>試作課 日報</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-/* === vivoo カラーパレット ===
-   ティール    : #0BBDC4  (プライマリ)
-   テラコッタ  : #C87455  (アクセント暖色)
-   マスタード  : #F5C540  (アクセント黄)
-   パープル    : #7C5CBF  (アクセント紫)
-   ========================================= */
 body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f0f6f6;color:#1a202c;font-size:16px;-webkit-tap-highlight-color:transparent}
 
 /* ヘッダー */
@@ -29,12 +23,12 @@ body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f0f
 .tab.on{color:#0BBDC4;border-bottom-color:#0BBDC4}
 
 /* メイン */
-.main{padding:16px;max-width:860px;margin:0 auto;padding-bottom:32px}
+.main{padding:16px;max-width:1200px;margin:0 auto;padding-bottom:32px}
 .pn{display:none}.pn.on{display:block}
 
 /* カード */
 .card{background:#fff;border-radius:16px;padding:20px 18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.card-ttl{font-size:14px;font-weight:800;color:#2d3748;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #d6eef0;display:flex;align-items:center;gap:8px;letter-spacing:.01em}
+.card-ttl{font-size:14px;font-weight:800;color:#2d3748;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #d6eef0;display:flex;align-items:center;gap:8px;letter-spacing:.01em;flex-wrap:wrap}
 
 /* フォーム */
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
@@ -53,33 +47,6 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .jikan-box .sub{font-size:12px;color:#2a9099;margin-top:4px}
 .jikan-box .jninku{font-size:12px;color:#2a9099;text-align:right;margin-top:3px;font-weight:700}
 
-/* 作業行 */
-.wrow{background:#fff;border:2px solid #ccdcde;border-radius:14px;padding:16px 14px 14px;margin-bottom:12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.wrow .del{position:absolute;top:12px;right:12px;background:#fee2e2;border:none;font-size:16px;color:#e53e3e;cursor:pointer;padding:6px 10px;border-radius:8px;transition:background .15s;line-height:1;font-weight:700}
-.wrow .del:active{background:#fecaca}
-.wrow .row{margin-bottom:10px}
-
-/* 分入力 */
-.min-wrap{position:relative}
-.min-wrap input{padding-right:34px;font-weight:800;font-size:18px;text-align:center}
-.min-wrap::after{content:'分';position:absolute;right:13px;top:50%;transform:translateY(-50%);color:#6b7a8d;font-size:14px;font-weight:700;pointer-events:none}
-.min-hint{font-size:12px;color:#4a5568;margin-top:5px;text-align:center;font-weight:700}
-
-/* 合計バー */
-.total-card{background:#fff;border:2px solid #ccdcde;border-radius:14px;padding:16px;margin-bottom:14px;transition:border-color .3s,box-shadow .3s;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.total-card.ok{border-color:#38a169;box-shadow:0 2px 12px rgba(56,161,105,.15)}
-.total-card.over{border-color:#e53e3e;box-shadow:0 2px 12px rgba(229,62,62,.15)}
-.total-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.total-num{font-size:28px;font-weight:900;color:#2d3748;line-height:1}
-.total-sub{font-size:12px;color:#4a5568;margin-top:3px;font-weight:600}
-.total-num.ok{color:#38a169}
-.total-num.over{color:#e53e3e}
-.total-hint{font-size:13px;color:#4a5568;font-weight:700;text-align:right}
-.track{height:12px;background:#d6eef0;border-radius:8px;overflow:hidden}
-.fill{height:100%;border-radius:8px;transition:width .4s cubic-bezier(.4,0,.2,1),background .3s;background:#0BBDC4;min-width:0}
-.fill.ok{background:linear-gradient(90deg,#38a169,#48bb78)}
-.fill.over{background:linear-gradient(90deg,#e53e3e,#fc8181)}
-
 /* ボタン */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:13px 20px;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap;letter-spacing:.02em}
 .btn-p{background:#0BBDC4;color:#fff;box-shadow:0 2px 8px rgba(11,189,196,.35)}.btn-p:active{background:#0896A0;transform:scale(.98)}
@@ -89,10 +56,6 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .btn-sm{padding:9px 16px;font-size:13px;border-radius:10px}
 .btn-full{width:100%;padding:17px;font-size:16px;border-radius:14px}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none !important}
-
-/* 作業追加ボタン */
-.add-row-btn{width:100%;padding:15px;background:#f5fbfb;border:2px dashed #8dd8db;border-radius:14px;color:#2a9099;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;margin-bottom:14px;font-family:inherit}
-.add-row-btn:active{background:#d6eef0;border-color:#0BBDC4}
 
 /* テーブル */
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -119,7 +82,7 @@ tr:active td{background:#f5fbfb}
 /* フィルター */
 .fbar{background:#f5fbfb;border:2px solid #b0cfd2;border-radius:12px;padding:14px;margin-bottom:14px}
 
-/* 統計カード (vivooカラー) */
+/* 統計カード */
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .sc{border-radius:14px;padding:16px;text-align:center;color:#fff}
 .sc.bl{background:linear-gradient(135deg,#0BBDC4,#0896A0)}
@@ -140,8 +103,72 @@ tr:active td{background:#f5fbfb}
 @keyframes sp{to{transform:rotate(360deg)}}
 .empty{text-align:center;padding:36px 16px;color:#6b7a8d;font-size:14px}
 
-/* セクション区切り */
-.section-gap{height:6px}
+/* =====================================================
+   横型タイムライン（Ganttチャート風）
+   ===================================================== */
+.gcal-wrap{overflow:auto;border:2px solid #d6eef0;border-radius:12px;max-height:480px;scroll-behavior:smooth}
+.gcal-inner{position:relative}
+.gcal-ruler{height:30px;position:sticky;top:0;z-index:10;background:#f5fbfb;border-bottom:2px solid #d6eef0}
+.gcal-rtick{position:absolute;top:0;bottom:0;display:flex;align-items:center;padding-left:5px;font-size:11px;font-weight:700;color:#6b7a8d;border-left:1px solid #e4eef0;white-space:nowrap;pointer-events:none}
+.gcal-rows{position:relative}
+.gcal-vgrid{position:absolute;top:0;bottom:0;width:1px;background:#e4eef0;pointer-events:none;z-index:0}
+.gcal-work-bg{position:absolute;top:0;bottom:0;background:rgba(11,189,196,.05);border-left:3px solid rgba(11,189,196,.3);border-right:2px solid rgba(200,116,85,.3);pointer-events:none;z-index:0}
+.gcal-clock-line{position:absolute;top:0;bottom:0;width:2px;pointer-events:none;z-index:5}
+.gcal-clock-line.in{background:#0BBDC4}
+.gcal-clock-line.out{background:#C87455}
+.gcal-clock-label{position:absolute;top:3px;left:3px;font-size:9px;font-weight:800;padding:1px 5px;border-radius:3px;color:#fff;white-space:nowrap}
+.gcal-clock-line.in .gcal-clock-label{background:#0BBDC4}
+.gcal-clock-line.out .gcal-clock-label{background:#C87455}
+.gcal-bar{position:absolute;height:44px;border-radius:7px;display:flex;align-items:stretch;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:pointer;user-select:none;-webkit-user-select:none;transition:box-shadow .15s;z-index:2}
+.gcal-bar:hover{box-shadow:0 3px 14px rgba(0,0,0,.28)}
+.gcal-bar-body{flex:1;display:flex;align-items:center;padding:0 10px;color:#fff;overflow:hidden;gap:6px;min-width:0}
+.gcal-bar-name{font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gcal-bar-stage{font-size:11px;opacity:.85;white-space:nowrap;flex-shrink:0}
+.gcal-bar-min{font-size:11px;opacity:.8;white-space:nowrap;flex-shrink:0}
+.gcal-bar-handle{width:12px;flex-shrink:0;background:rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;cursor:ew-resize;touch-action:none}
+.gcal-bar-handle::after{content:'';display:block;width:3px;height:18px;background:rgba(255,255,255,.7);border-radius:2px}
+.gcal-add-bar{position:absolute;left:8px;height:44px;border:2.5px dashed #8dd8db;border-radius:7px;background:#f5fbfb;display:flex;align-items:center;padding:0 12px;cursor:pointer;color:#2a9099;font-size:12px;font-weight:700;gap:6px;transition:background .15s,border-color .15s;z-index:2;white-space:nowrap;overflow:hidden}
+.gcal-add-bar:hover{background:#d6eef0;border-color:#0BBDC4}
+.gcal-break-band{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,rgba(150,150,150,.08),rgba(150,150,150,.08) 3px,transparent 3px,transparent 9px);border-left:2px dashed #b0bec5;border-right:1px solid #d6eef0;pointer-events:none;z-index:1}
+.gcal-break-label{position:absolute;top:4px;left:0;right:0;font-size:9px;font-weight:800;color:#90a4ae;text-align:center;white-space:nowrap}
+
+/* 合計 vs 実働 比較 */
+.tl-compare{display:flex;align-items:stretch;margin-top:16px;border-radius:14px;overflow:hidden;border:2px solid #d6eef0}
+.tl-cmp-side{flex:1;padding:14px 20px;text-align:center}
+.tl-cmp-side.used{background:linear-gradient(135deg,#e0f7f8,#c8eff1)}
+.tl-cmp-side.jikan{background:#f5fbfb}
+.tl-cmp-label{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.tl-cmp-side.used .tl-cmp-label{color:#0A6B70}
+.tl-cmp-side.jikan .tl-cmp-label{color:#6b7a8d}
+.tl-cmp-val{font-size:32px;font-weight:900;line-height:1;letter-spacing:-.02em}
+.tl-cmp-side.used .tl-cmp-val{color:#0BBDC4}
+.tl-cmp-side.jikan .tl-cmp-val{color:#2d3748}
+.tl-cmp-val.over{color:#e53e3e}
+.tl-cmp-sub{font-size:12px;font-weight:700;margin-top:4px}
+.tl-cmp-side.used .tl-cmp-sub{color:#2a9099}
+.tl-cmp-side.jikan .tl-cmp-sub{color:#6b7a8d}
+.tl-cmp-divider{width:2px;background:#d6eef0;flex-shrink:0}
+.tl-cmp-diff{background:#fff;padding:12px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:90px}
+.tl-cmp-diff-val{font-size:15px;font-weight:900;color:#2d3748}
+.tl-cmp-diff-label{font-size:10px;font-weight:700;color:#6b7a8d;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+.tl-cmp-diff.ok .tl-cmp-diff-val{color:#38a169}
+.tl-cmp-diff.over .tl-cmp-diff-val{color:#e53e3e}
+.tl-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid #d6eef0}
+.tl-leg-item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#2d3748}
+.tl-leg-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.tl-hint{font-size:11px;font-weight:600;color:#6b7a8d;margin-left:auto}
+
+/* モーダル */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:400;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg.show{display:flex}
+.modal-sheet{background:#fff;border-radius:16px;padding:28px 24px 32px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(0,0,0,.2);animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal-ttl{font-size:17px;font-weight:800;color:#2d3748;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.modal-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0}
+.modal-field{margin-bottom:14px}
+.modal-field label{margin-bottom:6px}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions .btn{flex:1}
 </style>
 </head>
 <body>
@@ -186,18 +213,17 @@ tr:active td{background:#f5fbfb}
     <div class="row">
       <div class="fg w2">
         <label>出勤</label>
-        <input type="time" id="r-in" value="08:30" onchange="snapTime('r-in'); calcJikan()" oninput="calcJikan()">
+        <input type="time" id="r-in" value="08:30" onchange="snapTime('r-in');autoCalcBreak()" oninput="autoCalcBreak()">
       </div>
       <div class="fg w2">
         <label>退勤</label>
-        <input type="time" id="r-out" value="17:45" onchange="snapTime('r-out'); calcJikan()" oninput="calcJikan()">
+        <input type="time" id="r-out" value="17:45" onchange="snapTime('r-out');autoCalcBreak()" oninput="autoCalcBreak()">
       </div>
       <div class="fg w2">
-        <label>休憩(分)</label>
+        <label>休憩(分) ※自動</label>
         <input type="number" id="r-break" value="75" min="0" step="5" oninput="calcJikan()">
       </div>
     </div>
-
     <div class="jikan-box">
       <div>
         <div class="jlabel">実働時間</div>
@@ -210,21 +236,38 @@ tr:active td{background:#f5fbfb}
     </div>
   </div>
 
-  <!-- 合計バー -->
-  <div class="total-card" id="tc">
-    <div class="total-head">
-      <div>
-        <div class="total-num" id="t-num">0分</div>
-        <div class="total-sub">入力済み作業時間</div>
-      </div>
-      <div class="total-hint" id="t-hint">残り 555分</div>
+  <!-- タイムライン -->
+  <div class="card">
+    <div class="card-ttl">
+      📅 作業タイムライン
+      <span class="tl-hint">右端ドラッグ→時間調整　バークリック→編集　＋をクリック→追加</span>
     </div>
-    <div class="track"><div class="fill" id="t-fill" style="width:0%"></div></div>
+    <div class="gcal-wrap" id="gcal-wrap">
+      <div class="gcal-inner" id="gcal-inner">
+        <div class="gcal-ruler" id="gcal-ruler"></div>
+        <div class="gcal-rows" id="gcal-rows"></div>
+      </div>
+    </div>
+    <div class="tl-compare">
+      <div class="tl-cmp-side used">
+        <div class="tl-cmp-label">作業合計</div>
+        <div class="tl-cmp-val" id="cmp-used">0分</div>
+        <div class="tl-cmp-sub" id="cmp-used-sub">0.00人工</div>
+      </div>
+      <div class="tl-cmp-divider"></div>
+      <div class="tl-cmp-diff" id="cmp-diff">
+        <div class="tl-cmp-diff-val" id="cmp-diff-val">—</div>
+        <div class="tl-cmp-diff-label" id="cmp-diff-label">残り</div>
+      </div>
+      <div class="tl-cmp-divider"></div>
+      <div class="tl-cmp-side jikan">
+        <div class="tl-cmp-label">実働時間</div>
+        <div class="tl-cmp-val" id="cmp-jikan">555分</div>
+        <div class="tl-cmp-sub" id="cmp-jikan-sub">1.16人工</div>
+      </div>
+    </div>
+    <div class="tl-legend" id="tl-legend"></div>
   </div>
-
-  <!-- 作業行 -->
-  <div id="wrows"></div>
-  <button class="add-row-btn" onclick="addRow()">＋ 作業を追加する</button>
 
   <!-- 提出ボタン -->
   <button class="btn btn-s btn-full" id="submit-btn" onclick="submitReport()">
@@ -310,7 +353,7 @@ tr:active td{background:#f5fbfb}
     <div class="tw">
       <table class="cross-table" id="s-cross-table"></table>
     </div>
-    <div style="font-size:12px;color:#9aa5b4;margin-top:12px">
+    <div style="font-size:12px;color:#6b7a8d;margin-top:12px">
       ※ 人工数 = 作業時間(分) ÷ 480　／　労務費 = 作業時間(分) × 42円
     </div>
   </div>
@@ -376,14 +419,65 @@ tr:active td{background:#f5fbfb}
 </div>
 </main>
 
+<!-- モーダル -->
+<div class="modal-bg" id="modal-bg" onclick="bgClose(event)">
+  <div class="modal-sheet">
+    <div class="modal-ttl"><div class="modal-dot" id="modal-dot"></div><span id="modal-title">作業を追加</span></div>
+    <div class="modal-field">
+      <label>製品名</label>
+      <select id="m-prod"><option value="">-- 選択 --</option></select>
+    </div>
+    <div class="modal-field">
+      <label>ステージ</label>
+      <select id="m-stage"><option value="">-- 選択 --</option></select>
+    </div>
+    <div class="modal-field">
+      <label>メモ（任意）</label>
+      <input type="text" id="m-memo" placeholder="作業内容・特記事項">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-p" onclick="saveBlock()">保存</button>
+      <button class="btn btn-g" onclick="closeModal()">キャンセル</button>
+      <button class="btn btn-d" id="modal-del" style="display:none" onclick="deleteBlock()">削除</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
-const S = { craftsmen:[], schedules:[], stages:[], rowIdx:0 };
+/* ======================== */
+/* 定数                     */
+/* ======================== */
+const COLORS   = ['#0BBDC4','#C87455','#7C5CBF','#F5C540','#38a169','#e74c3c','#3498db','#e67e22','#16a085','#8e44ad'];
+const HOUR_W   = 80;
+const ROW_H    = 54;
+const MIN_PX   = HOUR_W / 60;
 
+const FIXED_BREAKS = [
+  { start: 720,  end: 780,  label: '昼休憩',   minutes: 60 },
+  { start: 900,  end: 915,  label: '15時休憩', minutes: 15 },
+  { start: 1065, end: 1080, label: '17:45休憩', minutes: 15 },
+];
+
+/* ======================== */
+/* 状態                     */
+/* ======================== */
+const S = { craftsmen:[], schedules:[], stages:[] };
+let tlRows          = [];
+let nextId          = 1;
+let colorIdx        = 0;
+let editingId       = null;
+let dragState       = null;
+let recentlyDragged = false;
+
+/* ======================== */
+/* 初期化                   */
+/* ======================== */
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('r-date').value = today();
-  calcJikan();
+  buildRuler();
+  autoCalcBreak();
   google.script.run
     .withSuccessHandler(d => {
       S.craftsmen = d.craftsmen || [];
@@ -391,12 +485,86 @@ document.addEventListener('DOMContentLoaded', () => {
       S.stages    = d.stages    || [];
       fillAll();
       renderLists();
-      addRow();
     })
     .withFailureHandler(() => toast('読み込み失敗。「初期設定」を押してください。','err'))
     .getInitialData();
 });
 
+/* ======================== */
+/* 時間ルーラー             */
+/* ======================== */
+function buildRuler() {
+  const ruler = document.getElementById('gcal-ruler');
+  ruler.style.width = 24 * HOUR_W + 'px';
+  for (let h = 0; h < 24; h++) {
+    const tick = document.createElement('div');
+    tick.className  = 'gcal-rtick';
+    tick.style.left = h * HOUR_W + 'px';
+    tick.style.width = HOUR_W + 'px';
+    tick.textContent = pad(h) + ':00';
+    ruler.appendChild(tick);
+  }
+}
+
+/* ======================== */
+/* 休憩ヘルパー             */
+/* ======================== */
+function getActiveBreaks() {
+  const ci = getClockIn(), co = getClockOut();
+  return FIXED_BREAKS.filter(b => b.start >= ci && b.start < co);
+}
+
+function addWorkMin(clockMin, workMinutes) {
+  const breaks = getActiveBreaks();
+  let rem = workMinutes, cur = clockMin, g = 0;
+  while (rem > 0 && g++ < 500) {
+    const inB = breaks.find(b => b.start <= cur && b.end > cur);
+    if (inB) { cur = inB.end; continue; }
+    const nxt = breaks.filter(b => b.start > cur).sort((a,b)=>a.start-b.start)[0];
+    if (nxt && nxt.start < cur + rem) { rem -= nxt.start - cur; cur = nxt.end; }
+    else { cur += rem; rem = 0; }
+  }
+  return cur;
+}
+
+function getWorkMinutes(fromClock, toClock) {
+  const breaks = getActiveBreaks();
+  let work = toClock - fromClock;
+  breaks.forEach(b => {
+    const s = Math.max(b.start, fromClock), e = Math.min(b.end, toClock);
+    if (e > s) work -= (e - s);
+  });
+  return Math.max(0, work);
+}
+
+function getWorkSegments(startClock, workMinutes) {
+  const breaks = getActiveBreaks();
+  const segs = []; let rem = workMinutes, cur = startClock, g = 0;
+  while (rem > 0 && g++ < 500) {
+    const inB = breaks.find(b => b.start <= cur && b.end > cur);
+    if (inB) { cur = inB.end; continue; }
+    const nxt = breaks.filter(b => b.start > cur).sort((a,b)=>a.start-b.start)[0];
+    if (nxt && nxt.start < cur + rem) {
+      const sMin = nxt.start - cur;
+      if (sMin > 0) segs.push({ start: cur, end: nxt.start, minutes: sMin });
+      rem -= sMin; cur = nxt.end;
+    } else { segs.push({ start: cur, end: cur + rem, minutes: rem }); rem = 0; }
+  }
+  return segs;
+}
+
+function autoCalcBreak() {
+  const co  = getClockOut();
+  const brk = getActiveBreaks().reduce((s, b) => {
+    return s + Math.max(0, Math.min(b.end, co) - b.start);
+  }, 0);
+  document.getElementById('r-break').value = brk;
+  calcJikan();
+}
+
+/* ======================== */
+/* 時間計算                 */
+/* ======================== */
 function snapTime(id) {
   const el = document.getElementById(id);
   if (!el.value) return;
@@ -408,142 +576,329 @@ function snapTime(id) {
 function calcJikan() {
   const inp = document.getElementById('r-in').value;
   const out = document.getElementById('r-out').value;
-  const brk = Number(document.getElementById('r-break').value)||0;
-  const min = calcMin(inp, out, brk);
+  const brk = Number(document.getElementById('r-break').value) || 0;
+  const min  = calcMin(inp, out, brk);
+  const brkDetail = getActiveBreaks().map(b => b.label + b.minutes + '分').join('・') || `休憩${brk}分`;
   document.getElementById('jikan-val').textContent   = min + '分';
-  document.getElementById('jikan-ninku').textContent = '= ' + (min/480).toFixed(2) + '人工';
-  document.getElementById('jikan-sub').textContent   = `${inp}〜${out} 休憩${brk}分`;
-  updateTotal();
+  document.getElementById('jikan-ninku').textContent = '= ' + (min / 480).toFixed(2) + '人工';
+  document.getElementById('jikan-sub').textContent   = `${inp}〜${out}　${brkDetail}`;
+  renderTimeline();
+  scrollToWork();
 }
 
 function calcMin(inp, out, brk) {
   if (!inp || !out) return 480;
-  const [ih,im] = inp.split(':').map(Number);
-  const [oh,om] = out.split(':').map(Number);
-  return Math.max(0, (oh*60+om) - (ih*60+im) - (brk||0));
+  const [ih, im] = inp.split(':').map(Number);
+  const [oh, om] = out.split(':').map(Number);
+  return Math.max(0, (oh * 60 + om) - (ih * 60 + im) - (brk || 0));
 }
 
-function getJikan() {
-  return calcMin(
-    document.getElementById('r-in').value,
-    document.getElementById('r-out').value,
-    Number(document.getElementById('r-break').value)||0
-  );
-}
+function getJikan()    { return calcMin(document.getElementById('r-in').value, document.getElementById('r-out').value, Number(document.getElementById('r-break').value) || 0); }
+function getClockIn()  { const v = document.getElementById('r-in').value;  if (!v) return 510;  const [h,m]=v.split(':').map(Number); return h*60+m; }
+function getClockOut() { const v = document.getElementById('r-out').value; if (!v) return 1065; const [h,m]=v.split(':').map(Number); return h*60+m; }
 
-function addRow() {
-  const idx = S.rowIdx++;
-  const div = document.createElement('div');
-  div.className = 'wrow';
-  div.id = 'wr' + idx;
-  div.dataset.idx = idx;
-  div.innerHTML = `
-    <button class="del" onclick="delRow(${idx})" title="削除">✕</button>
-    <div class="row">
-      <div class="fg">
-        <label>製品名</label>
-        <select id="wp${idx}" class="ws">
-          <option value="">-- 選択 --</option>
-          ${S.schedules.map(s=>`<option>${esc(s.name)}</option>`).join('')}
-        </select>
-      </div>
-      <div class="fg">
-        <label>ステージ</label>
-        <select id="wst${idx}" class="wss">
-          <option value="">-- 選択 --</option>
-          ${S.stages.map(s=>`<option>${esc(s.name)}</option>`).join('')}
-        </select>
-      </div>
-    </div>
-    <div class="row">
-      <div class="fg w2">
-        <label>作業時間</label>
-        <div class="min-wrap">
-          <input type="number" id="wm${idx}" class="wmi" min="0" step="5" placeholder="0"
-            oninput="updateTotal()">
-        </div>
-        <div class="min-hint" id="wh${idx}">0.00人工</div>
-      </div>
-      <div class="fg">
-        <label>メモ（任意）</label>
-        <input type="text" id="wmemo${idx}" placeholder="作業内容・特記事項">
-      </div>
-    </div>
-  `;
-  document.getElementById('wrows').appendChild(div);
-  updateTotal();
-}
+/* ======================== */
+/* タイムライン描画         */
+/* ======================== */
+function renderTimeline() {
+  const totalMin = getJikan();
+  const clockIn  = getClockIn();
+  const clockOut = getClockOut();
 
-function delRow(idx) {
-  const el = document.getElementById('wr' + idx);
-  if (el) el.remove();
-  updateTotal();
-}
+  const inner = document.getElementById('gcal-inner');
+  const rows  = document.getElementById('gcal-rows');
+  const fullW = 24 * HOUR_W;
 
-function updateTotal() {
-  const jikan = getJikan();
-  let total = 0;
-  document.querySelectorAll('.wmi').forEach(inp => {
-    const val = Math.max(0, Number(inp.value)||0);
-    const idx = inp.id.replace('wm','');
-    const hint = document.getElementById('wh'+idx);
-    if (hint) hint.textContent = val > 0 ? `${(val/480).toFixed(2)}人工` : '0.00人工';
-    total += val;
+  inner.style.width = fullW + 'px';
+  rows.innerHTML = '';
+
+  const numRows = tlRows.length + 1;
+  rows.style.height = numRows * ROW_H + 'px';
+
+  for (let h = 0; h < 24; h++) {
+    const vg = document.createElement('div');
+    vg.className = 'gcal-vgrid';
+    vg.style.left = h * HOUR_W + 'px';
+    rows.appendChild(vg);
+  }
+
+  const workBg = document.createElement('div');
+  workBg.className  = 'gcal-work-bg';
+  workBg.style.left = clockIn * MIN_PX + 'px';
+  workBg.style.width = totalMin * MIN_PX + 'px';
+  rows.appendChild(workBg);
+
+  const inLine = document.createElement('div');
+  inLine.className  = 'gcal-clock-line in';
+  inLine.style.left = clockIn * MIN_PX + 'px';
+  inLine.innerHTML  = `<span class="gcal-clock-label">出勤 ${document.getElementById('r-in').value}</span>`;
+  rows.appendChild(inLine);
+
+  const outLine = document.createElement('div');
+  outLine.className  = 'gcal-clock-line out';
+  outLine.style.left = clockOut * MIN_PX + 'px';
+  outLine.innerHTML  = `<span class="gcal-clock-label">退勤 ${document.getElementById('r-out').value}</span>`;
+  rows.appendChild(outLine);
+
+  getActiveBreaks().forEach(brk => {
+    const bandEnd = Math.min(brk.end, clockOut + 60);
+    const bandW   = (bandEnd - brk.start) * MIN_PX;
+    const band = document.createElement('div');
+    band.className = 'gcal-break-band';
+    band.style.left  = brk.start * MIN_PX + 'px';
+    band.style.width = bandW + 'px';
+    band.innerHTML   = `<div class="gcal-break-label">☕ ${brk.label}</div>`;
+    rows.appendChild(band);
   });
 
-  const pct     = jikan > 0 ? Math.min(100, total / jikan * 100) : (total > 0 ? 100 : 0);
-  const remains = jikan - total;
+  let curClockMin = clockIn;
+  tlRows.forEach((row, idx) => {
+    const topPx = idx * ROW_H + 5;
+    const segs  = getWorkSegments(curClockMin, row.minutes);
 
-  document.getElementById('t-num').textContent  = total + '分';
-  document.getElementById('t-fill').style.width = pct + '%';
+    segs.forEach((seg, si) => {
+      const isLast  = si === segs.length - 1;
+      const leftPx  = seg.start * MIN_PX;
+      const widthPx = Math.max(20, Math.round((seg.end - seg.start) * MIN_PX));
+      const showStage = isLast && widthPx >= 80;
+      const showMin   = isLast && widthPx >= 120;
 
-  const numEl  = document.getElementById('t-num');
-  const fillEl = document.getElementById('t-fill');
-  const cardEl = document.getElementById('tc');
-  const hint   = document.getElementById('t-hint');
+      const bar = document.createElement('div');
+      bar.className      = 'gcal-bar';
+      bar.dataset.id     = row.id;
+      bar.dataset.action = 'edit';
+      bar.style.cssText  = `left:${leftPx}px;width:${widthPx}px;top:${topPx}px;background:${row.color};`;
+      bar.innerHTML = `
+        <div class="gcal-bar-body" data-action="edit" data-id="${row.id}">
+          <span class="gcal-bar-name">${esc(row.productName || '未設定')}</span>
+          ${showStage ? `<span class="gcal-bar-stage">/ ${esc(row.stageName || '—')}</span>` : ''}
+          ${showMin   ? `<span class="gcal-bar-min">${row.minutes}分</span>` : ''}
+        </div>
+        <div class="gcal-bar-handle" data-action="resize" data-id="${row.id}"></div>
+      `;
+      rows.appendChild(bar);
+    });
 
-  if (total === jikan && jikan > 0) {
-    numEl.className  = 'total-num ok';
-    fillEl.className = 'fill ok';
-    cardEl.className = 'total-card ok';
-    hint.textContent = '✔ ぴったり！';
-  } else if (total > jikan) {
-    numEl.className  = 'total-num over';
-    fillEl.className = 'fill over';
-    cardEl.className = 'total-card over';
-    hint.textContent = `⚠ ${total - jikan}分 超過`;
+    curClockMin = addWorkMin(curClockMin, row.minutes);
+  });
+
+  const remainWorkMin = getWorkMinutes(curClockMin, clockOut);
+  const addClockEnd   = addWorkMin(curClockMin, remainWorkMin);
+  const addLeft  = curClockMin * MIN_PX;
+  const addWidth = Math.max(80, Math.round((addClockEnd - curClockMin) * MIN_PX));
+  const addTop   = tlRows.length * ROW_H + 5;
+  const addBar   = document.createElement('div');
+  addBar.className      = 'gcal-add-bar';
+  addBar.dataset.action = 'add';
+  addBar.style.cssText  = `left:${addLeft}px;width:${addWidth}px;top:${addTop}px;`;
+  addBar.innerHTML      = `＋ 作業を追加（残り ${remainWorkMin}分）`;
+  rows.appendChild(addBar);
+
+  rows.removeEventListener('click',     onContentClick);
+  rows.removeEventListener('mousedown', onContentPointerDown);
+  rows.addEventListener('click',     onContentClick);
+  rows.addEventListener('mousedown', onContentPointerDown);
+
+  updateCompare();
+  renderLegend();
+}
+
+function scrollToWork() {
+  const wrap = document.getElementById('gcal-wrap');
+  wrap.scrollLeft = Math.max(0, getClockIn() * MIN_PX - 80);
+}
+
+/* ======================== */
+/* 凡例・比較               */
+/* ======================== */
+function renderLegend() {
+  const leg = document.getElementById('tl-legend');
+  if (!tlRows.length) { leg.innerHTML = ''; return; }
+  leg.innerHTML = tlRows.map(r => `
+    <div class="tl-leg-item">
+      <div class="tl-leg-dot" style="background:${r.color}"></div>
+      <span>${esc(r.productName || '未設定')} / ${esc(r.stageName || '—')}</span>
+    </div>
+  `).join('');
+}
+
+function updateCompare() {
+  const totalMin = getJikan();
+  const usedMin  = tlRows.reduce((s, r) => s + r.minutes, 0);
+  const diff     = totalMin - usedMin;
+
+  document.getElementById('cmp-used').textContent      = usedMin + '分';
+  document.getElementById('cmp-used-sub').textContent  = (usedMin / 480).toFixed(2) + '人工';
+  document.getElementById('cmp-jikan').textContent     = totalMin + '分';
+  document.getElementById('cmp-jikan-sub').textContent = (totalMin / 480).toFixed(2) + '人工';
+
+  const usedEl  = document.getElementById('cmp-used');
+  const diffBox = document.getElementById('cmp-diff');
+  const diffVal = document.getElementById('cmp-diff-val');
+  const diffLbl = document.getElementById('cmp-diff-label');
+
+  if (usedMin === totalMin && totalMin > 0) {
+    usedEl.className  = 'tl-cmp-val';
+    diffBox.className = 'tl-cmp-diff ok';
+    diffVal.textContent = '✔'; diffLbl.textContent = 'ぴったり';
+  } else if (usedMin > totalMin) {
+    usedEl.className  = 'tl-cmp-val over';
+    diffBox.className = 'tl-cmp-diff over';
+    diffVal.textContent = '+' + (usedMin - totalMin) + '分'; diffLbl.textContent = '残業';
   } else {
-    numEl.className  = 'total-num';
-    fillEl.className = 'fill';
-    cardEl.className = 'total-card';
-    hint.textContent = jikan > 0 ? `残り ${remains}分` : '';
+    usedEl.className  = 'tl-cmp-val';
+    diffBox.className = 'tl-cmp-diff';
+    diffVal.textContent = diff + '分'; diffLbl.textContent = '残り';
   }
 }
 
+/* ======================== */
+/* ドラッグ操作             */
+/* ======================== */
+function onContentPointerDown(e) {
+  const el = e.target.closest('[data-action="resize"]');
+  if (!el) return;
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (dragState) cleanupDrag();
+
+  const rowId = parseInt(el.dataset.id);
+  const row   = tlRows.find(r => r.id === rowId);
+  if (!row) return;
+
+  dragState = { rowId, startX: e.clientX, startMin: row.minutes, moved: false };
+
+  document.addEventListener('mousemove', onDragMove);
+  document.addEventListener('mouseup',   onDragEnd);
+}
+
+function onDragMove(e) {
+  if (!dragState) return;
+  const { rowId, startX, startMin } = dragState;
+  const deltaX   = e.clientX - startX;
+  const deltaMin = Math.round(deltaX / MIN_PX / 5) * 5;
+  if (Math.abs(deltaMin) >= 5) dragState.moved = true;
+
+  const row = tlRows.find(r => r.id === rowId);
+  if (!row) return;
+  row.minutes = Math.max(5, startMin + deltaMin);
+  renderTimeline();
+}
+
+function onDragEnd() {
+  if (!dragState) return;
+  if (dragState.moved) recentlyDragged = true;
+  cleanupDrag();
+}
+
+function cleanupDrag() {
+  dragState = null;
+  document.removeEventListener('mousemove', onDragMove);
+  document.removeEventListener('mouseup',   onDragEnd);
+}
+
+/* ======================== */
+/* クリック操作             */
+/* ======================== */
+function onContentClick(e) {
+  if (recentlyDragged) { recentlyDragged = false; return; }
+  if (dragState) return;
+
+  const el = e.target.closest('[data-action]');
+  if (!el) return;
+  const action = el.dataset.action;
+  const id     = parseInt(el.dataset.id);
+
+  if (action === 'resize') return;
+  if (action === 'edit' && !isNaN(id)) openEditModal(id);
+  else if (action === 'add')           openAddModal();
+}
+
+/* ======================== */
+/* モーダル                 */
+/* ======================== */
+function openAddModal() {
+  editingId = null;
+  const color = COLORS[colorIdx % COLORS.length];
+  document.getElementById('modal-title').textContent    = '作業を追加';
+  document.getElementById('modal-dot').style.background = color;
+  document.getElementById('m-prod').value  = '';
+  document.getElementById('m-stage').value = '';
+  document.getElementById('m-memo').value  = '';
+  document.getElementById('modal-del').style.display = 'none';
+  document.getElementById('modal-bg').classList.add('show');
+}
+
+function openEditModal(id) {
+  const row = tlRows.find(r => r.id === id);
+  if (!row) return;
+  editingId = id;
+  document.getElementById('modal-title').textContent    = '作業を編集';
+  document.getElementById('modal-dot').style.background = row.color;
+  document.getElementById('m-prod').value  = row.productName;
+  document.getElementById('m-stage').value = row.stageName;
+  document.getElementById('m-memo').value  = row.memo || '';
+  document.getElementById('modal-del').style.display = '';
+  document.getElementById('modal-bg').classList.add('show');
+}
+
+function closeModal() { document.getElementById('modal-bg').classList.remove('show'); }
+function bgClose(e)   { if (e.target === document.getElementById('modal-bg')) closeModal(); }
+
+function saveBlock() {
+  const prod  = document.getElementById('m-prod').value.trim();
+  const stage = document.getElementById('m-stage').value.trim();
+  const memo  = document.getElementById('m-memo').value.trim();
+  if (!prod)  { toast('製品名を選択してください', 'err'); return; }
+  if (!stage) { toast('ステージを選択してください', 'err'); return; }
+
+  if (editingId === null) {
+    const totalMin = getJikan();
+    const usedMin  = tlRows.reduce((s, r) => s + r.minutes, 0);
+    const remain   = Math.max(5, totalMin - usedMin);
+    const defMin   = Math.min(remain, Math.max(5, Math.round(remain / 2 / 5) * 5));
+    const color    = COLORS[colorIdx % COLORS.length];
+    colorIdx++;
+    tlRows.push({ id: nextId++, productName: prod, stageName: stage, minutes: defMin, color, memo });
+    toast(`追加しました（${defMin}分）`, 'ok');
+  } else {
+    const row = tlRows.find(r => r.id === editingId);
+    if (row) { row.productName = prod; row.stageName = stage; row.memo = memo; }
+    toast('更新しました', 'ok');
+  }
+  closeModal();
+  renderTimeline();
+}
+
+function deleteBlock() {
+  tlRows = tlRows.filter(r => r.id !== editingId);
+  closeModal();
+  renderTimeline();
+  toast('削除しました', 'warn');
+}
+
+/* ======================== */
+/* 提出                     */
+/* ======================== */
 function submitReport() {
-  const who    = document.getElementById('r-who').value;
-  const date   = document.getElementById('r-date').value;
+  const who      = document.getElementById('r-who').value;
+  const date     = document.getElementById('r-date').value;
   const clockIn  = document.getElementById('r-in').value;
   const clockOut = document.getElementById('r-out').value;
-  const brk    = document.getElementById('r-break').value;
+  const brk      = document.getElementById('r-break').value;
 
-  if (!who)  { toast('職人を選択してください','err'); return; }
-  if (!date) { toast('日付を入力してください','err'); return; }
+  if (!who)  { toast('職人を選択してください', 'err'); return; }
+  if (!date) { toast('日付を入力してください', 'err'); return; }
 
-  const rows = [];
-  document.querySelectorAll('.wrow').forEach(wr => {
-    const idx = wr.dataset.idx;
-    const m   = Number(document.getElementById(`wm${idx}`)?.value)||0;
-    if (m <= 0) return;
-    rows.push({
-      productName: document.getElementById(`wp${idx}`)?.value  || '',
-      stageName:   document.getElementById(`wst${idx}`)?.value || '',
-      minutes:     m,
-      memo:        document.getElementById(`wmemo${idx}`)?.value || ''
-    });
-  });
+  const rows = tlRows.map(r => ({
+    productName: r.productName,
+    stageName:   r.stageName,
+    minutes:     r.minutes,
+    memo:        r.memo || ''
+  }));
 
-  if (!rows.length) { toast('作業時間を入力した行がありません','err'); return; }
+  if (!rows.length) { toast('作業を追加してください', 'err'); return; }
 
   const btn = document.getElementById('submit-btn');
   btn.disabled = true; btn.textContent = '提出中...';
@@ -551,29 +906,29 @@ function submitReport() {
   google.script.run
     .withSuccessHandler(res => {
       btn.disabled = false; btn.textContent = '✔ 日報を提出する';
-      if (!res.success) { toast(res.message,'err'); return; }
+      if (!res.success) { toast(res.message, 'err'); return; }
       toast(res.message, res.warning ? 'warn' : 'ok');
       resetForm();
     })
     .withFailureHandler(() => {
       btn.disabled = false; btn.textContent = '✔ 日報を提出する';
-      toast('提出に失敗しました','err');
+      toast('提出に失敗しました', 'err');
     })
     .submitReport(who, date, clockIn, clockOut, brk, rows, '');
 }
 
 function resetForm() {
-  document.getElementById('r-who').value = '';
+  document.getElementById('r-who').value  = '';
   document.getElementById('r-date').value = today();
   document.getElementById('r-in').value   = '08:30';
   document.getElementById('r-out').value  = '17:45';
-  document.getElementById('r-break').value = '75';
-  document.getElementById('wrows').innerHTML = '';
-  S.rowIdx = 0;
-  calcJikan();
-  addRow();
+  tlRows = []; nextId = 1; colorIdx = 0;
+  autoCalcBreak();
 }
 
+/* ======================== */
+/* 履歴                     */
+/* ======================== */
 function loadHistory() {
   const p = [v('h-who'), v('h-prod'), v('h-stage'), v('h-from'), v('h-to')];
   document.getElementById('h-body').innerHTML =
@@ -592,9 +947,9 @@ function loadHistory() {
           <td>${esc(l.productName)}</td>
           <td><span class="badge b-gy">${esc(l.stageName)}</span></td>
           <td style="font-weight:800">${l.minutes}分</td>
-          <td style="color:#1a73e8;font-weight:800">${Number(l.ninkuCount).toFixed(3)}</td>
+          <td style="color:#0BBDC4;font-weight:800">${Number(l.ninkuCount).toFixed(3)}</td>
           <td style="color:#276749;font-weight:700">¥${Number(l.cost).toLocaleString()}</td>
-          <td style="color:#9aa5b4;font-size:13px">${esc(l.memo)}</td>
+          <td style="color:#6b7a8d;font-size:13px">${esc(l.memo)}</td>
         </tr>
       `).join('');
     })
@@ -606,6 +961,9 @@ function clearHist() {
   ['h-who','h-prod','h-stage','h-from','h-to'].forEach(id => { document.getElementById(id).value=''; });
 }
 
+/* ======================== */
+/* 集計                     */
+/* ======================== */
 function loadSummary() {
   const p = [v('s-who'), v('s-prod'), v('s-stage'), v('s-from'), v('s-to')];
   google.script.run
@@ -666,6 +1024,9 @@ function loadSummary() {
     .getSummary(...p);
 }
 
+/* ======================== */
+/* 設定管理                 */
+/* ======================== */
 function addCraftsman() {
   const name = document.getElementById('c-name').value.trim();
   if (!name) { toast('名前を入力してください','err'); return; }
@@ -710,11 +1071,16 @@ function mTable(headers, rows) {
   </table></div>`;
 }
 
+/* ======================== */
+/* セレクト補充             */
+/* ======================== */
 function fillAll() {
-  fill('r-who',  S.craftsmen.map(c=>c.name), '-- 選択 --');
+  fill('r-who', S.craftsmen.map(c=>c.name), '-- 選択 --');
   ['h-who','s-who'].forEach(id => fill(id, S.craftsmen.map(c=>c.name), 'すべて'));
   ['h-prod','s-prod'].forEach(id => fill(id, S.schedules.map(s=>s.name), 'すべて'));
   ['h-stage','s-stage'].forEach(id => fill(id, S.stages.map(s=>s.name), 'すべて'));
+  fill('m-prod',  S.schedules.map(s=>s.name), '-- 選択 --');
+  fill('m-stage', S.stages.map(s=>s.name),    '-- 選択 --');
 }
 
 function fill(id, items, placeholder) {
@@ -726,6 +1092,18 @@ function fill(id, items, placeholder) {
   el.value = cur;
 }
 
+function reload() {
+  google.script.run
+    .withSuccessHandler(d => {
+      S.craftsmen = d.craftsmen||[]; S.schedules = d.schedules||[]; S.stages = d.stages||[];
+      fillAll(); renderLists();
+    })
+    .getInitialData();
+}
+
+/* ======================== */
+/* 初期設定                 */
+/* ======================== */
 function runSetup() {
   if (!confirm('初期設定を実行します。よろしいですか？')) return;
   google.script.run
@@ -734,38 +1112,27 @@ function runSetup() {
     .setup();
 }
 
-function reload() {
-  google.script.run
-    .withSuccessHandler(d => {
-      S.craftsmen = d.craftsmen||[]; S.schedules = d.schedules||[]; S.stages = d.stages||[];
-      fillAll(); renderLists();
-      document.querySelectorAll('.ws').forEach(sel => {
-        const cur = sel.value;
-        sel.innerHTML = '<option value="">-- 選択 --</option>' + S.schedules.map(s=>`<option>${esc(s.name)}</option>`).join('');
-        sel.value = cur;
-      });
-      document.querySelectorAll('.wss').forEach(sel => {
-        const cur = sel.value;
-        sel.innerHTML = '<option value="">-- 選択 --</option>' + S.stages.map(s=>`<option>${esc(s.name)}</option>`).join('');
-        sel.value = cur;
-      });
-    })
-    .getInitialData();
-}
-
+/* ======================== */
+/* タブ                     */
+/* ======================== */
 function sw(name, btn) {
   document.querySelectorAll('.pn').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
   document.getElementById('tab-'+name).classList.add('on');
   btn.classList.add('on');
+  if (name === 'report') { renderTimeline(); scrollToWork(); }
 }
 
+/* ======================== */
+/* ユーティリティ           */
+/* ======================== */
 function today() {
   const d=new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-function v(id) { return document.getElementById(id)?.value||null; }
-function esc(s) {
+function pad(n)  { return String(n).padStart(2,'0'); }
+function v(id)   { return document.getElementById(id)?.value||null; }
+function esc(s)  {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 let _tt;
