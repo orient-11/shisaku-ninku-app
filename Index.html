@@ -6,20 +6,20 @@
 <title>試作課 日報</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f0f6f6;color:#1a202c;font-size:16px;-webkit-tap-highlight-color:transparent}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f0f6f6;color:#1a202c;font-size:17px;-webkit-tap-highlight-color:transparent}
 
 /* ヘッダー */
 .hd{background:linear-gradient(135deg,#0BBDC4 0%,#0896A0 100%);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(11,189,196,.35)}
 .hd-left{display:flex;align-items:center;gap:10px}
-.hd h1{font-size:19px;font-weight:800;letter-spacing:-.02em}
-.hd small{font-size:12px;opacity:.8;display:block;margin-top:2px}
-.setup-btn{background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.5);color:#fff;padding:8px 16px;border-radius:22px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.02em;transition:background .15s}
+.hd h1{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.hd small{font-size:13px;opacity:.8;display:block;margin-top:2px}
+.setup-btn{background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.5);color:#fff;padding:9px 18px;border-radius:22px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.02em;transition:background .15s}
 .setup-btn:active{background:rgba(255,255,255,.35)}
 
 /* タブ */
 .tabs{display:flex;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.tab{flex:1;padding:13px 4px 11px;border:none;background:none;cursor:pointer;font-size:11px;font-weight:700;color:#6b7a8d;border-bottom:3px solid transparent;white-space:nowrap;line-height:1.3;transition:color .15s,border-color .15s;letter-spacing:.02em}
-.tab .ic{display:block;font-size:22px;margin-bottom:3px}
+.tab{flex:1;padding:14px 4px 12px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:700;color:#6b7a8d;border-bottom:3px solid transparent;white-space:nowrap;line-height:1.3;transition:color .15s,border-color .15s;letter-spacing:.02em}
+.tab .ic{display:block;font-size:24px;margin-bottom:3px}
 .tab.on{color:#0BBDC4;border-bottom-color:#0BBDC4}
 
 /* メイン */
@@ -28,59 +28,50 @@ body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f0f
 
 /* カード */
 .card{background:#fff;border-radius:16px;padding:20px 18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.card-ttl{font-size:14px;font-weight:800;color:#2d3748;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #d6eef0;display:flex;align-items:center;gap:8px;letter-spacing:.01em;flex-wrap:wrap}
+.card-ttl{font-size:15px;font-weight:800;color:#2d3748;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #d6eef0;display:flex;align-items:center;gap:8px;letter-spacing:.01em;flex-wrap:wrap}
 
 /* フォーム */
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .fg{flex:1;min-width:130px}
-.fg.w2{min-width:95px;max-width:140px}
+.fg.w2{min-width:95px;max-width:150px}
 .fg.full{flex:1 0 100%}
-label{display:block;font-size:12px;font-weight:800;color:#4a5568;letter-spacing:.06em;margin-bottom:7px;text-transform:uppercase}
-select,input{width:100%;padding:14px 13px;border:2px solid #ccdcde;border-radius:12px;font-size:16px;color:#1a202c;background:#f5fbfb;font-family:inherit;transition:border .2s,box-shadow .2s,background .2s;-webkit-appearance:none;appearance:none}
+label{display:block;font-size:13px;font-weight:800;color:#4a5568;letter-spacing:.05em;margin-bottom:7px;text-transform:uppercase}
+select,input{width:100%;padding:14px 13px;border:2px solid #ccdcde;border-radius:12px;font-size:17px;color:#1a202c;background:#f5fbfb;font-family:inherit;transition:border .2s,box-shadow .2s,background .2s;-webkit-appearance:none;appearance:none}
 select:focus,input:focus{outline:none;border-color:#0BBDC4;box-shadow:0 0 0 4px rgba(11,189,196,.12);background:#fff}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a8d' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
 
 /* 実働時間表示 */
 .jikan-box{background:linear-gradient(135deg,#e0f7f8,#c8eff1);border:2px solid #8dd8db;border-radius:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;margin-top:4px}
-.jikan-box .jlabel{font-size:12px;font-weight:800;color:#0A6B70;letter-spacing:.06em;text-transform:uppercase}
-.jikan-box .value{font-size:28px;font-weight:900;color:#0BBDC4;line-height:1}
-.jikan-box .sub{font-size:12px;color:#2a9099;margin-top:4px}
-.jikan-box .jninku{font-size:12px;color:#2a9099;text-align:right;margin-top:3px;font-weight:700}
+.jikan-box .jlabel{font-size:13px;font-weight:800;color:#0A6B70;letter-spacing:.05em;text-transform:uppercase}
+.jikan-box .value{font-size:30px;font-weight:900;color:#0BBDC4;line-height:1}
+.jikan-box .sub{font-size:13px;color:#2a9099;margin-top:4px}
+.jikan-box .jninku{font-size:13px;color:#2a9099;text-align:right;margin-top:3px;font-weight:700}
 
 /* ボタン */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:13px 20px;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap;letter-spacing:.02em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px 20px;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap;letter-spacing:.02em}
 .btn-p{background:#0BBDC4;color:#fff;box-shadow:0 2px 8px rgba(11,189,196,.35)}.btn-p:active{background:#0896A0;transform:scale(.98)}
 .btn-s{background:#38a169;color:#fff;box-shadow:0 2px 8px rgba(56,161,105,.3)}.btn-s:active{background:#2f855a;transform:scale(.98)}
 .btn-d{background:#e53e3e;color:#fff}.btn-d:active{background:#c53030}
 .btn-g{background:#edf5f5;color:#2d3748;border:2px solid #b0cfd2}.btn-g:active{background:#d6eef0}
-.btn-sm{padding:9px 16px;font-size:13px;border-radius:10px}
-.btn-full{width:100%;padding:17px;font-size:16px;border-radius:14px}
+.btn-sm{padding:10px 16px;font-size:14px;border-radius:10px}
+.btn-full{width:100%;padding:18px;font-size:17px;border-radius:14px}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none !important}
 
 /* テーブル */
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th{background:#edf8f9;padding:11px 12px;text-align:left;font-weight:800;color:#2d3748;border-bottom:2px solid #b0cfd2;white-space:nowrap;font-size:12px;letter-spacing:.04em}
-td{padding:12px;border-bottom:1px solid #d6eef0;font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{background:#edf8f9;padding:12px 12px;text-align:left;font-weight:800;color:#2d3748;border-bottom:2px solid #b0cfd2;white-space:nowrap;font-size:13px;letter-spacing:.04em}
+td{padding:13px 12px;border-bottom:1px solid #d6eef0;font-size:15px}
 tr:last-child td{border-bottom:none}
 tr:active td{background:#f5fbfb}
 
-/* クロス集計テーブル */
-.cross-table th.stage{text-align:center;font-size:11px;padding:8px 6px}
-.cross-table td.ninku{text-align:center;font-size:14px;font-weight:800;color:#0BBDC4}
-.cross-table td.ninku.zero{color:#8aa5a8;font-weight:400}
-.cross-table td.total{background:#e0f7f8;font-weight:800;color:#0A6B70;text-align:center}
-.cross-table td.cost{background:#f0fff4;font-weight:800;color:#276749;text-align:right;white-space:nowrap}
-
 /* バッジ */
-.badge{display:inline-block;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:800}
+.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:800}
 .b-bl{background:#e0f7f8;color:#0A6B70}
 .b-gn{background:#f0fff4;color:#276749}
 .b-gy{background:#e8ecef;color:#2d3748}
 .b-or{background:#fff3e8;color:#9a4a1a}
-
-/* フィルター */
-.fbar{background:#f5fbfb;border:2px solid #b0cfd2;border-radius:12px;padding:14px;margin-bottom:14px}
+.b-pp{background:#f0eeff;color:#5e43a0}
 
 /* 統計カード */
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
@@ -90,81 +81,86 @@ tr:active td{background:#f5fbfb}
 .sc.pp{background:linear-gradient(135deg,#7C5CBF,#5e43a0)}
 .sc.or{background:linear-gradient(135deg,#C87455,#a85a3a)}
 .sv{font-size:28px;font-weight:900;line-height:1}
-.sl{font-size:12px;opacity:.9;margin-top:5px;font-weight:700}
+.sl{font-size:13px;opacity:.9;margin-top:5px;font-weight:700}
 
 /* トースト */
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(140px);background:#2d3748;color:#fff;padding:14px 24px;border-radius:32px;font-size:14px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.2);z-index:9999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);max-width:88vw;text-align:center}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(140px);background:#2d3748;color:#fff;padding:14px 24px;border-radius:32px;font-size:15px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.2);z-index:9999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);max-width:88vw;text-align:center}
 #toast.show{transform:translateX(-50%) translateY(0)}
 #toast.ok{background:#38a169}#toast.err{background:#e53e3e}#toast.warn{background:#C87455}
 
 /* ローディング・空 */
-.ld{text-align:center;padding:36px;color:#6b7a8d;font-size:14px}
+.ld{text-align:center;padding:36px;color:#6b7a8d;font-size:15px}
 .sp{display:inline-block;width:28px;height:28px;border:3px solid #d6eef0;border-top-color:#0BBDC4;border-radius:50%;animation:sp .7s linear infinite;margin-bottom:10px}
 @keyframes sp{to{transform:rotate(360deg)}}
-.empty{text-align:center;padding:36px 16px;color:#6b7a8d;font-size:14px}
+.empty{text-align:center;padding:36px 16px;color:#6b7a8d;font-size:15px}
 
 /* =====================================================
    横型タイムライン（Ganttチャート風）
    ===================================================== */
 .gcal-wrap{overflow:auto;border:2px solid #d6eef0;border-radius:12px;max-height:480px;scroll-behavior:smooth}
 .gcal-inner{position:relative}
-.gcal-ruler{height:30px;position:sticky;top:0;z-index:10;background:#f5fbfb;border-bottom:2px solid #d6eef0}
-.gcal-rtick{position:absolute;top:0;bottom:0;display:flex;align-items:center;padding-left:5px;font-size:11px;font-weight:700;color:#6b7a8d;border-left:1px solid #e4eef0;white-space:nowrap;pointer-events:none}
+.gcal-ruler{height:32px;position:sticky;top:0;z-index:10;background:#f5fbfb;border-bottom:2px solid #d6eef0}
+.gcal-rtick{position:absolute;top:0;bottom:0;display:flex;align-items:center;padding-left:5px;font-size:12px;font-weight:700;color:#6b7a8d;border-left:1px solid #e4eef0;white-space:nowrap;pointer-events:none}
 .gcal-rows{position:relative}
 .gcal-vgrid{position:absolute;top:0;bottom:0;width:1px;background:#e4eef0;pointer-events:none;z-index:0}
 .gcal-work-bg{position:absolute;top:0;bottom:0;background:rgba(11,189,196,.05);border-left:3px solid rgba(11,189,196,.3);border-right:2px solid rgba(200,116,85,.3);pointer-events:none;z-index:0}
 .gcal-clock-line{position:absolute;top:0;bottom:0;width:2px;pointer-events:none;z-index:5}
 .gcal-clock-line.in{background:#0BBDC4}
 .gcal-clock-line.out{background:#C87455}
-.gcal-clock-label{position:absolute;top:3px;left:3px;font-size:9px;font-weight:800;padding:1px 5px;border-radius:3px;color:#fff;white-space:nowrap}
+.gcal-clock-label{position:absolute;top:3px;left:3px;font-size:10px;font-weight:800;padding:2px 6px;border-radius:3px;color:#fff;white-space:nowrap}
 .gcal-clock-line.in .gcal-clock-label{background:#0BBDC4}
 .gcal-clock-line.out .gcal-clock-label{background:#C87455}
 .gcal-bar{position:absolute;height:44px;border-radius:7px;display:flex;align-items:stretch;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:pointer;user-select:none;-webkit-user-select:none;transition:box-shadow .15s;z-index:2}
 .gcal-bar:hover{box-shadow:0 3px 14px rgba(0,0,0,.28)}
 .gcal-bar-body{flex:1;display:flex;align-items:center;padding:0 10px;color:#fff;overflow:hidden;gap:6px;min-width:0}
-.gcal-bar-name{font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gcal-bar-stage{font-size:11px;opacity:.85;white-space:nowrap;flex-shrink:0}
-.gcal-bar-min{font-size:11px;opacity:.8;white-space:nowrap;flex-shrink:0}
+.gcal-bar-name{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gcal-bar-stage{font-size:12px;opacity:.85;white-space:nowrap;flex-shrink:0}
+.gcal-bar-min{font-size:12px;opacity:.8;white-space:nowrap;flex-shrink:0}
 .gcal-bar-handle{width:12px;flex-shrink:0;background:rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;cursor:ew-resize;touch-action:none}
 .gcal-bar-handle::after{content:'';display:block;width:3px;height:18px;background:rgba(255,255,255,.7);border-radius:2px}
-.gcal-add-bar{position:absolute;left:8px;height:44px;border:2.5px dashed #8dd8db;border-radius:7px;background:#f5fbfb;display:flex;align-items:center;padding:0 12px;cursor:pointer;color:#2a9099;font-size:12px;font-weight:700;gap:6px;transition:background .15s,border-color .15s;z-index:2;white-space:nowrap;overflow:hidden}
+.gcal-add-bar{position:absolute;left:8px;height:44px;border:2.5px dashed #8dd8db;border-radius:7px;background:#f5fbfb;display:flex;align-items:center;padding:0 12px;cursor:pointer;color:#2a9099;font-size:13px;font-weight:700;gap:6px;transition:background .15s,border-color .15s;z-index:2;white-space:nowrap;overflow:hidden}
 .gcal-add-bar:hover{background:#d6eef0;border-color:#0BBDC4}
 .gcal-break-band{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,rgba(150,150,150,.08),rgba(150,150,150,.08) 3px,transparent 3px,transparent 9px);border-left:2px dashed #b0bec5;border-right:1px solid #d6eef0;pointer-events:none;z-index:1}
-.gcal-break-label{position:absolute;top:4px;left:0;right:0;font-size:9px;font-weight:800;color:#90a4ae;text-align:center;white-space:nowrap}
+.gcal-break-label{position:absolute;top:4px;left:0;right:0;font-size:10px;font-weight:800;color:#90a4ae;text-align:center;white-space:nowrap}
 
 /* 合計 vs 実働 比較 */
 .tl-compare{display:flex;align-items:stretch;margin-top:16px;border-radius:14px;overflow:hidden;border:2px solid #d6eef0}
 .tl-cmp-side{flex:1;padding:14px 20px;text-align:center}
 .tl-cmp-side.used{background:linear-gradient(135deg,#e0f7f8,#c8eff1)}
 .tl-cmp-side.jikan{background:#f5fbfb}
-.tl-cmp-label{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.tl-cmp-label{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
 .tl-cmp-side.used .tl-cmp-label{color:#0A6B70}
 .tl-cmp-side.jikan .tl-cmp-label{color:#6b7a8d}
 .tl-cmp-val{font-size:32px;font-weight:900;line-height:1;letter-spacing:-.02em}
 .tl-cmp-side.used .tl-cmp-val{color:#0BBDC4}
 .tl-cmp-side.jikan .tl-cmp-val{color:#2d3748}
 .tl-cmp-val.over{color:#e53e3e}
-.tl-cmp-sub{font-size:12px;font-weight:700;margin-top:4px}
+.tl-cmp-sub{font-size:13px;font-weight:700;margin-top:4px}
 .tl-cmp-side.used .tl-cmp-sub{color:#2a9099}
 .tl-cmp-side.jikan .tl-cmp-sub{color:#6b7a8d}
 .tl-cmp-divider{width:2px;background:#d6eef0;flex-shrink:0}
 .tl-cmp-diff{background:#fff;padding:12px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:90px}
-.tl-cmp-diff-val{font-size:15px;font-weight:900;color:#2d3748}
-.tl-cmp-diff-label{font-size:10px;font-weight:700;color:#6b7a8d;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+.tl-cmp-diff-val{font-size:16px;font-weight:900;color:#2d3748}
+.tl-cmp-diff-label{font-size:11px;font-weight:700;color:#6b7a8d;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
 .tl-cmp-diff.ok .tl-cmp-diff-val{color:#38a169}
 .tl-cmp-diff.over .tl-cmp-diff-val{color:#e53e3e}
 .tl-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid #d6eef0}
-.tl-leg-item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#2d3748}
-.tl-leg-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-.tl-hint{font-size:11px;font-weight:600;color:#6b7a8d;margin-left:auto}
+.tl-leg-item{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#2d3748}
+.tl-leg-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
+.tl-hint{font-size:12px;font-weight:600;color:#6b7a8d;margin-left:auto}
+
+/* 製品情報バッジ（モーダル自動表示） */
+.prod-info{display:none;flex-wrap:wrap;gap:6px;margin-top:10px;padding:10px 12px;background:#f5fbfb;border:1.5px solid #d6eef0;border-radius:10px}
+.prod-info.show{display:flex}
+.prod-info-plan{font-size:14px;font-weight:700;color:#4a5568;width:100%;margin-top:4px}
 
 /* モーダル */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:400;display:none;align-items:center;justify-content:center;padding:16px}
 .modal-bg.show{display:flex}
-.modal-sheet{background:#fff;border-radius:16px;padding:28px 24px 32px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(0,0,0,.2);animation:fadeIn .2s ease}
+.modal-sheet{background:#fff;border-radius:16px;padding:28px 24px 32px;width:100%;max-width:460px;box-shadow:0 8px 40px rgba(0,0,0,.2);animation:fadeIn .2s ease}
 @keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-.modal-ttl{font-size:17px;font-weight:800;color:#2d3748;margin-bottom:20px;display:flex;align-items:center;gap:10px}
-.modal-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0}
+.modal-ttl{font-size:18px;font-weight:800;color:#2d3748;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.modal-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0}
 .modal-field{margin-bottom:14px}
 .modal-field label{margin-bottom:6px}
 .modal-actions{display:flex;gap:10px;margin-top:20px}
@@ -187,8 +183,6 @@ tr:active td{background:#f5fbfb}
 <!-- タブ -->
 <nav class="tabs">
   <button class="tab on" onclick="sw('report',this)"><span class="ic">📝</span>日報入力</button>
-  <button class="tab"    onclick="sw('history',this)"><span class="ic">📋</span>履歴</button>
-  <button class="tab"    onclick="sw('summary',this)"><span class="ic">📊</span>集計</button>
   <button class="tab"    onclick="sw('settings',this)"><span class="ic">⚙️</span>設定</button>
 </nav>
 
@@ -276,90 +270,7 @@ tr:active td{background:#f5fbfb}
 
 </div>
 
-<!-- ============ TAB 2: 履歴 ============ -->
-<div id="tab-history" class="pn">
-  <div class="card">
-    <div class="card-ttl">🔍 絞り込み</div>
-    <div class="fbar">
-      <div class="row">
-        <div class="fg"><label>職人</label>
-          <select id="h-who"><option value="">すべて</option></select>
-        </div>
-        <div class="fg"><label>製品</label>
-          <select id="h-prod"><option value="">すべて</option></select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="fg"><label>ステージ</label>
-          <select id="h-stage"><option value="">すべて</option></select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="fg"><label>期間（開始）</label><input type="date" id="h-from"></div>
-        <div class="fg"><label>期間（終了）</label><input type="date" id="h-to"></div>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:6px">
-        <button class="btn btn-p btn-sm" onclick="loadHistory()" style="flex:1">検索</button>
-        <button class="btn btn-g btn-sm" onclick="clearHist()">クリア</button>
-      </div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-ttl">作業履歴</div>
-    <div class="tw">
-      <table>
-        <thead>
-          <tr><th>日付</th><th>職人</th><th>製品</th><th>ステージ</th>
-              <th>作業時間</th><th>人工数</th><th>労務費</th><th>メモ</th></tr>
-        </thead>
-        <tbody id="h-body">
-          <tr><td colspan="8" class="ld">検索ボタンを押してください</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- ============ TAB 3: 集計 ============ -->
-<div id="tab-summary" class="pn">
-  <div class="card">
-    <div class="card-ttl">🔍 集計フィルター</div>
-    <div class="fbar">
-      <div class="row">
-        <div class="fg"><label>職人</label>
-          <select id="s-who"><option value="">すべて</option></select>
-        </div>
-        <div class="fg"><label>製品</label>
-          <select id="s-prod"><option value="">すべて</option></select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="fg"><label>ステージ</label>
-          <select id="s-stage"><option value="">すべて</option></select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="fg"><label>期間（開始）</label><input type="date" id="s-from"></div>
-        <div class="fg"><label>期間（終了）</label><input type="date" id="s-to"></div>
-      </div>
-      <button class="btn btn-p btn-sm btn-full" onclick="loadSummary()" style="margin-top:4px">集計する</button>
-    </div>
-  </div>
-
-  <div id="s-stats" class="sg" style="display:none"></div>
-
-  <div class="card" id="s-cross-card" style="display:none">
-    <div class="card-ttl">📋 製品 × ステージ 人工集計表</div>
-    <div class="tw">
-      <table class="cross-table" id="s-cross-table"></table>
-    </div>
-    <div style="font-size:12px;color:#6b7a8d;margin-top:12px">
-      ※ 人工数 = 作業時間(分) ÷ 480　／　労務費 = 作業時間(分) × 42円
-    </div>
-  </div>
-</div>
-
-<!-- ============ TAB 4: 設定 ============ -->
+<!-- ============ TAB 2: 設定 ============ -->
 <div id="tab-settings" class="pn">
 
   <div class="card">
@@ -379,16 +290,24 @@ tr:active td{background:#f5fbfb}
   <div class="card">
     <div class="card-ttl">👜 製品管理</div>
     <div class="row">
-      <div class="fg full"><label>製品名</label>
-        <input type="text" id="p-name" placeholder="例: バナナショルダー">
+      <div class="fg full"><label>サンプル製品名称</label>
+        <input type="text" id="p-name" placeholder="例: バックパック 組み立て">
+      </div>
+    </div>
+    <div class="row">
+      <div class="fg w2"><label>シーズン</label>
+        <input type="text" id="p-season" placeholder="2027SS">
+      </div>
+      <div class="fg"><label>型振・VMD</label>
+        <input type="text" id="p-vmd" placeholder="VN型振り など">
       </div>
     </div>
     <div class="row">
       <div class="fg"><label>ブランド</label>
         <input type="text" id="p-brand" placeholder="TSUCHIYA など">
       </div>
-      <div class="fg"><label>企画名称</label>
-        <input type="text" id="p-plan" placeholder="XA新型ショルダー など">
+      <div class="fg"><label>企画名</label>
+        <input type="text" id="p-plan" placeholder="27SS 新メンズライン など">
       </div>
     </div>
     <div class="row">
@@ -404,7 +323,7 @@ tr:active td{background:#f5fbfb}
 
   <div class="card">
     <div class="card-ttl">🔢 ステージ管理</div>
-    <p style="font-size:13px;color:#9aa5b4;margin-bottom:14px">
+    <p style="font-size:14px;color:#9aa5b4;margin-bottom:14px">
       初期値: モック / 1st / 2nd / 最終（展示会）/ 色増し前修正 / 試験体 / ショー用
     </p>
     <div class="row">
@@ -424,11 +343,18 @@ tr:active td{background:#f5fbfb}
   <div class="modal-sheet">
     <div class="modal-ttl"><div class="modal-dot" id="modal-dot"></div><span id="modal-title">作業を追加</span></div>
     <div class="modal-field">
-      <label>製品名</label>
-      <select id="m-prod"><option value="">-- 選択 --</option></select>
+      <label>サンプル製品名称</label>
+      <select id="m-prod" onchange="onProdChange()"><option value="">-- 選択 --</option></select>
+      <!-- 製品情報自動表示 -->
+      <div class="prod-info" id="prod-info">
+        <span class="badge b-bl" id="pi-season"></span>
+        <span class="badge b-pp" id="pi-vmd"></span>
+        <span class="badge b-gy" id="pi-brand"></span>
+        <div class="prod-info-plan" id="pi-plan"></div>
+      </div>
     </div>
     <div class="modal-field">
-      <label>ステージ</label>
+      <label>サンプルフェーズ</label>
       <select id="m-stage"><option value="">-- 選択 --</option></select>
     </div>
     <div class="modal-field">
@@ -760,7 +686,6 @@ function onContentPointerDown(e) {
   if (!el) return;
   e.preventDefault();
   e.stopPropagation();
-
   if (dragState) cleanupDrag();
 
   const rowId = parseInt(el.dataset.id);
@@ -768,7 +693,6 @@ function onContentPointerDown(e) {
   if (!row) return;
 
   dragState = { rowId, startX: e.clientX, startMin: row.minutes, moved: false };
-
   document.addEventListener('mousemove', onDragMove);
   document.addEventListener('mouseup',   onDragEnd);
 }
@@ -776,10 +700,8 @@ function onContentPointerDown(e) {
 function onDragMove(e) {
   if (!dragState) return;
   const { rowId, startX, startMin } = dragState;
-  const deltaX   = e.clientX - startX;
-  const deltaMin = Math.round(deltaX / MIN_PX / 5) * 5;
+  const deltaMin = Math.round((e.clientX - startX) / MIN_PX / 5) * 5;
   if (Math.abs(deltaMin) >= 5) dragState.moved = true;
-
   const row = tlRows.find(r => r.id === rowId);
   if (!row) return;
   row.minutes = Math.max(5, startMin + deltaMin);
@@ -804,12 +726,10 @@ function cleanupDrag() {
 function onContentClick(e) {
   if (recentlyDragged) { recentlyDragged = false; return; }
   if (dragState) return;
-
   const el = e.target.closest('[data-action]');
   if (!el) return;
   const action = el.dataset.action;
   const id     = parseInt(el.dataset.id);
-
   if (action === 'resize') return;
   if (action === 'edit' && !isNaN(id)) openEditModal(id);
   else if (action === 'add')           openAddModal();
@@ -818,6 +738,29 @@ function onContentClick(e) {
 /* ======================== */
 /* モーダル                 */
 /* ======================== */
+function onProdChange() {
+  const name = document.getElementById('m-prod').value;
+  const sch  = S.schedules.find(s => s.name === name);
+  const info = document.getElementById('prod-info');
+
+  if (sch && (sch.season || sch.vmd || sch.brand || sch.plan)) {
+    const setSI = (id, val) => {
+      const el = document.getElementById(id);
+      el.textContent = val || '';
+      el.style.display = val ? '' : 'none';
+    };
+    setSI('pi-season', sch.season);
+    setSI('pi-vmd',    sch.vmd);
+    setSI('pi-brand',  sch.brand);
+    const planEl = document.getElementById('pi-plan');
+    planEl.textContent = sch.plan || '';
+    planEl.style.display = sch.plan ? '' : 'none';
+    info.classList.add('show');
+  } else {
+    info.classList.remove('show');
+  }
+}
+
 function openAddModal() {
   editingId = null;
   const color = COLORS[colorIdx % COLORS.length];
@@ -827,6 +770,7 @@ function openAddModal() {
   document.getElementById('m-stage').value = '';
   document.getElementById('m-memo').value  = '';
   document.getElementById('modal-del').style.display = 'none';
+  document.getElementById('prod-info').classList.remove('show');
   document.getElementById('modal-bg').classList.add('show');
 }
 
@@ -840,6 +784,7 @@ function openEditModal(id) {
   document.getElementById('m-stage').value = row.stageName;
   document.getElementById('m-memo').value  = row.memo || '';
   document.getElementById('modal-del').style.display = '';
+  onProdChange();
   document.getElementById('modal-bg').classList.add('show');
 }
 
@@ -851,7 +796,7 @@ function saveBlock() {
   const stage = document.getElementById('m-stage').value.trim();
   const memo  = document.getElementById('m-memo').value.trim();
   if (!prod)  { toast('製品名を選択してください', 'err'); return; }
-  if (!stage) { toast('ステージを選択してください', 'err'); return; }
+  if (!stage) { toast('フェーズを選択してください', 'err'); return; }
 
   if (editingId === null) {
     const totalMin = getJikan();
@@ -927,104 +872,6 @@ function resetForm() {
 }
 
 /* ======================== */
-/* 履歴                     */
-/* ======================== */
-function loadHistory() {
-  const p = [v('h-who'), v('h-prod'), v('h-stage'), v('h-from'), v('h-to')];
-  document.getElementById('h-body').innerHTML =
-    '<tr><td colspan="8" class="ld"><div class="sp"></div><br>読み込み中...</td></tr>';
-  google.script.run
-    .withSuccessHandler(logs => {
-      const tb = document.getElementById('h-body');
-      if (!logs?.length) {
-        tb.innerHTML = '<tr><td colspan="8" class="empty">該当データなし</td></tr>';
-        return;
-      }
-      tb.innerHTML = logs.map(l => `
-        <tr>
-          <td>${esc(l.date)}</td>
-          <td><span class="badge b-bl">${esc(l.craftsmanName)}</span></td>
-          <td>${esc(l.productName)}</td>
-          <td><span class="badge b-gy">${esc(l.stageName)}</span></td>
-          <td style="font-weight:800">${l.minutes}分</td>
-          <td style="color:#0BBDC4;font-weight:800">${Number(l.ninkuCount).toFixed(3)}</td>
-          <td style="color:#276749;font-weight:700">¥${Number(l.cost).toLocaleString()}</td>
-          <td style="color:#6b7a8d;font-size:13px">${esc(l.memo)}</td>
-        </tr>
-      `).join('');
-    })
-    .withFailureHandler(() => toast('履歴取得失敗','err'))
-    .getLogs(...p);
-}
-
-function clearHist() {
-  ['h-who','h-prod','h-stage','h-from','h-to'].forEach(id => { document.getElementById(id).value=''; });
-}
-
-/* ======================== */
-/* 集計                     */
-/* ======================== */
-function loadSummary() {
-  const p = [v('s-who'), v('s-prod'), v('s-stage'), v('s-from'), v('s-to')];
-  google.script.run
-    .withSuccessHandler(data => {
-      if (!data?.rows?.length) { toast('集計データなし','err'); return; }
-
-      const { stages, rows } = data;
-      const totMin   = rows.reduce((s,r) => s + r.totalMin, 0);
-      const totNinku = rows.reduce((s,r) => s + r.totalNinku, 0);
-      const totCost  = rows.reduce((s,r) => s + r.totalCost, 0);
-
-      const sc = document.getElementById('s-stats');
-      sc.style.display = 'grid';
-      sc.innerHTML = `
-        <div class="sc bl"><div class="sv">${totNinku.toFixed(2)}</div><div class="sl">合計人工数</div></div>
-        <div class="sc gn"><div class="sv">${(totMin/60).toFixed(1)}h</div><div class="sl">合計作業時間</div></div>
-        <div class="sc or"><div class="sv">¥${Math.round(totCost/10000)}万</div><div class="sl">合計労務費</div></div>
-        <div class="sc pp"><div class="sv">${rows.length}</div><div class="sl">製品数</div></div>
-      `;
-
-      const allStages = stages.concat(
-        rows.flatMap(r => Object.keys(r.stages)).filter(st => !stages.includes(st))
-      );
-
-      let html = `<thead><tr>
-        <th>製品名</th>
-        ${allStages.map(st=>`<th class="stage">${esc(st)}</th>`).join('')}
-        <th class="stage">合計人工</th>
-        <th class="stage">労務費</th>
-      </tr></thead><tbody>`;
-
-      rows.forEach(row => {
-        html += `<tr>
-          <td><strong>${esc(row.productName)}</strong></td>
-          ${allStages.map(st => {
-            const m = row.stages[st] || 0;
-            return `<td class="ninku${m===0?' zero':''}">${m > 0 ? (m/480).toFixed(2) : '—'}</td>`;
-          }).join('')}
-          <td class="total">${row.totalNinku.toFixed(2)}</td>
-          <td class="cost">¥${row.totalCost.toLocaleString()}</td>
-        </tr>`;
-      });
-
-      html += `<tr style="background:#f0f4f8;font-weight:800">
-        <td>【合計】</td>
-        ${allStages.map(st => {
-          const m = rows.reduce((s,r) => s+(r.stages[st]||0), 0);
-          return `<td class="ninku">${m>0?(m/480).toFixed(2):'—'}</td>`;
-        }).join('')}
-        <td class="total">${totNinku.toFixed(2)}</td>
-        <td class="cost">¥${totCost.toLocaleString()}</td>
-      </tr></tbody>`;
-
-      document.getElementById('s-cross-table').innerHTML = html;
-      document.getElementById('s-cross-card').style.display = 'block';
-    })
-    .withFailureHandler(() => toast('集計失敗','err'))
-    .getSummary(...p);
-}
-
-/* ======================== */
 /* 設定管理                 */
 /* ======================== */
 function addCraftsman() {
@@ -1034,13 +881,15 @@ function addCraftsman() {
     .withSuccessHandler(r => { toast(r.message,r.success?'ok':'err'); if(r.success){document.getElementById('c-name').value=''; reload();} })
     .addCraftsman(name, document.getElementById('c-note').value.trim());
 }
+
 function addSchedule() {
   const name = document.getElementById('p-name').value.trim();
   if (!name) { toast('製品名を入力してください','err'); return; }
   google.script.run
     .withSuccessHandler(r => { toast(r.message,r.success?'ok':'err'); if(r.success){document.getElementById('p-name').value=''; reload();} })
-    .addSchedule(name, v('p-brand'), v('p-plan'), v('p-status'));
+    .addSchedule(name, v('p-season'), v('p-vmd'), v('p-brand'), v('p-plan'), v('p-status'));
 }
+
 function addStage() {
   const name = document.getElementById('st-name').value.trim();
   if (!name) { toast('ステージ名を入力してください','err'); return; }
@@ -1048,6 +897,7 @@ function addStage() {
     .withSuccessHandler(r => { toast(r.message,r.success?'ok':'err'); if(r.success){document.getElementById('st-name').value=''; reload();} })
     .addStage(name);
 }
+
 function delCraftsman(name){ if(!confirm(`「${name}」を削除しますか？`))return; google.script.run.withSuccessHandler(r=>{toast(r.message,r.success?'ok':'err');if(r.success)reload();}).deleteCraftsman(name); }
 function delSchedule(name) { if(!confirm(`「${name}」を削除しますか？`))return; google.script.run.withSuccessHandler(r=>{toast(r.message,r.success?'ok':'err');if(r.success)reload();}).deleteSchedule(name); }
 function delStage(name)    { if(!confirm(`「${name}」を削除しますか？`))return; google.script.run.withSuccessHandler(r=>{toast(r.message,r.success?'ok':'err');if(r.success)reload();}).deleteStage(name); }
@@ -1056,9 +906,22 @@ function renderLists() {
   document.getElementById('list-c').innerHTML = S.craftsmen.length
     ? mTable(['ID','名前','備考'], S.craftsmen.map(c=>[c.id, `<strong>${esc(c.name)}</strong>`, esc(c.note), `<button class="btn btn-d btn-sm" onclick="delCraftsman('${esc(c.name)}')">削除</button>`]))
     : '<div class="empty">未登録</div>';
+
   document.getElementById('list-p').innerHTML = S.schedules.length
-    ? mTable(['製品名','ブランド','企画名称','状態'], S.schedules.map(s=>[`<strong>${esc(s.name)}</strong>`, esc(s.brand), esc(s.plan), `<span class="badge ${s.status==='完了'?'b-gn':'b-bl'}">${esc(s.status)}</span>`, `<button class="btn btn-d btn-sm" onclick="delSchedule('${esc(s.name)}')">削除</button>`]))
+    ? mTable(
+        ['製品名','シーズン','型振・VMD','ブランド','企画名','状態'],
+        S.schedules.map(s => [
+          `<strong>${esc(s.name)}</strong>`,
+          esc(s.season) || '—',
+          esc(s.vmd)    || '—',
+          esc(s.brand)  || '—',
+          esc(s.plan)   || '—',
+          `<span class="badge ${s.status==='完了'?'b-gn':'b-bl'}">${esc(s.status)}</span>`,
+          `<button class="btn btn-d btn-sm" onclick="delSchedule('${esc(s.name)}')">削除</button>`
+        ])
+      )
     : '<div class="empty">未登録</div>';
+
   document.getElementById('list-st').innerHTML = S.stages.length
     ? mTable(['順番','ステージ名'], S.stages.map((s,i)=>[i+1, `<strong>${esc(s.name)}</strong>`, `<button class="btn btn-d btn-sm" onclick="delStage('${esc(s.name)}')">削除</button>`]))
     : '<div class="empty">未登録</div>';
@@ -1075,10 +938,7 @@ function mTable(headers, rows) {
 /* セレクト補充             */
 /* ======================== */
 function fillAll() {
-  fill('r-who', S.craftsmen.map(c=>c.name), '-- 選択 --');
-  ['h-who','s-who'].forEach(id => fill(id, S.craftsmen.map(c=>c.name), 'すべて'));
-  ['h-prod','s-prod'].forEach(id => fill(id, S.schedules.map(s=>s.name), 'すべて'));
-  ['h-stage','s-stage'].forEach(id => fill(id, S.stages.map(s=>s.name), 'すべて'));
+  fill('r-who',   S.craftsmen.map(c=>c.name), '-- 選択 --');
   fill('m-prod',  S.schedules.map(s=>s.name), '-- 選択 --');
   fill('m-stage', S.stages.map(s=>s.name),    '-- 選択 --');
 }

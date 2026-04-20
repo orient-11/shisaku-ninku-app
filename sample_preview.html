@@ -2,328 +2,154 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>試作課 日報 — プレビュー</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f0f6f6;color:#1a202c;font-size:15px}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f0f6f6;color:#1a202c;font-size:17px;-webkit-tap-highlight-color:transparent}
 
 /* ヘッダー */
-.hd{background:linear-gradient(135deg,#0BBDC4 0%,#0896A0 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(11,189,196,.35)}
+.hd{background:linear-gradient(135deg,#0BBDC4 0%,#0896A0 100%);color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(11,189,196,.35)}
+.hd-left{display:flex;align-items:center;gap:10px}
 .hd h1{font-size:20px;font-weight:800;letter-spacing:-.02em}
-.hd small{font-size:12px;opacity:.8;display:block;margin-top:1px}
-.setup-btn{background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.5);color:#fff;padding:8px 18px;border-radius:22px;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s}
-.setup-btn:hover{background:rgba(255,255,255,.3)}
+.hd small{font-size:13px;opacity:.8;display:block;margin-top:2px}
+.setup-btn{background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.5);color:#fff;padding:9px 18px;border-radius:22px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.02em;transition:background .15s}
+.setup-btn:active{background:rgba(255,255,255,.35)}
 
 /* タブ */
 .tabs{display:flex;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.tab{flex:1;padding:12px 4px 10px;border:none;background:none;cursor:pointer;font-size:12px;font-weight:700;color:#6b7a8d;border-bottom:3px solid transparent;white-space:nowrap;line-height:1.3;transition:color .15s,border-color .15s}
-.tab .ic{display:block;font-size:20px;margin-bottom:2px}
+.tab{flex:1;padding:14px 4px 12px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:700;color:#6b7a8d;border-bottom:3px solid transparent;white-space:nowrap;line-height:1.3;transition:color .15s,border-color .15s;letter-spacing:.02em}
+.tab .ic{display:block;font-size:24px;margin-bottom:3px}
 .tab.on{color:#0BBDC4;border-bottom-color:#0BBDC4}
-.tab:hover:not(.on){color:#2d3748}
 
 /* メイン */
-.main{padding:20px 24px;max-width:1200px;margin:0 auto;padding-bottom:40px}
+.main{padding:16px;max-width:1200px;margin:0 auto;padding-bottom:32px}
 .pn{display:none}.pn.on{display:block}
 
 /* カード */
-.card{background:#fff;border-radius:16px;padding:20px 22px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.card-ttl{font-size:14px;font-weight:800;color:#2d3748;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #d6eef0;display:flex;align-items:center;gap:8px}
+.card{background:#fff;border-radius:16px;padding:20px 18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.card-ttl{font-size:15px;font-weight:800;color:#2d3748;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #d6eef0;display:flex;align-items:center;gap:8px;letter-spacing:.01em;flex-wrap:wrap}
 
-/* 基本情報 1行 */
-.info-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
-.info-field{display:flex;flex-direction:column;gap:6px}
-.info-field.f-who{flex:2;min-width:140px}
-.info-field.f-date{flex:2;min-width:140px}
-.info-field.f-time{flex:1;min-width:100px}
-.info-field.f-break{flex:0 0 90px}
-label{font-size:11px;font-weight:800;color:#4a5568;letter-spacing:.06em;text-transform:uppercase}
-select,input[type="date"],input[type="time"],input[type="number"],input[type="text"]{
-  width:100%;padding:10px 12px;border:2px solid #ccdcde;border-radius:10px;font-size:15px;
-  color:#1a202c;background:#f5fbfb;font-family:inherit;transition:border .2s,box-shadow .2s;
-  -webkit-appearance:none;appearance:none}
-select:focus,input:focus{outline:none;border-color:#0BBDC4;box-shadow:0 0 0 3px rgba(11,189,196,.12);background:#fff}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a8d' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+/* フォーム */
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.fg{flex:1;min-width:130px}
+.fg.w2{min-width:95px;max-width:150px}
+.fg.full{flex:1 0 100%}
+label{display:block;font-size:13px;font-weight:800;color:#4a5568;letter-spacing:.05em;margin-bottom:7px;text-transform:uppercase}
+select,input{width:100%;padding:14px 13px;border:2px solid #ccdcde;border-radius:12px;font-size:17px;color:#1a202c;background:#f5fbfb;font-family:inherit;transition:border .2s,box-shadow .2s,background .2s;-webkit-appearance:none;appearance:none}
+select:focus,input:focus{outline:none;border-color:#0BBDC4;box-shadow:0 0 0 4px rgba(11,189,196,.12);background:#fff}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a8d' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
 
-/* 実働時間インライン */
-.info-jikan{background:linear-gradient(135deg,#e0f7f8,#c8eff1);border:2px solid #8dd8db;border-radius:12px;padding:10px 18px;white-space:nowrap;display:flex;flex-direction:column;justify-content:center;gap:2px;flex-shrink:0}
-.ij-label{font-size:10px;font-weight:800;color:#0A6B70;letter-spacing:.07em;text-transform:uppercase}
-.ij-val{font-size:28px;font-weight:900;color:#0BBDC4;line-height:1;letter-spacing:-.02em}
-.ij-sub{font-size:12px;color:#2a9099;font-weight:700}
-.ij-detail{font-size:10px;color:#2a9099;margin-top:1px}
+/* 実働時間表示 */
+.jikan-box{background:linear-gradient(135deg,#e0f7f8,#c8eff1);border:2px solid #8dd8db;border-radius:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.jikan-box .jlabel{font-size:13px;font-weight:800;color:#0A6B70;letter-spacing:.05em;text-transform:uppercase}
+.jikan-box .value{font-size:30px;font-weight:900;color:#0BBDC4;line-height:1}
+.jikan-box .sub{font-size:13px;color:#2a9099;margin-top:4px}
+.jikan-box .jninku{font-size:13px;color:#2a9099;text-align:right;margin-top:3px;font-weight:700}
 
 /* ボタン */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
-.btn-p{background:#0BBDC4;color:#fff;box-shadow:0 2px 8px rgba(11,189,196,.3)}.btn-p:hover{background:#0BBDC4cc}
-.btn-s{background:#38a169;color:#fff;box-shadow:0 2px 8px rgba(56,161,105,.25)}.btn-s:hover{background:#2f855a}
-.btn-d{background:#e53e3e;color:#fff}.btn-d:hover{background:#c53030}
-.btn-g{background:#edf5f5;color:#2d3748;border:2px solid #b0cfd2}.btn-g:hover{background:#d6eef0}
-.btn-sm{padding:7px 13px;font-size:12px;border-radius:8px}
-.btn-full{width:100%;padding:14px;font-size:15px;border-radius:12px}
-.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px 20px;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap;letter-spacing:.02em}
+.btn-p{background:#0BBDC4;color:#fff;box-shadow:0 2px 8px rgba(11,189,196,.35)}.btn-p:active{background:#0896A0;transform:scale(.98)}
+.btn-s{background:#38a169;color:#fff;box-shadow:0 2px 8px rgba(56,161,105,.3)}.btn-s:active{background:#2f855a;transform:scale(.98)}
+.btn-d{background:#e53e3e;color:#fff}.btn-d:active{background:#c53030}
+.btn-g{background:#edf5f5;color:#2d3748;border:2px solid #b0cfd2}.btn-g:active{background:#d6eef0}
+.btn-sm{padding:10px 16px;font-size:14px;border-radius:10px}
+.btn-full{width:100%;padding:18px;font-size:17px;border-radius:14px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none !important}
 
 /* テーブル */
-.tw{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th{background:#edf8f9;padding:10px 12px;text-align:left;font-weight:800;color:#2d3748;border-bottom:2px solid #b0cfd2;white-space:nowrap;font-size:12px;letter-spacing:.04em}
-td{padding:10px 12px;border-bottom:1px solid #d6eef0}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{background:#edf8f9;padding:12px 12px;text-align:left;font-weight:800;color:#2d3748;border-bottom:2px solid #b0cfd2;white-space:nowrap;font-size:13px;letter-spacing:.04em}
+td{padding:13px 12px;border-bottom:1px solid #d6eef0;font-size:15px}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:#f5fbfb}
-.cross-table th.stage{text-align:center;font-size:11px;padding:8px 6px}
-.cross-table td.ninku{text-align:center;font-weight:800;color:#0BBDC4}
-.cross-table td.ninku.zero{color:#8aa5a8;font-weight:400}
-.cross-table td.total{background:#e0f7f8;font-weight:800;color:#0A6B70;text-align:center}
-.cross-table td.cost{background:#f0fff4;font-weight:800;color:#276749;text-align:right;white-space:nowrap}
+tr:active td{background:#f5fbfb}
 
 /* バッジ */
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:800}
+.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:800}
 .b-bl{background:#e0f7f8;color:#0A6B70}
 .b-gn{background:#f0fff4;color:#276749}
 .b-gy{background:#e8ecef;color:#2d3748}
-
-/* フィルター */
-.fbar{background:#f5fbfb;border:2px solid #b0cfd2;border-radius:12px;padding:14px;margin-bottom:14px}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.fg{flex:1;min-width:120px}
-
-/* 統計 */
-.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.sc{border-radius:14px;padding:16px;text-align:center;color:#fff}
-.sc.bl{background:linear-gradient(135deg,#0BBDC4,#0896A0)}
-.sc.gn{background:linear-gradient(135deg,#38a169,#2f855a)}
-.sc.pp{background:linear-gradient(135deg,#7C5CBF,#5e43a0)}
-.sc.or{background:linear-gradient(135deg,#C87455,#a85a3a)}
-.sv{font-size:28px;font-weight:900;line-height:1}
-.sl{font-size:12px;opacity:.9;margin-top:5px;font-weight:700}
+.b-or{background:#fff3e8;color:#9a4a1a}
+.b-pp{background:#f0eeff;color:#5e43a0}
 
 /* トースト */
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(140px);background:#2d3748;color:#fff;padding:12px 24px;border-radius:32px;font-size:14px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.2);z-index:9999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-width:80vw;text-align:center;pointer-events:none}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(140px);background:#2d3748;color:#fff;padding:14px 24px;border-radius:32px;font-size:15px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.2);z-index:9999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);max-width:88vw;text-align:center;pointer-events:none}
 #toast.show{transform:translateX(-50%) translateY(0)}
 #toast.ok{background:#38a169}#toast.err{background:#e53e3e}#toast.warn{background:#C87455}
 
-.ld{text-align:center;padding:36px;color:#6b7a8d;font-size:14px}
-.empty{text-align:center;padding:36px;color:#6b7a8d}
+.ld{text-align:center;padding:36px;color:#6b7a8d;font-size:15px}
+.empty{text-align:center;padding:36px 16px;color:#6b7a8d;font-size:15px}
 
 /* =====================================================
    横型タイムライン（Ganttチャート風）
-   上: 0:00〜24:00 横軸ルーラー
-   下: タスクバーが時間軸に沿って横に並ぶ
    ===================================================== */
-
-/* 外枠 */
-.gcal-wrap{
-  overflow:auto;
-  border:2px solid #d6eef0;
-  border-radius:12px;
-  max-height:480px;
-  scroll-behavior:smooth;
-}
-
-/* 全体コンテナ（幅はJSで設定） */
-.gcal-inner{
-  position:relative;
-}
-
-/* 時間ルーラー（上部・スクロール時sticky） */
-.gcal-ruler{
-  height:30px;
-  position:sticky;
-  top:0;
-  z-index:10;
-  background:#f5fbfb;
-  border-bottom:2px solid #d6eef0;
-}
-.gcal-rtick{
-  position:absolute;
-  top:0;bottom:0;
-  display:flex;
-  align-items:center;
-  padding-left:5px;
-  font-size:11px;
-  font-weight:700;
-  color:#6b7a8d;
-  border-left:1px solid #e4eef0;
-  white-space:nowrap;
-  pointer-events:none;
-}
-
-/* タスク行エリア */
-.gcal-rows{
-  position:relative;
-}
-
-/* 縦グリッド線 */
-.gcal-vgrid{
-  position:absolute;
-  top:0;bottom:0;width:1px;
-  background:#e4eef0;
-  pointer-events:none;
-  z-index:0;
-}
-.gcal-vgrid.half{background:#f5fafa;}
-
-/* 勤務時間帯ハイライト */
-.gcal-work-bg{
-  position:absolute;
-  top:0;bottom:0;
-  background:rgba(11,189,196,.05);
-  border-left:3px solid rgba(11,189,196,.3);
-  border-right:2px solid rgba(200,116,85,.3);
-  pointer-events:none;
-  z-index:0;
-}
-
-/* 出勤・退勤ライン（縦線） */
-.gcal-clock-line{
-  position:absolute;
-  top:0;bottom:0;width:2px;
-  pointer-events:none;
-  z-index:5;
-}
-.gcal-clock-line.in {background:#0BBDC4}
+.gcal-wrap{overflow:auto;border:2px solid #d6eef0;border-radius:12px;max-height:480px;scroll-behavior:smooth}
+.gcal-inner{position:relative}
+.gcal-ruler{height:32px;position:sticky;top:0;z-index:10;background:#f5fbfb;border-bottom:2px solid #d6eef0}
+.gcal-rtick{position:absolute;top:0;bottom:0;display:flex;align-items:center;padding-left:5px;font-size:12px;font-weight:700;color:#6b7a8d;border-left:1px solid #e4eef0;white-space:nowrap;pointer-events:none}
+.gcal-rows{position:relative}
+.gcal-vgrid{position:absolute;top:0;bottom:0;width:1px;background:#e4eef0;pointer-events:none;z-index:0}
+.gcal-work-bg{position:absolute;top:0;bottom:0;background:rgba(11,189,196,.05);border-left:3px solid rgba(11,189,196,.3);border-right:2px solid rgba(200,116,85,.3);pointer-events:none;z-index:0}
+.gcal-clock-line{position:absolute;top:0;bottom:0;width:2px;pointer-events:none;z-index:5}
+.gcal-clock-line.in{background:#0BBDC4}
 .gcal-clock-line.out{background:#C87455}
-.gcal-clock-label{
-  position:absolute;
-  top:3px;left:3px;
-  font-size:9px;font-weight:800;
-  padding:1px 5px;border-radius:3px;color:#fff;
-  white-space:nowrap;
-}
-.gcal-clock-line.in  .gcal-clock-label{background:#0BBDC4}
+.gcal-clock-label{position:absolute;top:3px;left:3px;font-size:10px;font-weight:800;padding:2px 6px;border-radius:3px;color:#fff;white-space:nowrap}
+.gcal-clock-line.in .gcal-clock-label{background:#0BBDC4}
 .gcal-clock-line.out .gcal-clock-label{background:#C87455}
-
-/* タスクバー */
-.gcal-bar{
-  position:absolute;
-  height:44px;
-  border-radius:7px;
-  display:flex;
-  align-items:stretch;
-  overflow:hidden;
-  box-shadow:0 2px 8px rgba(0,0,0,.18);
-  cursor:pointer;
-  user-select:none;
-  -webkit-user-select:none;
-  transition:box-shadow .15s;
-  z-index:2;
-}
+.gcal-bar{position:absolute;height:44px;border-radius:7px;display:flex;align-items:stretch;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:pointer;user-select:none;-webkit-user-select:none;transition:box-shadow .15s;z-index:2}
 .gcal-bar:hover{box-shadow:0 3px 14px rgba(0,0,0,.28)}
-.gcal-bar-body{
-  flex:1;
-  display:flex;
-  align-items:center;
-  padding:0 10px;
-  color:#fff;
-  overflow:hidden;
-  gap:6px;
-  min-width:0;
-}
-.gcal-bar-name{font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gcal-bar-stage{font-size:11px;opacity:.85;white-space:nowrap;flex-shrink:0}
-.gcal-bar-min{font-size:11px;opacity:.8;white-space:nowrap;flex-shrink:0}
-
-/* ドラッグハンドル（右端） */
-.gcal-bar-handle{
-  width:12px;
-  flex-shrink:0;
-  background:rgba(0,0,0,.22);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:ew-resize;
-  touch-action:none;
-}
-.gcal-bar-handle::after{
-  content:'';
-  display:block;
-  width:3px;height:18px;
-  background:rgba(255,255,255,.7);
-  border-radius:2px;
-}
-
-/* 追加バー */
-.gcal-add-bar{
-  position:absolute;
-  left:8px;
-  height:44px;
-  border:2.5px dashed #8dd8db;
-  border-radius:7px;
-  background:#f5fbfb;
-  display:flex;
-  align-items:center;
-  padding:0 12px;
-  cursor:pointer;
-  color:#2a9099;
-  font-size:12px;
-  font-weight:700;
-  gap:6px;
-  transition:background .15s,border-color .15s;
-  z-index:2;
-  white-space:nowrap;
-  overflow:hidden;
-}
+.gcal-bar-body{flex:1;display:flex;align-items:center;padding:0 10px;color:#fff;overflow:hidden;gap:6px;min-width:0}
+.gcal-bar-name{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gcal-bar-stage{font-size:12px;opacity:.85;white-space:nowrap;flex-shrink:0}
+.gcal-bar-min{font-size:12px;opacity:.8;white-space:nowrap;flex-shrink:0}
+.gcal-bar-handle{width:12px;flex-shrink:0;background:rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;cursor:ew-resize;touch-action:none}
+.gcal-bar-handle::after{content:'';display:block;width:3px;height:18px;background:rgba(255,255,255,.7);border-radius:2px}
+.gcal-add-bar{position:absolute;left:8px;height:44px;border:2.5px dashed #8dd8db;border-radius:7px;background:#f5fbfb;display:flex;align-items:center;padding:0 12px;cursor:pointer;color:#2a9099;font-size:13px;font-weight:700;gap:6px;transition:background .15s,border-color .15s;z-index:2;white-space:nowrap;overflow:hidden}
 .gcal-add-bar:hover{background:#d6eef0;border-color:#0BBDC4}
+.gcal-break-band{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,rgba(150,150,150,.08),rgba(150,150,150,.08) 3px,transparent 3px,transparent 9px);border-left:2px dashed #b0bec5;border-right:1px solid #d6eef0;pointer-events:none;z-index:1}
+.gcal-break-label{position:absolute;top:4px;left:0;right:0;font-size:10px;font-weight:800;color:#90a4ae;text-align:center;white-space:nowrap}
 
-/* ===================== */
-/* 合計 vs 実働 比較     */
-/* ===================== */
+/* 合計 vs 実働 比較 */
 .tl-compare{display:flex;align-items:stretch;margin-top:16px;border-radius:14px;overflow:hidden;border:2px solid #d6eef0}
 .tl-cmp-side{flex:1;padding:14px 20px;text-align:center}
 .tl-cmp-side.used{background:linear-gradient(135deg,#e0f7f8,#c8eff1)}
 .tl-cmp-side.jikan{background:#f5fbfb}
-.tl-cmp-label{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.tl-cmp-label{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
 .tl-cmp-side.used .tl-cmp-label{color:#0A6B70}
 .tl-cmp-side.jikan .tl-cmp-label{color:#6b7a8d}
 .tl-cmp-val{font-size:32px;font-weight:900;line-height:1;letter-spacing:-.02em}
 .tl-cmp-side.used .tl-cmp-val{color:#0BBDC4}
 .tl-cmp-side.jikan .tl-cmp-val{color:#2d3748}
 .tl-cmp-val.over{color:#e53e3e}
-.tl-cmp-sub{font-size:12px;font-weight:700;margin-top:4px}
+.tl-cmp-sub{font-size:13px;font-weight:700;margin-top:4px}
 .tl-cmp-side.used .tl-cmp-sub{color:#2a9099}
 .tl-cmp-side.jikan .tl-cmp-sub{color:#6b7a8d}
 .tl-cmp-divider{width:2px;background:#d6eef0;flex-shrink:0}
 .tl-cmp-diff{background:#fff;padding:12px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:90px}
-.tl-cmp-diff-val{font-size:15px;font-weight:900;color:#2d3748}
-.tl-cmp-diff-label{font-size:10px;font-weight:700;color:#6b7a8d;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+.tl-cmp-diff-val{font-size:16px;font-weight:900;color:#2d3748}
+.tl-cmp-diff-label{font-size:11px;font-weight:700;color:#6b7a8d;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
 .tl-cmp-diff.ok .tl-cmp-diff-val{color:#38a169}
 .tl-cmp-diff.over .tl-cmp-diff-val{color:#e53e3e}
-
-/* 凡例 */
 .tl-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid #d6eef0}
-.tl-leg-item{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#2d3748}
-.tl-leg-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.tl-leg-item{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#2d3748}
+.tl-leg-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
+.tl-hint{font-size:12px;font-weight:600;color:#6b7a8d;margin-left:auto}
 
-/* 休憩バンド */
-.gcal-break-band{
-  position:absolute;
-  top:0;bottom:0;
-  background:repeating-linear-gradient(45deg,rgba(150,150,150,.08),rgba(150,150,150,.08) 3px,transparent 3px,transparent 9px);
-  border-left:2px dashed #b0bec5;
-  border-right:1px solid #d6eef0;
-  pointer-events:none;
-  z-index:1;
-}
-.gcal-break-label{
-  position:absolute;
-  top:4px;left:0;right:0;
-  font-size:9px;font-weight:800;
-  color:#90a4ae;text-align:center;
-  white-space:nowrap;
-}
+/* 製品情報バッジ（モーダル自動表示） */
+.prod-info{display:none;flex-wrap:wrap;gap:6px;margin-top:10px;padding:10px 12px;background:#f5fbfb;border:1.5px solid #d6eef0;border-radius:10px}
+.prod-info.show{display:flex}
+.prod-info-plan{font-size:14px;font-weight:700;color:#4a5568;width:100%;margin-top:4px}
 
-/* ヒント */
-.tl-hint{font-size:11px;font-weight:600;color:#6b7a8d;margin-left:auto}
-
-/* ===================== */
-/* モーダル（中央）      */
-/* ===================== */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:400;display:none;align-items:center;justify-content:center}
+/* モーダル */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:400;display:none;align-items:center;justify-content:center;padding:16px}
 .modal-bg.show{display:flex}
-.modal-sheet{background:#fff;border-radius:16px;padding:28px 28px 32px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(0,0,0,.2);animation:fadeIn .2s ease}
+.modal-sheet{background:#fff;border-radius:16px;padding:28px 24px 32px;width:100%;max-width:460px;box-shadow:0 8px 40px rgba(0,0,0,.2);animation:fadeIn .2s ease}
 @keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-.modal-ttl{font-size:17px;font-weight:800;color:#2d3748;margin-bottom:20px;display:flex;align-items:center;gap:10px}
-.modal-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0}
+.modal-ttl{font-size:18px;font-weight:800;color:#2d3748;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.modal-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0}
 .modal-field{margin-bottom:14px}
+.modal-field label{margin-bottom:6px}
 .modal-actions{display:flex;gap:10px;margin-top:20px}
 .modal-actions .btn{flex:1}
 </style>
@@ -331,14 +157,17 @@ tr:hover td{background:#f5fbfb}
 <body>
 
 <header class="hd">
-  <div><h1>🧵 試作課 日報</h1><small>作業時間・人工管理</small></div>
+  <div class="hd-left">
+    <div>
+      <h1>🧵 試作課 日報</h1>
+      <small>作業時間・人工管理</small>
+    </div>
+  </div>
   <button class="setup-btn" onclick="toast('※ プレビュー版です','warn')">初期設定</button>
 </header>
 
 <nav class="tabs">
   <button class="tab on" onclick="sw('report',this)"><span class="ic">📝</span>日報入力</button>
-  <button class="tab"    onclick="sw('history',this)"><span class="ic">📋</span>履歴</button>
-  <button class="tab"    onclick="sw('summary',this)"><span class="ic">📊</span>集計</button>
   <button class="tab"    onclick="sw('settings',this)"><span class="ic">⚙️</span>設定</button>
 </nav>
 
@@ -347,59 +176,58 @@ tr:hover td{background:#f5fbfb}
 <!-- ====== TAB 1: 日報入力 ====== -->
 <div id="tab-report" class="pn on">
 
-  <!-- 基本情報 -->
   <div class="card">
     <div class="card-ttl">👷 基本情報</div>
-    <div class="info-row">
-      <div class="info-field f-who">
+    <div class="row">
+      <div class="fg">
         <label>職人</label>
         <select id="r-who">
           <option value="">-- 選択 --</option>
           <option>田中 太郎</option><option>佐藤 花子</option><option>鈴木 一郎</option>
         </select>
       </div>
-      <div class="info-field f-date">
+      <div class="fg">
         <label>作業日</label>
         <input type="date" id="r-date">
       </div>
-      <div class="info-field f-time">
+    </div>
+    <div class="row">
+      <div class="fg w2">
         <label>出勤</label>
         <input type="time" id="r-in" value="08:30" onchange="snapTime('r-in');autoCalcBreak()" oninput="autoCalcBreak()">
       </div>
-      <div class="info-field f-time">
+      <div class="fg w2">
         <label>退勤</label>
         <input type="time" id="r-out" value="17:45" onchange="snapTime('r-out');autoCalcBreak()" oninput="autoCalcBreak()">
       </div>
-      <div class="info-field f-break">
+      <div class="fg w2">
         <label>休憩(分) ※自動</label>
         <input type="number" id="r-break" value="75" min="0" step="5" oninput="calcJikan()">
       </div>
-      <div class="info-jikan">
-        <div class="ij-label">実働時間</div>
-        <div class="ij-val" id="jikan-val">555分</div>
-        <div class="ij-sub" id="jikan-ninku">1.16人工</div>
-        <div class="ij-detail" id="jikan-sub">8:30〜17:45 休憩75分</div>
+    </div>
+    <div class="jikan-box">
+      <div>
+        <div class="jlabel">実働時間</div>
+        <div class="sub" id="jikan-sub">8:30〜17:45 休憩75分</div>
+      </div>
+      <div style="text-align:right">
+        <div class="value" id="jikan-val">555分</div>
+        <div class="jninku" id="jikan-ninku">= 1.16人工</div>
       </div>
     </div>
   </div>
 
-  <!-- タイムライン -->
   <div class="card">
     <div class="card-ttl">
       📅 作業タイムライン
-      <span class="tl-hint">バー右端ドラッグ→時間調整　バーをクリック→編集　＋追加エリアをクリック→作業追加</span>
+      <span class="tl-hint">右端ドラッグ→時間調整　バークリック→編集　＋をクリック→追加</span>
     </div>
-
     <div class="gcal-wrap" id="gcal-wrap">
       <div class="gcal-inner" id="gcal-inner">
-        <!-- 時間ルーラー（横軸） -->
         <div class="gcal-ruler" id="gcal-ruler"></div>
-        <!-- タスク行 -->
         <div class="gcal-rows" id="gcal-rows"></div>
       </div>
     </div>
-
-    <!-- 合計 vs 実働 比較 -->
     <div class="tl-compare">
       <div class="tl-cmp-side used">
         <div class="tl-cmp-label">作業合計</div>
@@ -418,96 +246,94 @@ tr:hover td{background:#f5fbfb}
         <div class="tl-cmp-sub" id="cmp-jikan-sub">1.16人工</div>
       </div>
     </div>
-
     <div class="tl-legend" id="tl-legend"></div>
   </div>
 
   <button class="btn btn-s btn-full" onclick="demoSubmit()">✔ 日報を提出する</button>
 </div>
 
-<!-- ====== TAB 2: 履歴 ====== -->
-<div id="tab-history" class="pn">
-  <div class="card">
-    <div class="card-ttl">🔍 絞り込み</div>
-    <div class="fbar">
-      <div class="row">
-        <div class="fg"><label>職人</label><select><option>すべて</option><option>田中 太郎</option><option>佐藤 花子</option></select></div>
-        <div class="fg"><label>製品</label><select><option>すべて</option><option>バナナショルダー</option><option>ミニトート</option></select></div>
-        <div class="fg"><label>ステージ</label><select><option>すべて</option><option>モック</option><option>1st</option><option>2nd</option></select></div>
-        <div class="fg"><label>期間（開始）</label><input type="date"></div>
-        <div class="fg"><label>期間（終了）</label><input type="date"></div>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:4px">
-        <button class="btn btn-p btn-sm" onclick="loadDemoHistory()" style="flex:1">検索</button>
-        <button class="btn btn-g btn-sm">クリア</button>
-      </div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-ttl">作業履歴</div>
-    <div class="tw"><table>
-      <thead><tr><th>日付</th><th>職人</th><th>製品</th><th>ステージ</th><th>作業時間</th><th>人工数</th><th>労務費</th><th>メモ</th></tr></thead>
-      <tbody id="h-body"><tr><td colspan="8" class="ld">検索ボタンを押してください</td></tr></tbody>
-    </table></div>
-  </div>
-</div>
-
-<!-- ====== TAB 3: 集計 ====== -->
-<div id="tab-summary" class="pn">
-  <div class="card">
-    <div class="card-ttl">🔍 集計フィルター</div>
-    <div class="fbar">
-      <div class="row">
-        <div class="fg"><label>職人</label><select><option>すべて</option><option>田中 太郎</option></select></div>
-        <div class="fg"><label>製品</label><select><option>すべて</option><option>バナナショルダー</option></select></div>
-        <div class="fg"><label>ステージ</label><select><option>すべて</option><option>モック</option></select></div>
-        <div class="fg"><label>期間（開始）</label><input type="date"></div>
-        <div class="fg"><label>期間（終了）</label><input type="date"></div>
-      </div>
-      <button class="btn btn-p btn-sm" onclick="loadDemoSummary()" style="margin-top:4px">集計する</button>
-    </div>
-  </div>
-  <div id="s-stats" class="sg" style="display:none"></div>
-  <div class="card" id="s-cross-card" style="display:none">
-    <div class="card-ttl">📋 製品 × ステージ 人工集計表</div>
-    <div class="tw"><table class="cross-table" id="s-cross-table"></table></div>
-    <div style="font-size:12px;color:#6b7a8d;margin-top:12px">※ 人工数 = 作業時間(分) ÷ 480　／　労務費 = 作業時間(分) × 42円</div>
-  </div>
-</div>
-
-<!-- ====== TAB 4: 設定 ====== -->
+<!-- ====== TAB 2: 設定 ====== -->
 <div id="tab-settings" class="pn">
+
   <div class="card">
     <div class="card-ttl">👷 職人管理</div>
-    <div class="row"><div class="fg"><label>名前</label><input type="text" placeholder="田中 太郎"></div><div class="fg"><label>備考</label><input type="text" placeholder="担当工程など"></div></div>
+    <div class="row">
+      <div class="fg"><label>名前</label><input type="text" placeholder="田中 太郎"></div>
+      <div class="fg"><label>備考</label><input type="text" placeholder="担当工程など"></div>
+    </div>
     <button class="btn btn-p btn-sm" onclick="toast('追加しました（プレビュー）','ok')">追加</button>
-    <div style="margin-top:16px"><div class="tw"><table>
-      <thead><tr><th>ID</th><th>名前</th><th>備考</th><th></th></tr></thead>
-      <tbody>
-        <tr><td>1</td><td><strong>田中 太郎</strong></td><td>裁断担当</td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
-        <tr><td>2</td><td><strong>佐藤 花子</strong></td><td>縫製担当</td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
-      </tbody>
-    </table></div></div>
+    <div style="margin-top:16px">
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>名前</th><th>備考</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>田中 太郎</strong></td><td>裁断担当</td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+          <tr><td>2</td><td><strong>佐藤 花子</strong></td><td>縫製担当</td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+        </tbody>
+      </table></div>
+    </div>
   </div>
+
   <div class="card">
     <div class="card-ttl">👜 製品管理</div>
     <div class="row">
-      <div class="fg" style="flex:3"><label>製品名</label><input type="text" placeholder="例: バナナショルダー"></div>
-      <div class="fg"><label>ブランド</label><input type="text" placeholder="TSUCHIYA"></div>
-      <div class="fg"><label>ステータス</label><select><option>進行中</option><option>完了</option><option>保留</option></select></div>
+      <div class="fg full"><label>サンプル製品名称</label>
+        <input type="text" placeholder="例: バックパック 組み立て">
+      </div>
+    </div>
+    <div class="row">
+      <div class="fg w2"><label>シーズン</label>
+        <input type="text" placeholder="2027SS">
+      </div>
+      <div class="fg"><label>型振・VMD</label>
+        <input type="text" placeholder="VN型振り など">
+      </div>
+    </div>
+    <div class="row">
+      <div class="fg"><label>ブランド</label>
+        <input type="text" placeholder="TSUCHIYA など">
+      </div>
+      <div class="fg"><label>企画名</label>
+        <input type="text" placeholder="27SS 新メンズライン など">
+      </div>
+    </div>
+    <div class="row">
+      <div class="fg"><label>ステータス</label>
+        <select><option>進行中</option><option>完了</option><option>保留</option></select>
+      </div>
     </div>
     <button class="btn btn-p btn-sm" onclick="toast('追加しました（プレビュー）','ok')">追加</button>
-    <div style="margin-top:16px"><div class="tw"><table>
-      <thead><tr><th>製品名</th><th>ブランド</th><th>状態</th><th></th></tr></thead>
-      <tbody>
-        <tr><td><strong>バナナショルダー</strong></td><td>TSUCHIYA</td><td><span class="badge b-bl">進行中</span></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
-        <tr><td><strong>ミニトート</strong></td><td>TSUCHIYA</td><td><span class="badge b-bl">進行中</span></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
-        <tr><td><strong>クラッチバッグ</strong></td><td>別注</td><td><span class="badge b-gn">完了</span></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
-      </tbody>
-    </table></div></div>
+    <div style="margin-top:16px">
+      <div class="tw"><table>
+        <thead><tr><th>製品名</th><th>シーズン</th><th>型振・VMD</th><th>ブランド</th><th>企画名</th><th>状態</th><th></th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>バックパック 組み立て</strong></td>
+            <td>2027SS</td><td>—</td><td>TSUCHIYA</td><td>27SS 新メンズライン</td>
+            <td><span class="badge b-bl">進行中</span></td>
+            <td><button class="btn btn-d btn-sm">削除</button></td>
+          </tr>
+          <tr>
+            <td><strong>ミディアムショルダー 組み立て</strong></td>
+            <td>2027SS</td><td>—</td><td>TSUCHIYA</td><td>27SS YOKEコラボ</td>
+            <td><span class="badge b-bl">進行中</span></td>
+            <td><button class="btn btn-d btn-sm">削除</button></td>
+          </tr>
+          <tr>
+            <td><strong>スクエバックパック型修正</strong></td>
+            <td>2026AW</td><td>VN型振り</td><td>TSUCHIYA</td><td>—</td>
+            <td><span class="badge b-bl">進行中</span></td>
+            <td><button class="btn btn-d btn-sm">削除</button></td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
   </div>
+
   <div class="card">
     <div class="card-ttl">🔢 ステージ管理</div>
+    <p style="font-size:14px;color:#9aa5b4;margin-bottom:14px">
+      初期値: モック / 1st / 2nd / 最終（展示会）/ 色増し前修正 / 試験体 / ショー用
+    </p>
     <div class="row"><div class="fg"><label>ステージ名</label><input type="text" placeholder="例: 量産前確認"></div></div>
     <button class="btn btn-p btn-sm" onclick="toast('追加しました（プレビュー）','ok')">追加</button>
     <div style="margin-top:16px"><div class="tw"><table>
@@ -517,31 +343,46 @@ tr:hover td{background:#f5fbfb}
         <tr><td>2</td><td><strong>1st</strong></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
         <tr><td>3</td><td><strong>2nd</strong></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
         <tr><td>4</td><td><strong>最終（展示会）</strong></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
+        <tr><td>5</td><td><strong>色増し前修正</strong></td><td><button class="btn btn-d btn-sm">削除</button></td></tr>
       </tbody>
     </table></div></div>
   </div>
 </div>
+
 </main>
 
 <!-- モーダル -->
 <div class="modal-bg" id="modal-bg" onclick="bgClose(event)">
   <div class="modal-sheet">
     <div class="modal-ttl"><div class="modal-dot" id="modal-dot"></div><span id="modal-title">作業を追加</span></div>
-    <div class="modal-field"><label>製品名</label>
-      <select id="m-prod" style="margin-top:6px">
+    <div class="modal-field">
+      <label>サンプル製品名称</label>
+      <select id="m-prod" onchange="onProdChange()">
         <option value="">-- 選択 --</option>
-        <option>バナナショルダー</option><option>ミニトート</option><option>クラッチバッグ</option>
+        <option>バックパック 組み立て</option>
+        <option>ミディアムショルダー 組み立て</option>
+        <option>スクエバックパック型修正</option>
+        <option>花粉症ストラップ</option>
+        <option>トート（横）</option>
       </select>
+      <div class="prod-info" id="prod-info">
+        <span class="badge b-bl" id="pi-season"></span>
+        <span class="badge b-pp" id="pi-vmd"></span>
+        <span class="badge b-gy" id="pi-brand"></span>
+        <div class="prod-info-plan" id="pi-plan"></div>
+      </div>
     </div>
-    <div class="modal-field"><label>ステージ</label>
-      <select id="m-stage" style="margin-top:6px">
+    <div class="modal-field">
+      <label>サンプルフェーズ</label>
+      <select id="m-stage">
         <option value="">-- 選択 --</option>
         <option>モック</option><option>1st</option><option>2nd</option>
         <option>最終（展示会）</option><option>色増し前修正</option>
       </select>
     </div>
-    <div class="modal-field"><label>メモ（任意）</label>
-      <input type="text" id="m-memo" placeholder="作業内容・特記事項" style="margin-top:6px">
+    <div class="modal-field">
+      <label>メモ（任意）</label>
+      <input type="text" id="m-memo" placeholder="作業内容・特記事項">
     </div>
     <div class="modal-actions">
       <button class="btn btn-p" onclick="saveBlock()">保存</button>
@@ -555,18 +396,28 @@ tr:hover td{background:#f5fbfb}
 
 <script>
 /* ======================== */
+/* ダミーデータ             */
+/* ======================== */
+const DUMMY_SCHEDULES = [
+  { name:'バックパック 組み立て',        season:'2027SS', vmd:'',       brand:'TSUCHIYA', plan:'27SS 新メンズライン' },
+  { name:'ミディアムショルダー 組み立て', season:'2027SS', vmd:'',       brand:'TSUCHIYA', plan:'27SS YOKEコラボ' },
+  { name:'スクエバックパック型修正',      season:'2026AW', vmd:'VN型振り', brand:'TSUCHIYA', plan:'' },
+  { name:'花粉症ストラップ',              season:'2027SS', vmd:'',       brand:'TSUCHIYA', plan:'27SS YOKEコラボ' },
+  { name:'トート（横）',                  season:'2027SS', vmd:'',       brand:'TSUCHIYA', plan:'27SS 新メンズライン' },
+];
+
+/* ======================== */
 /* 定数                     */
 /* ======================== */
-const COLORS  = ['#0BBDC4','#C87455','#7C5CBF','#F5C540','#38a169','#e74c3c','#3498db','#e67e22','#16a085','#8e44ad'];
-const HOUR_W  = 80;          // px per hour (横軸スケール)
-const ROW_H   = 54;          // px per task row
-const MIN_PX  = HOUR_W / 60; // px per minute (≈1.333)
+const COLORS   = ['#0BBDC4','#C87455','#7C5CBF','#F5C540','#38a169','#e74c3c','#3498db','#e67e22','#16a085','#8e44ad'];
+const HOUR_W   = 80;
+const ROW_H    = 54;
+const MIN_PX   = HOUR_W / 60;
 
-/* 固定休憩定義 */
 const FIXED_BREAKS = [
-  { start: 720,  end: 780,  label: '昼休憩',   minutes: 60 },  // 12:00-13:00
-  { start: 900,  end: 915,  label: '15時休憩', minutes: 15 },  // 15:00-15:15
-  { start: 1065, end: 1080, label: '17:45休憩', minutes: 15 }, // 17:45-18:00
+  { start: 720,  end: 780,  label: '昼休憩',   minutes: 60 },
+  { start: 900,  end: 915,  label: '15時休憩', minutes: 15 },
+  { start: 1065, end: 1080, label: '17:45休憩', minutes: 15 },
 ];
 
 /* ======================== */
@@ -588,14 +439,13 @@ document.addEventListener('DOMContentLoaded', () => {
   autoCalcBreak();
 });
 
-/* 時間ルーラーを構築（横軸・一度だけ） */
 function buildRuler() {
   const ruler = document.getElementById('gcal-ruler');
   ruler.style.width = 24 * HOUR_W + 'px';
   for (let h = 0; h < 24; h++) {
     const tick = document.createElement('div');
-    tick.className   = 'gcal-rtick';
-    tick.style.left  = h * HOUR_W + 'px';
+    tick.className  = 'gcal-rtick';
+    tick.style.left = h * HOUR_W + 'px';
     tick.style.width = HOUR_W + 'px';
     tick.textContent = pad(h) + ':00';
     ruler.appendChild(tick);
@@ -605,15 +455,11 @@ function buildRuler() {
 /* ======================== */
 /* 休憩ヘルパー             */
 /* ======================== */
-
-/* 出退勤時間内に含まれる固定休憩を返す
-   (休憩開始が出勤以降・退勤より前なら有効。残業時の17:45休憩にも対応) */
 function getActiveBreaks() {
   const ci = getClockIn(), co = getClockOut();
   return FIXED_BREAKS.filter(b => b.start >= ci && b.start < co);
 }
 
-/* 休憩を挟んで workMinutes 分作業した後の clock 時刻を返す */
 function addWorkMin(clockMin, workMinutes) {
   const breaks = getActiveBreaks();
   let rem = workMinutes, cur = clockMin, g = 0;
@@ -627,7 +473,6 @@ function addWorkMin(clockMin, workMinutes) {
   return cur;
 }
 
-/* clock 区間 [fromClock, toClock] の実作業分数（休憩を除く） */
 function getWorkMinutes(fromClock, toClock) {
   const breaks = getActiveBreaks();
   let work = toClock - fromClock;
@@ -638,7 +483,6 @@ function getWorkMinutes(fromClock, toClock) {
   return Math.max(0, work);
 }
 
-/* 1タスクを休憩で分割したセグメント配列 [{start,end,minutes},...] を返す */
 function getWorkSegments(startClock, workMinutes) {
   const breaks = getActiveBreaks();
   const segs = []; let rem = workMinutes, cur = startClock, g = 0;
@@ -655,13 +499,9 @@ function getWorkSegments(startClock, workMinutes) {
   return segs;
 }
 
-/* 出退勤に合わせて休憩分数を自動セットしてから calcJikan
-   (休憩が退勤をまたぐ場合は退勤までの分数のみカウント) */
 function autoCalcBreak() {
   const co  = getClockOut();
-  const brk = getActiveBreaks().reduce((s, b) => {
-    return s + Math.max(0, Math.min(b.end, co) - b.start);
-  }, 0);
+  const brk = getActiveBreaks().reduce((s, b) => s + Math.max(0, Math.min(b.end, co) - b.start), 0);
   document.getElementById('r-break').value = brk;
   calcJikan();
 }
@@ -673,19 +513,19 @@ function snapTime(id) {
   const el = document.getElementById(id);
   if (!el.value) return;
   const [h, m] = el.value.split(':').map(Number);
-  const t = h * 60 + Math.round(m / 5) * 5;
-  el.value = pad(Math.floor(t / 60) % 24) + ':' + pad(t % 60);
+  const total = h * 60 + Math.round(m / 5) * 5;
+  el.value = String(Math.floor(total / 60) % 24).padStart(2,'0') + ':' + String(total % 60).padStart(2,'0');
 }
 
 function calcJikan() {
   const inp = document.getElementById('r-in').value;
   const out = document.getElementById('r-out').value;
   const brk = Number(document.getElementById('r-break').value) || 0;
-  const min = calcMin(inp, out, brk);
+  const min  = calcMin(inp, out, brk);
   const brkDetail = getActiveBreaks().map(b => b.label + b.minutes + '分').join('・') || `休憩${brk}分`;
-  document.getElementById('jikan-val').textContent    = min + '分';
-  document.getElementById('jikan-ninku').textContent  = (min / 480).toFixed(2) + '人工';
-  document.getElementById('jikan-sub').textContent    = `${inp}〜${out}　${brkDetail}`;
+  document.getElementById('jikan-val').textContent   = min + '分';
+  document.getElementById('jikan-ninku').textContent = '= ' + (min / 480).toFixed(2) + '人工';
+  document.getElementById('jikan-sub').textContent   = `${inp}〜${out}　${brkDetail}`;
   renderTimeline();
   scrollToWork();
 }
@@ -694,122 +534,88 @@ function calcMin(inp, out, brk) {
   if (!inp || !out) return 480;
   const [ih, im] = inp.split(':').map(Number);
   const [oh, om] = out.split(':').map(Number);
-  return Math.max(0, (oh * 60 + om) - (ih * 60 + im) - brk);
+  return Math.max(0, (oh * 60 + om) - (ih * 60 + im) - (brk || 0));
 }
 
-function getJikan()   { return calcMin(document.getElementById('r-in').value, document.getElementById('r-out').value, Number(document.getElementById('r-break').value) || 0); }
-function getClockIn() { const v = document.getElementById('r-in').value;  if (!v) return 510; const [h,m]=v.split(':').map(Number); return h*60+m; }
-function getClockOut(){ const v = document.getElementById('r-out').value; if (!v) return 1065;const [h,m]=v.split(':').map(Number); return h*60+m; }
+function getJikan()    { return calcMin(document.getElementById('r-in').value, document.getElementById('r-out').value, Number(document.getElementById('r-break').value) || 0); }
+function getClockIn()  { const v = document.getElementById('r-in').value;  if (!v) return 510;  const [h,m]=v.split(':').map(Number); return h*60+m; }
+function getClockOut() { const v = document.getElementById('r-out').value; if (!v) return 1065; const [h,m]=v.split(':').map(Number); return h*60+m; }
 
 /* ======================== */
 /* タイムライン描画         */
 /* ======================== */
 function renderTimeline() {
   const totalMin = getJikan();
-  const clockIn  = getClockIn();   // 分（例: 510 = 8:30）
-  const clockOut = getClockOut();  // 分（例: 1065 = 17:45）
-
+  const clockIn  = getClockIn();
+  const clockOut = getClockOut();
   const inner = document.getElementById('gcal-inner');
   const rows  = document.getElementById('gcal-rows');
-  const fullW = 24 * HOUR_W;
 
-  inner.style.width = fullW + 'px';
+  inner.style.width = 24 * HOUR_W + 'px';
   rows.innerHTML = '';
+  rows.style.height = (tlRows.length + 1) * ROW_H + 'px';
 
-  /* 行数 = タスク数 + 追加行 */
-  const numRows = tlRows.length + 1;
-  rows.style.height = numRows * ROW_H + 'px';
-
-  /* 縦グリッド線（時間ごと） */
   for (let h = 0; h < 24; h++) {
     const vg = document.createElement('div');
-    vg.className = 'gcal-vgrid';
-    vg.style.left = h * HOUR_W + 'px';
+    vg.className = 'gcal-vgrid'; vg.style.left = h * HOUR_W + 'px';
     rows.appendChild(vg);
   }
 
-  /* 勤務時間ハイライト */
   const workBg = document.createElement('div');
-  workBg.className   = 'gcal-work-bg';
-  workBg.style.left  = clockIn * MIN_PX + 'px';
+  workBg.className  = 'gcal-work-bg';
+  workBg.style.left = clockIn * MIN_PX + 'px';
   workBg.style.width = totalMin * MIN_PX + 'px';
   rows.appendChild(workBg);
 
-  /* 出勤・退勤ライン（縦線） */
   const inLine = document.createElement('div');
-  inLine.className  = 'gcal-clock-line in';
-  inLine.style.left = clockIn * MIN_PX + 'px';
+  inLine.className  = 'gcal-clock-line in'; inLine.style.left = clockIn * MIN_PX + 'px';
   inLine.innerHTML  = `<span class="gcal-clock-label">出勤 ${document.getElementById('r-in').value}</span>`;
   rows.appendChild(inLine);
 
   const outLine = document.createElement('div');
-  outLine.className  = 'gcal-clock-line out';
-  outLine.style.left = clockOut * MIN_PX + 'px';
+  outLine.className  = 'gcal-clock-line out'; outLine.style.left = clockOut * MIN_PX + 'px';
   outLine.innerHTML  = `<span class="gcal-clock-label">退勤 ${document.getElementById('r-out').value}</span>`;
   rows.appendChild(outLine);
 
-  /* 休憩バンド（全行にまたがる背景として描画）
-     退勤をまたぐ場合は退勤時刻でクリップ */
   getActiveBreaks().forEach(brk => {
-    const bandEnd = Math.min(brk.end, clockOut + 60); // 残業含め少し余裕を持たせる
-    const bandW   = (bandEnd - brk.start) * MIN_PX;
     const band = document.createElement('div');
     band.className = 'gcal-break-band';
     band.style.left  = brk.start * MIN_PX + 'px';
-    band.style.width = bandW + 'px';
+    band.style.width = (Math.min(brk.end, clockOut + 60) - brk.start) * MIN_PX + 'px';
     band.innerHTML   = `<div class="gcal-break-label">☕ ${brk.label}</div>`;
     rows.appendChild(band);
   });
 
-  /* タスクバー（連続・順番つき・休憩で分割） */
-  let curClockMin = clockIn;
-
+  let cur = clockIn;
   tlRows.forEach((row, idx) => {
-    const topPx  = idx * ROW_H + 5;
-    const segs   = getWorkSegments(curClockMin, row.minutes);
-
-    segs.forEach((seg, si) => {
-      const isLast  = si === segs.length - 1;
+    const topPx = idx * ROW_H + 5;
+    getWorkSegments(cur, row.minutes).forEach((seg, si, arr) => {
+      const isLast  = si === arr.length - 1;
       const leftPx  = seg.start * MIN_PX;
       const widthPx = Math.max(20, Math.round((seg.end - seg.start) * MIN_PX));
-      const showStage = isLast && widthPx >= 80;
-      const showMin   = isLast && widthPx >= 120;
-
       const bar = document.createElement('div');
-      bar.className      = 'gcal-bar';
-      bar.dataset.id     = row.id;
-      bar.dataset.action = 'edit';
-      bar.style.cssText  = `left:${leftPx}px;width:${widthPx}px;top:${topPx}px;background:${row.color};`;
-
-      /* ハンドルは全セグメントに表示（細いセグメントでも掴めるように） */
+      bar.className     = 'gcal-bar';
+      bar.dataset.id    = row.id; bar.dataset.action = 'edit';
+      bar.style.cssText = `left:${leftPx}px;width:${widthPx}px;top:${topPx}px;background:${row.color};`;
       bar.innerHTML = `
         <div class="gcal-bar-body" data-action="edit" data-id="${row.id}">
-          <span class="gcal-bar-name">${esc(row.productName || '未設定')}</span>
-          ${showStage ? `<span class="gcal-bar-stage">/ ${esc(row.stageName || '—')}</span>` : ''}
-          ${showMin   ? `<span class="gcal-bar-min">${row.minutes}分</span>` : ''}
+          <span class="gcal-bar-name">${esc(row.productName||'未設定')}</span>
+          ${isLast && widthPx>=80  ? `<span class="gcal-bar-stage">/ ${esc(row.stageName||'—')}</span>` : ''}
+          ${isLast && widthPx>=120 ? `<span class="gcal-bar-min">${row.minutes}分</span>` : ''}
         </div>
-        <div class="gcal-bar-handle" data-action="resize" data-id="${row.id}"></div>
-      `;
+        <div class="gcal-bar-handle" data-action="resize" data-id="${row.id}"></div>`;
       rows.appendChild(bar);
     });
-
-    curClockMin = addWorkMin(curClockMin, row.minutes);
+    cur = addWorkMin(cur, row.minutes);
   });
 
-  /* 残り時間 → 追加バー */
-  const remainWorkMin = getWorkMinutes(curClockMin, clockOut);
-  const addClockEnd   = addWorkMin(curClockMin, remainWorkMin);
-  const addLeft  = curClockMin * MIN_PX;
-  const addWidth = Math.max(80, Math.round((addClockEnd - curClockMin) * MIN_PX));
-  const addTop   = tlRows.length * ROW_H + 5;
-  const addBar   = document.createElement('div');
-  addBar.className      = 'gcal-add-bar';
-  addBar.dataset.action = 'add';
-  addBar.style.cssText  = `left:${addLeft}px;width:${addWidth}px;top:${addTop}px;`;
-  addBar.innerHTML      = `＋ 作業を追加（残り ${remainWorkMin}分）`;
+  const rem = getWorkMinutes(cur, clockOut);
+  const addBar = document.createElement('div');
+  addBar.className     = 'gcal-add-bar'; addBar.dataset.action = 'add';
+  addBar.style.cssText = `left:${cur*MIN_PX}px;width:${Math.max(80,Math.round((addWorkMin(cur,rem)-cur)*MIN_PX))}px;top:${tlRows.length*ROW_H+5}px;`;
+  addBar.innerHTML     = `＋ 作業を追加（残り ${rem}分）`;
   rows.appendChild(addBar);
 
-  /* イベント委任 */
   rows.removeEventListener('click',     onContentClick);
   rows.removeEventListener('mousedown', onContentPointerDown);
   rows.addEventListener('click',     onContentClick);
@@ -819,97 +625,70 @@ function renderTimeline() {
   renderLegend();
 }
 
-/* 出勤時刻付近にスクロール（横方向） */
 function scrollToWork() {
-  const wrap = document.getElementById('gcal-wrap');
-  const clockIn = getClockIn();
-  wrap.scrollLeft = Math.max(0, clockIn * MIN_PX - 80);
+  document.getElementById('gcal-wrap').scrollLeft = Math.max(0, getClockIn() * MIN_PX - 80);
 }
 
-/* ======================== */
-/* 凡例・比較更新           */
-/* ======================== */
 function renderLegend() {
   const leg = document.getElementById('tl-legend');
   if (!tlRows.length) { leg.innerHTML = ''; return; }
   leg.innerHTML = tlRows.map(r => `
     <div class="tl-leg-item">
       <div class="tl-leg-dot" style="background:${r.color}"></div>
-      <span>${esc(r.productName || '未設定')} / ${esc(r.stageName || '—')}</span>
-    </div>
-  `).join('');
+      <span>${esc(r.productName||'未設定')} / ${esc(r.stageName||'—')}</span>
+    </div>`).join('');
 }
 
 function updateCompare() {
   const totalMin = getJikan();
-  const usedMin  = tlRows.reduce((s, r) => s + r.minutes, 0);
+  const usedMin  = tlRows.reduce((s,r)=>s+r.minutes, 0);
   const diff     = totalMin - usedMin;
-
-  document.getElementById('cmp-used').textContent     = usedMin + '分';
-  document.getElementById('cmp-used-sub').textContent = (usedMin / 480).toFixed(2) + '人工';
-  document.getElementById('cmp-jikan').textContent    = totalMin + '分';
-  document.getElementById('cmp-jikan-sub').textContent = (totalMin / 480).toFixed(2) + '人工';
-
+  document.getElementById('cmp-used').textContent      = usedMin + '分';
+  document.getElementById('cmp-used-sub').textContent  = (usedMin/480).toFixed(2) + '人工';
+  document.getElementById('cmp-jikan').textContent     = totalMin + '分';
+  document.getElementById('cmp-jikan-sub').textContent = (totalMin/480).toFixed(2) + '人工';
   const usedEl  = document.getElementById('cmp-used');
   const diffBox = document.getElementById('cmp-diff');
   const diffVal = document.getElementById('cmp-diff-val');
   const diffLbl = document.getElementById('cmp-diff-label');
-
   if (usedMin === totalMin && totalMin > 0) {
-    usedEl.className  = 'tl-cmp-val';
-    diffBox.className = 'tl-cmp-diff ok';
-    diffVal.textContent = '✔'; diffLbl.textContent = 'ぴったり';
+    usedEl.className='tl-cmp-val'; diffBox.className='tl-cmp-diff ok';
+    diffVal.textContent='✔'; diffLbl.textContent='ぴったり';
   } else if (usedMin > totalMin) {
-    usedEl.className  = 'tl-cmp-val over';
-    diffBox.className = 'tl-cmp-diff over';
-    diffVal.textContent = '+' + (usedMin - totalMin) + '分'; diffLbl.textContent = '残業';
+    usedEl.className='tl-cmp-val over'; diffBox.className='tl-cmp-diff over';
+    diffVal.textContent='+'+(usedMin-totalMin)+'分'; diffLbl.textContent='残業';
   } else {
-    usedEl.className  = 'tl-cmp-val';
-    diffBox.className = 'tl-cmp-diff';
-    diffVal.textContent = diff + '分'; diffLbl.textContent = '残り';
+    usedEl.className='tl-cmp-val'; diffBox.className='tl-cmp-diff';
+    diffVal.textContent=diff+'分'; diffLbl.textContent='残り';
   }
 }
 
 /* ======================== */
-/* ドラッグ操作             */
+/* ドラッグ                 */
 /* ======================== */
 function onContentPointerDown(e) {
   const el = e.target.closest('[data-action="resize"]');
   if (!el) return;
-  e.preventDefault();
-  e.stopPropagation();
-
+  e.preventDefault(); e.stopPropagation();
   if (dragState) cleanupDrag();
-
-  const rowId = parseInt(el.dataset.id);
-  const row   = tlRows.find(r => r.id === rowId);
+  const row = tlRows.find(r => r.id === parseInt(el.dataset.id));
   if (!row) return;
-
-  dragState = { rowId, startX: e.clientX, startMin: row.minutes, scale: MIN_PX, moved: false };
-
+  dragState = { rowId:row.id, startX:e.clientX, startMin:row.minutes, moved:false };
   document.addEventListener('mousemove', onDragMove);
   document.addEventListener('mouseup',   onDragEnd);
 }
-
 function onDragMove(e) {
   if (!dragState) return;
-  const { rowId, startX, startMin, scale } = dragState;
-  const deltaX   = e.clientX - startX;
-  const deltaMin = Math.round(deltaX / scale / 5) * 5;
+  const deltaMin = Math.round((e.clientX - dragState.startX) / MIN_PX / 5) * 5;
   if (Math.abs(deltaMin) >= 5) dragState.moved = true;
-
-  const row = tlRows.find(r => r.id === rowId);
-  if (!row) return;
-  row.minutes = Math.max(5, startMin + deltaMin); // 残業可: 上限なし
-  renderTimeline();
+  const row = tlRows.find(r => r.id === dragState.rowId);
+  if (row) { row.minutes = Math.max(5, dragState.startMin + deltaMin); renderTimeline(); }
 }
-
 function onDragEnd() {
   if (!dragState) return;
   if (dragState.moved) recentlyDragged = true;
   cleanupDrag();
 }
-
 function cleanupDrag() {
   dragState = null;
   document.removeEventListener('mousemove', onDragMove);
@@ -917,17 +696,14 @@ function cleanupDrag() {
 }
 
 /* ======================== */
-/* クリック操作             */
+/* クリック                 */
 /* ======================== */
 function onContentClick(e) {
   if (recentlyDragged) { recentlyDragged = false; return; }
   if (dragState) return;
-
-  const el     = e.target.closest('[data-action]');
+  const el = e.target.closest('[data-action]');
   if (!el) return;
-  const action = el.dataset.action;
-  const id     = parseInt(el.dataset.id);
-
+  const action = el.dataset.action, id = parseInt(el.dataset.id);
   if (action === 'resize') return;
   if (action === 'edit' && !isNaN(id)) openEditModal(id);
   else if (action === 'add')           openAddModal();
@@ -936,15 +712,32 @@ function onContentClick(e) {
 /* ======================== */
 /* モーダル                 */
 /* ======================== */
+function onProdChange() {
+  const name = document.getElementById('m-prod').value;
+  const sch  = DUMMY_SCHEDULES.find(s => s.name === name);
+  const info = document.getElementById('prod-info');
+  if (sch && (sch.season || sch.vmd || sch.brand || sch.plan)) {
+    const setSI = (id, val) => { const el=document.getElementById(id); el.textContent=val||''; el.style.display=val?'':'none'; };
+    setSI('pi-season', sch.season);
+    setSI('pi-vmd',    sch.vmd);
+    setSI('pi-brand',  sch.brand);
+    const planEl = document.getElementById('pi-plan');
+    planEl.textContent = sch.plan || ''; planEl.style.display = sch.plan ? '' : 'none';
+    info.classList.add('show');
+  } else {
+    info.classList.remove('show');
+  }
+}
+
 function openAddModal() {
   editingId = null;
-  const color = COLORS[colorIdx % COLORS.length];
   document.getElementById('modal-title').textContent    = '作業を追加';
-  document.getElementById('modal-dot').style.background = color;
+  document.getElementById('modal-dot').style.background = COLORS[colorIdx % COLORS.length];
   document.getElementById('m-prod').value  = '';
   document.getElementById('m-stage').value = '';
   document.getElementById('m-memo').value  = '';
   document.getElementById('modal-del').style.display = 'none';
+  document.getElementById('prod-info').classList.remove('show');
   document.getElementById('modal-bg').classList.add('show');
 }
 
@@ -958,6 +751,7 @@ function openEditModal(id) {
   document.getElementById('m-stage').value = row.stageName;
   document.getElementById('m-memo').value  = row.memo || '';
   document.getElementById('modal-del').style.display = '';
+  onProdChange();
   document.getElementById('modal-bg').classList.add('show');
 }
 
@@ -968,108 +762,55 @@ function saveBlock() {
   const prod  = document.getElementById('m-prod').value.trim();
   const stage = document.getElementById('m-stage').value.trim();
   const memo  = document.getElementById('m-memo').value.trim();
-  if (!prod)  { toast('製品名を選択してください', 'err'); return; }
-  if (!stage) { toast('ステージを選択してください', 'err'); return; }
-
+  if (!prod)  { toast('製品名を選択してください','err'); return; }
+  if (!stage) { toast('フェーズを選択してください','err'); return; }
   if (editingId === null) {
-    const totalMin = getJikan();
-    const usedMin  = tlRows.reduce((s, r) => s + r.minutes, 0);
-    const remain   = Math.max(5, totalMin - usedMin);
-    const defMin   = Math.min(remain, Math.max(5, Math.round(remain / 2 / 5) * 5));
-    const color    = COLORS[colorIdx % COLORS.length];
-    colorIdx++;
-    tlRows.push({ id: nextId++, productName: prod, stageName: stage, minutes: defMin, color, memo });
-    toast(`追加しました（${defMin}分）`, 'ok');
+    const remain = Math.max(5, getJikan() - tlRows.reduce((s,r)=>s+r.minutes,0));
+    const defMin = Math.min(remain, Math.max(5, Math.round(remain/2/5)*5));
+    tlRows.push({ id:nextId++, productName:prod, stageName:stage, minutes:defMin, color:COLORS[colorIdx++%COLORS.length], memo });
+    toast(`追加しました（${defMin}分）`,'ok');
   } else {
-    const row = tlRows.find(r => r.id === editingId);
-    if (row) { row.productName = prod; row.stageName = stage; row.memo = memo; }
-    toast('更新しました', 'ok');
+    const row = tlRows.find(r=>r.id===editingId);
+    if (row) { row.productName=prod; row.stageName=stage; row.memo=memo; }
+    toast('更新しました','ok');
   }
-  closeModal();
-  renderTimeline();
+  closeModal(); renderTimeline();
 }
 
 function deleteBlock() {
-  tlRows = tlRows.filter(r => r.id !== editingId);
-  closeModal();
-  renderTimeline();
-  toast('削除しました', 'warn');
+  tlRows = tlRows.filter(r=>r.id!==editingId);
+  closeModal(); renderTimeline();
+  toast('削除しました','warn');
 }
 
-/* ======================== */
-/* 提出                     */
-/* ======================== */
 function demoSubmit() {
-  if (!document.getElementById('r-who').value) { toast('職人を選択してください', 'err'); return; }
-  if (!tlRows.length) { toast('作業を追加してください', 'err'); return; }
-  toast('日報を提出しました！（プレビュー動作）', 'ok');
+  if (!document.getElementById('r-who').value) { toast('職人を選択してください','err'); return; }
+  if (!tlRows.length) { toast('作業を追加してください','err'); return; }
+  toast('日報を提出しました！（プレビュー動作）','ok');
 }
 
 /* ======================== */
 /* タブ                     */
 /* ======================== */
 function sw(name, btn) {
-  document.querySelectorAll('.pn').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
-  document.getElementById('tab-' + name).classList.add('on');
+  document.querySelectorAll('.pn').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+name).classList.add('on');
   btn.classList.add('on');
-  if (name === 'report') renderTimeline();
-}
-
-/* ======================== */
-/* 履歴・集計（デモ）       */
-/* ======================== */
-function loadDemoHistory() {
-  const data = [
-    {date:'2026-04-17',craftsmanName:'田中 太郎',productName:'バナナショルダー',stageName:'1st',  minutes:180,ninkuCount:.375,cost:7560, memo:'本体縫製'},
-    {date:'2026-04-17',craftsmanName:'佐藤 花子',productName:'ミニトート',      stageName:'モック',minutes:240,ninkuCount:.500,cost:10080,memo:'パターン確認'},
-    {date:'2026-04-16',craftsmanName:'鈴木 一郎',productName:'クラッチバッグ',  stageName:'2nd',  minutes:120,ninkuCount:.250,cost:5040, memo:'仕上げ確認'},
-    {date:'2026-04-16',craftsmanName:'田中 太郎',productName:'バナナショルダー',stageName:'モック',minutes:300,ninkuCount:.625,cost:12600,memo:'型紙作成'},
-  ];
-  document.getElementById('h-body').innerHTML = data.map(l => `
-    <tr>
-      <td>${l.date}</td><td><span class="badge b-bl">${l.craftsmanName}</span></td>
-      <td>${l.productName}</td><td><span class="badge b-gy">${l.stageName}</span></td>
-      <td style="font-weight:800">${l.minutes}分</td>
-      <td style="color:#0BBDC4;font-weight:800">${l.ninkuCount.toFixed(3)}</td>
-      <td style="color:#276749;font-weight:700">¥${l.cost.toLocaleString()}</td>
-      <td style="color:#6b7a8d;font-size:13px">${l.memo || '—'}</td>
-    </tr>`).join('');
-}
-
-function loadDemoSummary() {
-  document.getElementById('s-stats').style.display = 'grid';
-  document.getElementById('s-stats').innerHTML = `
-    <div class="sc bl"><div class="sv">8.24</div><div class="sl">合計人工数</div></div>
-    <div class="sc gn"><div class="sv">65.9h</div><div class="sl">合計作業時間</div></div>
-    <div class="sc or"><div class="sv">¥17万</div><div class="sl">合計労務費</div></div>
-    <div class="sc pp"><div class="sv">3</div><div class="sl">製品数</div></div>`;
-  const stages = ['モック','1st','2nd','最終（展示会）'];
-  const rows = [
-    {productName:'バナナショルダー',stages:{モック:300,'1st':480,'2nd':240,'最終（展示会）':480},totalNinku:3.125,totalCost:63000},
-    {productName:'ミニトート',      stages:{モック:480,'1st':360,'2nd':0,  '最終（展示会）':0},  totalNinku:1.750,totalCost:35280},
-    {productName:'クラッチバッグ',  stages:{モック:120,'1st':210,'2nd':120,'最終（展示会）':240},totalNinku:1.438,totalCost:28980},
-  ];
-  const totNinku = rows.reduce((s,r)=>s+r.totalNinku,0);
-  const totCost  = rows.reduce((s,r)=>s+r.totalCost,0);
-  let html = `<thead><tr><th>製品名</th>${stages.map(st=>`<th class="stage">${st}</th>`).join('')}<th class="stage">合計人工</th><th class="stage">労務費</th></tr></thead><tbody>`;
-  rows.forEach(r=>{html+=`<tr><td><strong>${r.productName}</strong></td>${stages.map(st=>{const m=r.stages[st]||0;return`<td class="ninku${m===0?' zero':''}">${m>0?(m/480).toFixed(2):'—'}</td>`}).join('')}<td class="total">${r.totalNinku.toFixed(2)}</td><td class="cost">¥${r.totalCost.toLocaleString()}</td></tr>`;});
-  html+=`<tr style="background:#d6eef0;font-weight:800"><td>【合計】</td>${stages.map(st=>{const m=rows.reduce((s,r)=>s+(r.stages[st]||0),0);return`<td class="ninku">${m>0?(m/480).toFixed(2):'—'}</td>`}).join('')}<td class="total">${totNinku.toFixed(2)}</td><td class="cost">¥${totCost.toLocaleString()}</td></tr></tbody>`;
-  document.getElementById('s-cross-table').innerHTML = html;
-  document.getElementById('s-cross-card').style.display = 'block';
+  if (name === 'report') { renderTimeline(); scrollToWork(); }
 }
 
 /* ======================== */
 /* ユーティリティ           */
 /* ======================== */
-function today() { const d=new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+function today() { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function pad(n)  { return String(n).padStart(2,'0'); }
 function esc(s)  { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 let _tt;
 function toast(msg, type) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.className = 'show ' + (type || '');
-  clearTimeout(_tt); _tt = setTimeout(() => el.className = '', 3800);
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='show '+(type||'');
+  clearTimeout(_tt); _tt=setTimeout(()=>el.className='',3800);
 }
 </script>
 </body>

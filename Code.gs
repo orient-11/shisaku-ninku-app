@@ -34,14 +34,16 @@ function setup() {
     header(s, 3);
   }
 
-  // スケジュール（製品名）
+  // スケジュール（製品マスタ）
   s = getOrCreate(ss, SHEETS.SCHEDULES);
   if (s.getLastRow() === 0) {
-    s.appendRow(['ID', '製品名', 'ブランド', '企画名称', 'ステータス', '備考']);
-    header(s, 6);
+    s.appendRow(['ID', '製品名', 'シーズン', '型振・VMD', 'ブランド', '企画名', 'ステータス', '備考']);
+    header(s, 8);
     s.setColumnWidth(2, 220);
-    s.setColumnWidth(3, 150);
-    s.setColumnWidth(4, 180);
+    s.setColumnWidth(3, 100);
+    s.setColumnWidth(4, 120);
+    s.setColumnWidth(5, 150);
+    s.setColumnWidth(6, 180);
   }
 
   // ステージマスター
@@ -50,13 +52,13 @@ function setup() {
     s.appendRow(['ID', 'ステージ名', '順番']);
     header(s, 3);
     const defaults = [
-      ['ST1', 'モック',       1],
-      ['ST2', '1st',          2],
-      ['ST3', '2nd',          3],
+      ['ST1', 'モック',        1],
+      ['ST2', '1st',           2],
+      ['ST3', '2nd',           3],
       ['ST4', '最終（展示会）', 4],
-      ['ST5', '色増し前修正', 5],
-      ['ST6', '試験体',       6],
-      ['ST7', 'ショー用',     7],
+      ['ST5', '色増し前修正',  5],
+      ['ST6', '試験体',        6],
+      ['ST7', 'ショー用',      7],
     ];
     defaults.forEach(r => s.appendRow(r));
   }
@@ -102,9 +104,10 @@ function getSchedules(ss) {
   ss = ss || SpreadsheetApp.getActiveSpreadsheet();
   const s = ss.getSheetByName(SHEETS.SCHEDULES);
   if (!s || s.getLastRow() <= 1) return [];
-  return s.getRange(2, 1, s.getLastRow()-1, 6).getValues()
+  return s.getRange(2, 1, s.getLastRow()-1, 8).getValues()
     .filter(r => r[1]).map(r => ({
-      id:r[0], name:r[1], brand:r[2], plan:r[3], status:r[4]||'進行中', note:r[5]
+      id:r[0], name:r[1], season:r[2]||'', vmd:r[3]||'',
+      brand:r[4]||'', plan:r[5]||'', status:r[6]||'進行中', note:r[7]||''
     }));
 }
 
@@ -138,9 +141,9 @@ function submitReport(craftsmanName, dateStr, clockIn, clockOut, breakMin, rows,
   const submittedAt = fmt(new Date(), 'yyyy/MM/dd HH:mm:ss');
 
   rows.forEach(row => {
-    const min    = Number(row.minutes) || 0;
-    const ninku  = parseFloat((min / MINUTES_PER_NINKU).toFixed(4));
-    const cost   = Math.round(min * RATE_PER_MINUTE);
+    const min   = Number(row.minutes) || 0;
+    const ninku = parseFloat((min / MINUTES_PER_NINKU).toFixed(4));
+    const cost  = Math.round(min * RATE_PER_MINUTE);
     sheet.appendRow([
       Utilities.getUuid(),
       dateStr, craftsmanName,
@@ -173,72 +176,6 @@ function calcActualMinutes(clockIn, clockOut, breakMin) {
 }
 
 // ----------------------------------------------------------
-// ログ取得
-// ----------------------------------------------------------
-function getLogs(fCraftsman, fProduct, fStage, fFrom, fTo) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const s  = ss.getSheetByName(SHEETS.LOGS);
-  if (!s || s.getLastRow() <= 1) return [];
-
-  let rows = s.getRange(2, 1, s.getLastRow()-1, 14).getValues()
-    .filter(r => r[0])
-    .map(r => ({
-      id:r[0], date:String(r[1]), craftsmanName:r[2],
-      clockIn:r[3], clockOut:r[4], breakMin:r[5], actualMin:r[6],
-      productName:r[7], stageName:r[8],
-      minutes:r[9], ninkuCount:r[10], cost:r[11],
-      memo:r[12], submittedAt:String(r[13])
-    }));
-
-  if (fCraftsman) rows = rows.filter(r => r.craftsmanName === fCraftsman);
-  if (fProduct)   rows = rows.filter(r => r.productName   === fProduct);
-  if (fStage)     rows = rows.filter(r => r.stageName     === fStage);
-  if (fFrom)      rows = rows.filter(r => r.date >= fFrom);
-  if (fTo)        rows = rows.filter(r => r.date <= fTo);
-
-  return rows.reverse().slice(0, 300);
-}
-
-// ----------------------------------------------------------
-// 集計（製品 × ステージ クロス集計）
-// ----------------------------------------------------------
-function getSummary(fCraftsman, fProduct, fStage, fFrom, fTo) {
-  const logs   = getLogs(fCraftsman, fProduct, fStage, fFrom, fTo);
-  const stages = getStages().map(s => s.name);
-
-  // 製品ごとにステージ別に集計
-  const map = {};
-  logs.forEach(log => {
-    const p = log.productName || '（製品名なし）';
-    if (!map[p]) {
-      map[p] = { productName: p, stages:{}, totalMin:0, totalCost:0 };
-      stages.forEach(st => map[p].stages[st] = 0);
-    }
-    const m = Number(log.minutes)||0;
-    if (map[p].stages[log.stageName] !== undefined) {
-      map[p].stages[log.stageName] += m;
-    } else {
-      map[p].stages[log.stageName] = m;
-    }
-    map[p].totalMin  += m;
-    map[p].totalCost += Number(log.cost)||0;
-  });
-
-  return {
-    stages: stages,
-    rows: Object.values(map)
-      .sort((a,b) => b.totalMin - a.totalMin)
-      .map(r => ({
-        productName: r.productName,
-        stages: r.stages,
-        totalMin:  r.totalMin,
-        totalNinku: parseFloat((r.totalMin / MINUTES_PER_NINKU).toFixed(2)),
-        totalCost:  r.totalCost
-      }))
-  };
-}
-
-// ----------------------------------------------------------
 // マスター管理
 // ----------------------------------------------------------
 function addCraftsman(name, note) {
@@ -250,11 +187,11 @@ function addCraftsman(name, note) {
 }
 function deleteCraftsman(name) { return delRow(SHEETS.CRAFTSMEN, 2, name); }
 
-function addSchedule(name, brand, plan, status) {
+function addSchedule(name, season, vmd, brand, plan, status) {
   if (!name) return { success:false, message:'製品名を入力してください。' };
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const s  = ss.getSheetByName(SHEETS.SCHEDULES);
-  s.appendRow(['S'+String(s.getLastRow()).padStart(3,'0'), name, brand||'', plan||'', status||'進行中', '']);
+  s.appendRow(['S'+String(s.getLastRow()).padStart(3,'0'), name, season||'', vmd||'', brand||'', plan||'', status||'進行中', '']);
   return { success:true, message:`「${name}」を追加しました。` };
 }
 function deleteSchedule(name) { return delRow(SHEETS.SCHEDULES, 2, name); }
@@ -277,7 +214,7 @@ function getOrCreate(ss, name) {
 }
 function header(s, n) {
   const r = s.getRange(1,1,1,n);
-  r.setFontWeight('bold').setBackground('#1a73e8').setFontColor('#fff');
+  r.setFontWeight('bold').setBackground('#0BBDC4').setFontColor('#fff');
 }
 function fmt(d, pattern) {
   return Utilities.formatDate(d, 'Asia/Tokyo', pattern);
