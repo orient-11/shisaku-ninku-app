@@ -38,8 +38,8 @@ function setup() {
   // 列: ID / 製品名 / シーズン・型振・VMD / ブランド / 企画名 / ステータス / 備考
   s = getOrCreate(ss, SHEETS.SCHEDULES);
   if (s.getLastRow() === 0) {
-    s.appendRow(['ID', '製品名', 'シーズン・型振・VMD', 'ブランド', '企画名', 'ステータス', '備考']);
-    header(s, 7);
+    s.appendRow(['ID', '製品名', 'シーズン・型振・VMD', 'ブランド', '企画名']);
+    header(s, 5);
     s.setColumnWidth(2, 240);
     s.setColumnWidth(3, 160);
     s.setColumnWidth(4, 150);
@@ -104,10 +104,9 @@ function getSchedules(ss) {
   ss = ss || SpreadsheetApp.getActiveSpreadsheet();
   const s = ss.getSheetByName(SHEETS.SCHEDULES);
   if (!s || s.getLastRow() <= 1) return [];
-  return s.getRange(2, 1, s.getLastRow()-1, 7).getValues()
+  return s.getRange(2, 1, s.getLastRow()-1, 5).getValues()
     .filter(r => r[1]).map(r => ({
-      id:r[0], name:r[1], season:r[2]||'', brand:r[3]||'',
-      plan:r[4]||'', status:r[5]||'進行中', note:r[6]||''
+      id:r[0], name:r[1], season:r[2]||'', brand:r[3]||'', plan:r[4]||''
     }));
 }
 
@@ -186,11 +185,11 @@ function addCraftsman(name, note) {
 }
 function deleteCraftsman(name) { return delRow(SHEETS.CRAFTSMEN, 2, name); }
 
-function addSchedule(name, season, brand, plan, status) {
+function addSchedule(name, season, brand, plan) {
   if (!name) return { success:false, message:'製品名を入力してください。' };
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const s  = ss.getSheetByName(SHEETS.SCHEDULES);
-  s.appendRow(['S'+String(s.getLastRow()).padStart(3,'0'), name, season||'', brand||'', plan||'', status||'進行中', '']);
+  s.appendRow(['S'+String(s.getLastRow()).padStart(3,'0'), name, season||'', brand||'', plan||'']);
   return { success:true, message:`「${name}」を追加しました。` };
 }
 function deleteSchedule(name) { return delRow(SHEETS.SCHEDULES, 2, name); }

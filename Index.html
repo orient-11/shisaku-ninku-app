@@ -75,12 +75,42 @@ tr:active td{background:#f5fbfb}
 
 /* ===== 設定タブ モノトーン ===== */
 #tab-settings .card{border:1.5px solid #e2e8f0;box-shadow:none}
-#tab-settings .card-ttl{border-bottom-color:#e2e8f0;color:#374151}
 #tab-settings label{color:#374151}
 #tab-settings select,#tab-settings input[type="text"],#tab-settings input[type="number"]{border-color:#cbd5e0;background:#f9fafb}
 #tab-settings select:focus,#tab-settings input:focus{border-color:#4b5563;box-shadow:0 0 0 3px rgba(75,85,99,.1);background:#fff}
+#tab-settings th{background:#f3f4f6;color:#374151;border-bottom-color:#d1d5db}
+#tab-settings td{border-bottom-color:#e5e7eb}
 .btn-mono{background:#374151;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.15)}.btn-mono:active{background:#1f2937;transform:scale(.98)}
 .setting-note{font-size:13px;color:#6b7280;background:#f3f4f6;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:16px;line-height:1.7}
+#tab-report .card-ttl{font-size:20px}
+/* カスタム時刻ピッカー */
+.tp-wrap{position:relative}
+.tp-display{width:100%;padding:14px 13px;border:2px solid #ccdcde;border-radius:12px;font-size:17px;color:#1a202c;background:#f5fbfb;cursor:pointer;text-align:center;font-family:inherit;transition:border .2s,box-shadow .2s;display:flex;align-items:center;justify-content:center}
+.tp-display:hover{border-color:#0BBDC4;background:#fff}
+.tp-panel{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#fff;border:2px solid #d6eef0;border-radius:16px;box-shadow:0 8px 28px rgba(0,0,0,.18);z-index:300;padding:16px 20px 18px;width:180px}
+.tp-panel.hide{display:none}
+.tp-close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:18px;cursor:pointer;color:#9ca3af;line-height:1;padding:2px 6px}
+.tp-close:hover{color:#374151}
+.tp-grid{display:grid;grid-template-columns:1fr 24px 1fr;align-items:center;text-align:center;row-gap:6px;margin-top:10px}
+.tp-val{font-size:38px;font-weight:900;color:#1a202c;line-height:1}
+.tp-sep{font-size:38px;font-weight:900;color:#1a202c}
+.tp-btn{background:#f3f4f6;border:none;border-radius:8px;padding:8px;font-size:15px;cursor:pointer;color:#374151;width:100%;line-height:1}
+.tp-btn:active{background:#e5e7eb;transform:scale(.95)}
+.tp-val{cursor:pointer;border-radius:8px;padding:2px 4px;transition:background .15s}
+.tp-val:hover{background:#f3f4f6}
+.tp-grid-view{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px}
+.tp-grid-view.hide{display:none}
+.tp-spinner.hide{display:none}
+.tp-gitem{padding:10px 2px;border-radius:8px;border:none;background:none;cursor:pointer;font-size:15px;font-weight:700;color:#374151;text-align:center;width:100%}
+.tp-gitem:hover{background:#f3f4f6}
+.tp-gitem.active{background:#0BBDC4;color:#fff}
+/* アコーディオン */
+.acc-ttl{cursor:pointer;user-select:none;justify-content:space-between;font-size:20px;border-bottom-color:#e2e8f0;color:#374151}
+.acc-ttl::after{content:'▲';font-size:13px;color:#9ca3af;margin-left:auto;transition:transform .2s}
+.acc-ttl.closed{border-bottom:none;margin-bottom:0}
+.acc-ttl.closed::after{content:'▼'}
+.acc-body{padding-top:4px}
+.acc-body.closed{display:none}
 
 /* 統計カード */
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
@@ -113,9 +143,12 @@ tr:active td{background:#f5fbfb}
 .gcal-rows{position:relative}
 .gcal-vgrid{position:absolute;top:0;bottom:0;width:1px;background:#e4eef0;pointer-events:none;z-index:0}
 .gcal-work-bg{position:absolute;top:0;bottom:0;background:rgba(11,189,196,.05);border-left:3px solid rgba(11,189,196,.3);border-right:2px solid rgba(200,116,85,.3);pointer-events:none;z-index:0}
-.gcal-clock-line{position:absolute;top:0;bottom:0;width:2px;pointer-events:none;z-index:5}
-.gcal-clock-line.in{background:#0BBDC4}
-.gcal-clock-line.out{background:#C87455}
+.gcal-clock-line{position:absolute;top:0;bottom:0;width:12px;margin-left:-6px;cursor:ew-resize;z-index:5;display:flex;justify-content:center}
+.gcal-clock-line::before{content:'';position:absolute;top:0;bottom:0;width:2px;pointer-events:none}
+.gcal-clock-line.in::before{background:#0BBDC4}
+.gcal-clock-line.out::before{background:#C87455}
+.gcal-clock-line.in{background:transparent}
+.gcal-clock-line.out{background:transparent}
 .gcal-clock-label{position:absolute;top:3px;left:3px;font-size:10px;font-weight:800;padding:2px 6px;border-radius:3px;color:#fff;white-space:nowrap}
 .gcal-clock-line.in .gcal-clock-label{background:#0BBDC4}
 .gcal-clock-line.out .gcal-clock-label{background:#C87455}
@@ -213,28 +246,56 @@ tr:active td{background:#f5fbfb}
         <input type="date" id="r-date">
       </div>
     </div>
-    <div class="row">
+    <div class="row" style="align-items:flex-end">
       <div class="fg w2">
         <label>出勤</label>
-        <input type="time" id="r-in" value="08:30" onchange="snapTime('r-in');autoCalcBreak()" oninput="autoCalcBreak()">
+        <div class="tp-wrap">
+          <div class="tp-display" id="r-in-display" onclick="openPicker('r-in')">08:30</div>
+          <input type="hidden" id="r-in" value="08:30">
+          <div class="tp-panel hide" id="r-in-panel">
+            <button class="tp-close" onclick="closePicker('r-in')">×</button>
+            <div class="tp-spinner" id="r-in-spinner">
+              <div class="tp-grid">
+                <button class="tp-btn" onclick="changeHour('r-in',1)">∧</button><div></div><button class="tp-btn" onclick="changeMin('r-in',1)">∧</button>
+                <div class="tp-val" id="r-in-h" onclick="showGrid('r-in','h')">08</div><div class="tp-sep">:</div><div class="tp-val" id="r-in-m" onclick="showGrid('r-in','m')">30</div>
+                <button class="tp-btn" onclick="changeHour('r-in',-1)">∨</button><div></div><button class="tp-btn" onclick="changeMin('r-in',-1)">∨</button>
+              </div>
+            </div>
+            <div class="tp-grid-view hide" id="r-in-grid"></div>
+          </div>
+        </div>
       </div>
       <div class="fg w2">
         <label>退勤</label>
-        <input type="time" id="r-out" value="17:45" onchange="snapTime('r-out');autoCalcBreak()" oninput="autoCalcBreak()">
+        <div class="tp-wrap">
+          <div class="tp-display" id="r-out-display" onclick="openPicker('r-out')">17:45</div>
+          <input type="hidden" id="r-out" value="17:45">
+          <div class="tp-panel hide" id="r-out-panel">
+            <button class="tp-close" onclick="closePicker('r-out')">×</button>
+            <div class="tp-spinner" id="r-out-spinner">
+              <div class="tp-grid">
+                <button class="tp-btn" onclick="changeHour('r-out',1)">∧</button><div></div><button class="tp-btn" onclick="changeMin('r-out',1)">∧</button>
+                <div class="tp-val" id="r-out-h" onclick="showGrid('r-out','h')">17</div><div class="tp-sep">:</div><div class="tp-val" id="r-out-m" onclick="showGrid('r-out','m')">45</div>
+                <button class="tp-btn" onclick="changeHour('r-out',-1)">∨</button><div></div><button class="tp-btn" onclick="changeMin('r-out',-1)">∨</button>
+              </div>
+            </div>
+            <div class="tp-grid-view hide" id="r-out-grid"></div>
+          </div>
+        </div>
       </div>
       <div class="fg w2">
         <label>休憩(分) ※自動</label>
         <input type="number" id="r-break" value="75" min="0" step="5" oninput="calcJikan()">
       </div>
-    </div>
-    <div class="jikan-box">
-      <div>
-        <div class="jlabel">実働時間</div>
-        <div class="sub" id="jikan-sub">8:30〜17:45 休憩75分</div>
-      </div>
-      <div style="text-align:right">
-        <div class="value" id="jikan-val">555分</div>
-        <div class="jninku" id="jikan-ninku">= 1.16人工</div>
+      <div class="jikan-box" style="flex:1;min-width:160px;margin-top:0">
+        <div>
+          <div class="jlabel">実働時間</div>
+          <div class="sub" id="jikan-sub">8:30〜17:45 休憩75分</div>
+        </div>
+        <div style="text-align:right">
+          <div class="value" id="jikan-val">555分</div>
+          <div class="jninku" id="jikan-ninku">= 1.16人工</div>
+        </div>
       </div>
     </div>
   </div>
@@ -283,61 +344,57 @@ tr:active td{background:#f5fbfb}
 <div id="tab-settings" class="pn">
 
   <div class="card">
-    <div class="card-ttl">👷 職人管理</div>
-    <div class="row">
-      <div class="fg"><label>名前</label>
-        <input type="text" id="c-name" placeholder="田中 太郎">
+    <div class="card-ttl acc-ttl" onclick="toggleAcc(this)">👜 製品管理</div>
+    <div class="acc-body">
+      <p class="setting-note">⚠ 製品名を入力する際は、集計時に参照できるよう正式名称またはスケジュール表と完全一致させてください。</p>
+      <div class="row">
+        <div class="fg"><label>シーズン・型振・VMD</label>
+          <input type="text" id="p-season" placeholder="例: 2027SS / VN型振り">
+        </div>
+        <div class="fg"><label>ブランド</label>
+          <input type="text" id="p-brand" placeholder="例: TSUCHIYA">
+        </div>
+        <div class="fg"><label>企画名</label>
+          <input type="text" id="p-plan" placeholder="例: 27SS 新メンズライン">
+        </div>
       </div>
-      <div class="fg"><label>備考</label>
-        <input type="text" id="c-note" placeholder="担当工程など">
+      <div class="row" style="align-items:flex-end">
+        <div class="fg"><label>サンプル製品名称</label>
+          <input type="text" id="p-name" placeholder="例: バックパック 組み立て">
+        </div>
+        <button class="btn btn-mono btn-sm" onclick="addSchedule()">追加</button>
       </div>
+      <div id="list-p" style="margin-top:32px" class="ld">読み込み中...</div>
     </div>
-    <button class="btn btn-mono btn-sm" onclick="addCraftsman()">追加</button>
-    <div id="list-c" style="margin-top:16px" class="ld">読み込み中...</div>
   </div>
 
   <div class="card">
-    <div class="card-ttl">👜 製品管理</div>
-    <p class="setting-note">⚠ 製品名を入力する際は、集計時に参照できるよう正式名称またはスケジュール表と完全一致させてください。</p>
-    <div class="row">
-      <div class="fg"><label>シーズン・型振・VMD</label>
-        <input type="text" id="p-season" placeholder="例: 2027SS / VN型振り">
+    <div class="card-ttl acc-ttl closed" onclick="toggleAcc(this)">👷 職人管理</div>
+    <div class="acc-body closed">
+      <div class="row" style="align-items:flex-end">
+        <div class="fg"><label>名前</label>
+          <input type="text" id="c-name" placeholder="田中 太郎">
+        </div>
+        <button class="btn btn-mono btn-sm" onclick="addCraftsman()">追加</button>
       </div>
-      <div class="fg"><label>企画名</label>
-        <input type="text" id="p-plan" placeholder="例: 27SS 新メンズライン">
-      </div>
+      <div id="list-c" style="margin-top:32px" class="ld">読み込み中...</div>
     </div>
-    <div class="row">
-      <div class="fg full"><label>サンプル製品名称</label>
-        <input type="text" id="p-name" placeholder="例: バックパック 組み立て">
-      </div>
-    </div>
-    <div class="row">
-      <div class="fg"><label>ブランド</label>
-        <input type="text" id="p-brand" placeholder="例: TSUCHIYA">
-      </div>
-      <div class="fg"><label>ステータス</label>
-        <select id="p-status">
-          <option>進行中</option><option>完了</option><option>保留</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn btn-mono btn-sm" onclick="addSchedule()">追加</button>
-    <div id="list-p" style="margin-top:16px" class="ld">読み込み中...</div>
   </div>
 
   <div class="card">
-    <div class="card-ttl">🔢 ステージ管理</div>
-    <p style="font-size:14px;color:#9aa5b4;margin-bottom:14px">
-      初期値: モック / 1st / 2nd / 最終（展示会）/ 色増し前修正 / 試験体 / ショー用
-    </p>
-    <div class="row">
-      <div class="fg"><label>ステージ名</label>
-        <input type="text" id="st-name" placeholder="例: 量産前確認">
+    <div class="card-ttl acc-ttl closed" onclick="toggleAcc(this)">🔢 ステージ管理</div>
+    <div class="acc-body closed">
+      <p style="font-size:14px;color:#9aa5b4;margin-bottom:14px">
+        初期値: モック / 1st / 2nd / 最終（展示会）/ 色増し前修正 / 試験体 / ショー用
+      </p>
+      <div class="row" style="align-items:flex-end">
+        <div class="fg"><label>ステージ名</label>
+          <input type="text" id="st-name" placeholder="例: 量産前確認">
+        </div>
+        <button class="btn btn-mono btn-sm" onclick="addStage()">追加</button>
       </div>
+      <div id="list-st" style="margin-top:32px" class="ld">読み込み中...</div>
     </div>
-    <button class="btn btn-mono btn-sm" onclick="addStage()">追加</button>
-    <div id="list-st" style="margin-top:16px" class="ld">読み込み中...</div>
   </div>
 
 </div>
@@ -408,6 +465,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('r-date').value = today();
   buildRuler();
   autoCalcBreak();
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.tp-wrap')) {
+      document.querySelectorAll('.tp-panel').forEach(p => p.classList.add('hide'));
+    }
+  });
   google.script.run
     .withSuccessHandler(d => {
       S.craftsmen = d.craftsmen || [];
@@ -423,6 +485,93 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ======================== */
 /* 時間ルーラー             */
 /* ======================== */
+function makeDraggableClockLine(el, pickerId) {
+  const onDown = (e) => {
+    e.preventDefault(); e.stopPropagation();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const startX   = clientX;
+    const startMin = timeToMin(document.getElementById(pickerId).value);
+    const onMove = (e) => {
+      const cx = e.touches ? e.touches[0].clientX : e.clientX;
+      let newMin = Math.round((startMin + (cx - startX) / MIN_PX) / 5) * 5;
+      newMin = Math.max(0, Math.min(23 * 60 + 55, newMin));
+      updatePicker(pickerId, Math.floor(newMin / 60), newMin % 60);
+    };
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('touchend', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onUp);
+  };
+  el.addEventListener('mousedown', onDown);
+  el.addEventListener('touchstart', onDown, { passive: false });
+}
+function timeToMin(val) {
+  const [h, m] = val.split(':').map(Number); return h * 60 + m;
+}
+
+function openPicker(id) {
+  document.querySelectorAll('.tp-panel').forEach(p => p.classList.add('hide'));
+  hideGrid(id);
+  document.getElementById(id + '-panel').classList.remove('hide');
+}
+function closePicker(id) {
+  document.getElementById(id + '-panel').classList.add('hide');
+  hideGrid(id);
+}
+function showGrid(id, type) {
+  const [h, m] = document.getElementById(id).value.split(':').map(Number);
+  const gridEl = document.getElementById(id + '-grid');
+  gridEl.innerHTML = '';
+  if (type === 'h') {
+    for (let i = 0; i < 24; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'tp-gitem' + (i === h ? ' active' : '');
+      btn.textContent = pad(i);
+      btn.onclick = () => { updatePicker(id, i, m); hideGrid(id); };
+      gridEl.appendChild(btn);
+    }
+  } else {
+    for (let i = 0; i < 60; i += 5) {
+      const btn = document.createElement('button');
+      btn.className = 'tp-gitem' + (i === m ? ' active' : '');
+      btn.textContent = pad(i);
+      btn.onclick = () => { updatePicker(id, h, i); hideGrid(id); };
+      gridEl.appendChild(btn);
+    }
+  }
+  document.getElementById(id + '-spinner').classList.add('hide');
+  gridEl.classList.remove('hide');
+}
+function hideGrid(id) {
+  document.getElementById(id + '-spinner').classList.remove('hide');
+  document.getElementById(id + '-grid').classList.add('hide');
+}
+function changeHour(id, d) {
+  const [h, m] = document.getElementById(id).value.split(':').map(Number);
+  updatePicker(id, (h + d + 24) % 24, m);
+}
+function changeMin(id, d) {
+  const [h, m] = document.getElementById(id).value.split(':').map(Number);
+  let nm = m + d * 5;
+  if (nm >= 60) nm = 0;
+  if (nm < 0) nm = 55;
+  updatePicker(id, h, nm);
+}
+function updatePicker(id, h, m) {
+  const val = pad(h) + ':' + pad(m);
+  document.getElementById(id).value = val;
+  document.getElementById(id + '-display').textContent = val;
+  document.getElementById(id + '-h').textContent = pad(h);
+  document.getElementById(id + '-m').textContent = pad(m);
+  autoCalcBreak();
+}
+
 function buildRuler() {
   const ruler = document.getElementById('gcal-ruler');
   ruler.style.width = 24 * HOUR_W + 'px';
@@ -561,14 +710,16 @@ function renderTimeline() {
   const inLine = document.createElement('div');
   inLine.className  = 'gcal-clock-line in';
   inLine.style.left = clockIn * MIN_PX + 'px';
-  inLine.innerHTML  = `<span class="gcal-clock-label">出勤 ${document.getElementById('r-in').value}</span>`;
+  inLine.innerHTML  = `<span class="gcal-clock-label">出勤 ${document.getElementById('r-in-display').textContent}</span>`;
   rows.appendChild(inLine);
+  makeDraggableClockLine(inLine, 'r-in');
 
   const outLine = document.createElement('div');
   outLine.className  = 'gcal-clock-line out';
   outLine.style.left = clockOut * MIN_PX + 'px';
-  outLine.innerHTML  = `<span class="gcal-clock-label">退勤 ${document.getElementById('r-out').value}</span>`;
+  outLine.innerHTML  = `<span class="gcal-clock-label">退勤 ${document.getElementById('r-out-display').textContent}</span>`;
   rows.appendChild(outLine);
+  makeDraggableClockLine(outLine, 'r-out');
 
   getActiveBreaks().forEach(brk => {
     const bandEnd = Math.min(brk.end, clockOut + 60);
@@ -875,6 +1026,14 @@ function resetForm() {
 }
 
 /* ======================== */
+/* アコーディオン           */
+/* ======================== */
+function toggleAcc(ttl) {
+  ttl.classList.toggle('closed');
+  ttl.nextElementSibling.classList.toggle('closed');
+}
+
+/* ======================== */
 /* 設定管理                 */
 /* ======================== */
 function addCraftsman() {
@@ -882,7 +1041,7 @@ function addCraftsman() {
   if (!name) { toast('名前を入力してください','err'); return; }
   google.script.run
     .withSuccessHandler(r => { toast(r.message,r.success?'ok':'err'); if(r.success){document.getElementById('c-name').value=''; reload();} })
-    .addCraftsman(name, document.getElementById('c-note').value.trim());
+    .addCraftsman(name, '');
 }
 
 function addSchedule() {
@@ -890,7 +1049,7 @@ function addSchedule() {
   if (!name) { toast('製品名を入力してください','err'); return; }
   google.script.run
     .withSuccessHandler(r => { toast(r.message,r.success?'ok':'err'); if(r.success){document.getElementById('p-name').value=''; reload();} })
-    .addSchedule(name, v('p-season'), v('p-brand'), v('p-plan'), v('p-status'));
+    .addSchedule(name, v('p-season'), v('p-brand'), v('p-plan'));
 }
 
 function addStage() {
@@ -912,13 +1071,12 @@ function renderLists() {
 
   document.getElementById('list-p').innerHTML = S.schedules.length
     ? mTable(
-        ['製品名','シーズン・型振・VMD','ブランド','企画名','状態'],
+        ['製品名','シーズン・型振・VMD','ブランド','企画名'],
         S.schedules.map(s => [
           `<strong>${esc(s.name)}</strong>`,
           esc(s.season) || '—',
           esc(s.brand)  || '—',
           esc(s.plan)   || '—',
-          `<span class="badge ${s.status==='完了'?'b-gn':'b-bl'}">${esc(s.status)}</span>`,
           `<button class="btn btn-d btn-sm" onclick="delSchedule('${esc(s.name)}')">削除</button>`
         ])
       )
