@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>試作課 日報アプリ 使い方ガイド</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f7f7f8;color:#1a202c;font-size:16px;line-height:1.7}
+
+/* ======= レイアウト ======= */
+.page{max-width:860px;margin:0 auto;padding:32px 20px 64px}
+
+/* ======= 表紙 ======= */
+.cover{background:#1f2937;color:#fff;border-radius:20px;padding:48px 40px 40px;margin-bottom:40px}
+.cover-label{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#9ca3af;margin-bottom:10px}
+.cover h1{font-size:34px;font-weight:900;letter-spacing:-.02em;line-height:1.2;margin-bottom:12px}
+.cover p{font-size:15px;color:#d1d5db;max-width:480px;line-height:1.9}
+.cover-badges{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.cover-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:700;color:#e5e7eb}
+
+/* ======= 目次 ======= */
+.toc{background:#fff;border-radius:16px;padding:28px 32px;margin-bottom:40px;border:1.5px solid #e5e7eb}
+.toc h2{font-size:13px;font-weight:800;color:#9ca3af;margin-bottom:16px;letter-spacing:.1em;text-transform:uppercase}
+.toc-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.toc-list li a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;text-decoration:none;color:#374151;font-size:14px;font-weight:600;transition:background .15s}
+.toc-list li a:hover{background:#f3f4f6}
+.toc-part{width:26px;height:26px;border-radius:6px;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.toc-part.admin{background:#e5e7eb;color:#374151}
+.toc-part.daily{background:#374151;color:#fff}
+
+/* ======= セクション共通 ======= */
+.section{margin-bottom:48px}
+.part-header{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding:18px 24px;border-radius:12px;border:1.5px solid #e5e7eb;background:#fff}
+.part-header.admin{border-left:5px solid #9ca3af}
+.part-header.daily{border-left:5px solid #374151}
+.part-icon{font-size:30px}
+.part-header h2{font-size:20px;font-weight:900;color:#1a202c}
+.part-header p{font-size:13px;color:#6b7280;margin-top:3px}
+
+/* ======= ステップカード ======= */
+.steps{display:flex;flex-direction:column;gap:16px}
+.step{background:#fff;border-radius:14px;padding:22px 24px;border:1.5px solid #e5e7eb;display:grid;grid-template-columns:44px 1fr;gap:0 18px;align-items:start}
+.step-num{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;flex-shrink:0;margin-top:2px}
+.step-num.admin{background:#f3f4f6;color:#374151;border:2px solid #e5e7eb}
+.step-num.daily{background:#374151;color:#fff}
+.step-body h3{font-size:16px;font-weight:800;color:#1a202c;margin-bottom:8px}
+.step-body p{font-size:14px;color:#4b5563;line-height:1.8}
+.step-body ul{font-size:14px;color:#4b5563;line-height:1.8;padding-left:20px;margin-top:6px}
+.step-body li{margin-bottom:4px}
+
+/* ======= モック UI ======= */
+.mock{background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:10px;padding:14px;margin-top:12px;font-size:13px}
+.mock-label{font-size:10px;font-weight:800;color:#9ca3af;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+
+/* フォーム行 */
+.mock-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.mock-field{flex:1;min-width:80px}
+.mock-field label{display:block;font-size:11px;font-weight:700;color:#6b7280;margin-bottom:4px;letter-spacing:.04em}
+.mock-input{background:#f5fbfb;border:2px solid #ccdcde;border-radius:8px;padding:8px 10px;font-size:13px;color:#1a202c;width:100%;text-align:center;font-weight:700}
+.mock-input.active{border-color:#0BBDC4;background:#fff;box-shadow:0 0 0 3px rgba(11,189,196,.1)}
+.mock-select{background:#f5fbfb;border:2px solid #ccdcde;border-radius:8px;padding:8px 10px;font-size:13px;color:#1a202c;width:100%}
+
+/* タイムライン */
+.mock-timeline{background:#fff;border:2px solid #d6eef0;border-radius:10px;overflow:hidden;margin-top:8px}
+.mock-ruler{display:flex;background:#f5fbfb;border-bottom:2px solid #d6eef0;height:26px}
+.mock-ruler span{flex:1;font-size:11px;font-weight:700;color:#6b7280;display:flex;align-items:center;padding-left:4px;border-left:1px solid #e4eef0}
+.mock-tl-body{position:relative;height:64px;background:#fff}
+.mock-work-bg{position:absolute;top:0;bottom:0;left:15%;width:70%;background:rgba(11,189,196,.05);border-left:3px solid rgba(11,189,196,.4);border-right:2px solid rgba(200,116,85,.3)}
+.mock-bar{position:absolute;top:10px;height:44px;border-radius:7px;display:flex;align-items:center;padding:0 12px;color:#fff;font-size:12px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.mock-in-line{position:absolute;top:0;bottom:0;left:15%;width:2px;background:#0BBDC4}
+.mock-in-label{position:absolute;top:3px;left:16%;font-size:10px;font-weight:800;background:#0BBDC4;color:#fff;padding:2px 5px;border-radius:3px}
+.mock-out-line{position:absolute;top:0;bottom:0;left:85%;width:2px;background:#C87455}
+.mock-out-label{position:absolute;top:3px;left:72%;font-size:10px;font-weight:800;background:#C87455;color:#fff;padding:2px 5px;border-radius:3px}
+.mock-add-bar{position:absolute;top:10px;height:44px;left:15%;right:15%;border:2.5px dashed #8dd8db;border-radius:7px;display:flex;align-items:center;padding:0 12px;color:#2a9099;font-size:12px;font-weight:700}
+.mock-break{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,rgba(150,150,150,.08),rgba(150,150,150,.08) 2px,transparent 2px,transparent 7px);border-left:2px dashed #b0bec5}
+
+/* ピッカー */
+.mock-picker{background:#fff;border:2px solid #d6eef0;border-radius:12px;padding:14px;width:160px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.mock-picker-display{font-size:32px;font-weight:900;color:#1a202c;letter-spacing:.04em;margin:8px 0}
+.mock-picker-btns{display:grid;grid-template-columns:1fr 20px 1fr;gap:4px;align-items:center}
+.mock-picker-btn{background:#f3f4f6;border:none;border-radius:6px;padding:6px;font-size:13px;font-weight:800;color:#374151;cursor:pointer;text-align:center}
+.mock-picker-sep{font-size:24px;font-weight:900;color:#1a202c;text-align:center}
+
+/* アコーディオン */
+.mock-acc{border:2px solid #e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:6px}
+.mock-acc-ttl{background:#fff;padding:12px 16px;font-size:14px;font-weight:800;color:#374151;display:flex;justify-content:space-between;align-items:center}
+.mock-acc-ttl.open{border-bottom:1px solid #e2e8f0}
+.mock-acc-body{background:#f9fafb;padding:14px 16px;font-size:13px;color:#4b5563}
+
+/* モーダル */
+.mock-modal{background:#fff;border-radius:14px;padding:20px;box-shadow:0 8px 32px rgba(0,0,0,.15);max-width:280px;margin:8px auto}
+.mock-modal-ttl{font-size:15px;font-weight:800;color:#1a202c;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.mock-dot{width:14px;height:14px;border-radius:50%;background:#0BBDC4;flex-shrink:0}
+.mock-modal-field{margin-bottom:10px}
+.mock-modal-field label{font-size:11px;font-weight:700;color:#6b7280;display:block;margin-bottom:4px}
+
+/* ボタン */
+.mock-btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:800;border:none;cursor:pointer}
+.mock-btn.primary{background:#0BBDC4;color:#fff}
+.mock-btn.green{background:#38a169;color:#fff}
+.mock-btn.gray{background:#374151;color:#fff}
+.mock-btn.outline{background:#fff;border:2px solid #d1d5db;color:#374151}
+.mock-btn-row{display:flex;gap:8px;margin-top:10px}
+
+/* ======= ポイントボックス ======= */
+.point{display:flex;gap:12px;background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:10px;padding:13px 16px;margin-top:12px}
+.point-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.point p{font-size:13px;color:#374151;line-height:1.7;font-weight:600}
+
+.tip{display:flex;gap:12px;background:#f3f4f6;border:1.5px solid #e5e7eb;border-radius:10px;padding:13px 16px;margin-top:12px}
+.tip p{font-size:13px;color:#374151;line-height:1.7;font-weight:600}
+
+/* ======= 区切り ======= */
+.divider{border:none;border-top:2px dashed #e5e7eb;margin:40px 0}
+
+/* ======= フッター ======= */
+.guide-footer{text-align:center;padding:32px;color:#9ca3af;font-size:13px}
+
+/* ======= 印刷用 ======= */
+@media print {
+  body{background:#fff;font-size:13px}
+  .page{max-width:100%;padding:0;margin:0}
+  .cover{border-radius:0;margin-bottom:0;padding:32px 28px 28px;page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cover h1{font-size:28px}
+  .toc{border-radius:0;box-shadow:none;border:2px solid #e5e7eb;margin:0;page-break-after:always}
+  .part-header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .section{page-break-inside:avoid}
+  .step{box-shadow:none;border:1px solid #e5e7eb;page-break-inside:avoid}
+  .step-num{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .mock{border:1px solid #e5e7eb}
+  .mock-work-bg,.mock-in-line,.mock-out-line,.mock-bar,.mock-in-label,.mock-out-label{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .point,.tip{-webkit-print-color-adjust:exact;print-color-adjust:exact;page-break-inside:avoid}
+  .guide-footer{display:none}
+  @page{size:A4;margin:14mm 14mm 16mm}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ===== 表紙 ===== -->
+<div class="cover">
+  <div class="cover-label">使い方ガイド</div>
+  <h1>🧵 試作課 日報アプリ</h1>
+  <p>毎日の作業時間をスマホで簡単に記録・提出できるアプリです。このガイドを読めばすぐに使い始められます。</p>
+  <div class="cover-badges">
+    <span class="cover-badge">⚙️ 設定する人向け</span>
+    <span class="cover-badge">📝 毎日使う人向け</span>
+  </div>
+</div>
+
+<!-- ===== 目次 ===== -->
+<div class="toc">
+  <h2>📋 もくじ</h2>
+  <ul class="toc-list">
+    <li><a href="#admin"><span class="toc-part admin">A</span>初回セットアップ（設定する人）</a></li>
+    <li><a href="#step1"><span class="toc-part daily">1</span>職人名・日付を選ぶ</a></li>
+    <li><a href="#register-craftsman"><span class="toc-part admin">A</span>職人を登録する</a></li>
+    <li><a href="#step2"><span class="toc-part daily">2</span>出勤・退勤を入力する</a></li>
+    <li><a href="#register-product"><span class="toc-part admin">A</span>製品・ステージを登録する</a></li>
+    <li><a href="#step3"><span class="toc-part daily">3</span>作業をタイムラインに追加する</a></li>
+    <li><a href="#step4"><span class="toc-part daily">4</span>時間を調整する</a></li>
+    <li><a href="#step5"><span class="toc-part daily">5</span>日報を提出する</a></li>
+  </ul>
+</div>
+
+<!-- ===== PART A: 設定する人 ===== -->
+<div class="section" id="admin">
+  <div class="part-header admin">
+    <div class="part-icon">⚙️</div>
+    <div>
+      <h2>設定する人向け</h2>
+      <p>初めて使う前に、管理者が一度だけ行う作業です。</p>
+    </div>
+  </div>
+
+  <div class="steps">
+
+    <!-- A-1 初期設定 -->
+    <div class="step">
+      <div class="step-num admin">A1</div>
+      <div class="step-body">
+        <h3>初期設定ボタンを押す</h3>
+        <p>アプリを開いたら、右上の「初期設定」ボタンを押します。スプレッドシートに必要なシートが自動で作られます。<br>※ 一度だけ実行すればOKです。</p>
+        <div class="mock">
+          <div class="mock-label">アプリ画面（ヘッダー）</div>
+          <div style="background:linear-gradient(135deg,#0BBDC4,#0896A0);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between">
+            <div style="color:#fff">
+              <div style="font-size:16px;font-weight:900">🧵 試作課 日報</div>
+              <div style="font-size:11px;opacity:.8;margin-top:2px">作業時間・人工管理</div>
+            </div>
+            <div style="background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.5);color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:800">初期設定 ←ここを押す</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A-2 職人登録 -->
+    <div class="step" id="register-craftsman">
+      <div class="step-num admin">A2</div>
+      <div class="step-body">
+        <h3>職人を登録する</h3>
+        <p>「設定」タブを開き、「👷 職人管理」をタップして展開します。名前を入力して「追加」ボタンを押してください。</p>
+        <div class="mock">
+          <div class="mock-label">設定タブ ＞ 職人管理</div>
+          <div class="mock-acc">
+            <div class="mock-acc-ttl open">👷 職人管理 <span>▲</span></div>
+            <div class="mock-acc-body">
+              <div class="mock-row">
+                <div class="mock-field">
+                  <label>名前</label>
+                  <div class="mock-input active">田中 太郎</div>
+                </div>
+                <div style="display:flex;align-items:flex-end">
+                  <div class="mock-btn gray" style="height:44px">追加</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="point">
+          <div class="point-icon">⚠️</div>
+          <p>名前はスプレッドシートと完全一致させてください。あとから変更すると過去の日報データと一致しなくなります。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- A-3 製品・ステージ登録 -->
+    <div class="step" id="register-product">
+      <div class="step-num admin">A3</div>
+      <div class="step-body">
+        <h3>製品・ステージを登録する</h3>
+        <p>「👜 製品管理」から現在進行中のサンプル製品を登録します。シーズン・型振・VMD、ブランド、企画名、製品名の順に入力してください。</p>
+        <div class="mock">
+          <div class="mock-label">設定タブ ＞ 製品管理</div>
+          <div class="mock-acc">
+            <div class="mock-acc-ttl open">👜 製品管理 <span>▲</span></div>
+            <div class="mock-acc-body">
+              <div class="mock-row">
+                <div class="mock-field">
+                  <label>シーズン・型振・VMD</label>
+                  <div class="mock-input">2027SS / VN型振り</div>
+                </div>
+                <div class="mock-field">
+                  <label>ブランド</label>
+                  <div class="mock-input">TSUCHIYA</div>
+                </div>
+                <div class="mock-field">
+                  <label>企画名</label>
+                  <div class="mock-input">27SS 新メンズ</div>
+                </div>
+              </div>
+              <div class="mock-row">
+                <div class="mock-field" style="flex:3">
+                  <label>サンプル製品名称</label>
+                  <div class="mock-input active">バックパック 組み立て</div>
+                </div>
+                <div style="display:flex;align-items:flex-end">
+                  <div class="mock-btn gray" style="height:44px">追加</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:14px;color:#4b5563;margin-top:12px">「🔢 ステージ管理」では作業フェーズ（モック / 1st / 2nd など）を登録・追加できます。初期値は自動で入っています。</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== PART B: 毎日使う人 ===== -->
+<div class="section">
+  <div class="part-header daily">
+    <div class="part-icon">📝</div>
+    <div>
+      <h2>毎日使う人向け</h2>
+      <p>日報入力の手順です。毎日この流れで入力・提出してください。</p>
+    </div>
+  </div>
+
+  <div class="steps">
+
+    <!-- STEP 1 基本情報 -->
+    <div class="step" id="step1">
+      <div class="step-num daily">1</div>
+      <div class="step-body">
+        <h3>職人名と作業日を選ぶ</h3>
+        <p>「📝 日報入力」タブを開き、「👷 基本情報」カードで自分の名前と今日の日付を選んでください。</p>
+        <div class="mock">
+          <div class="mock-label">基本情報</div>
+          <div class="mock-row">
+            <div class="mock-field">
+              <label>職人</label>
+              <div class="mock-input active">田中 太郎 ▼</div>
+            </div>
+            <div class="mock-field">
+              <label>作業日</label>
+              <div class="mock-input">2027-04-21</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 出退勤 -->
+    <div class="step" id="step2">
+      <div class="step-num daily">2</div>
+      <div class="step-body">
+        <h3>出勤・退勤時間を入力する</h3>
+        <p>時刻の枠をタップするとピッカーが開きます。<strong>∧/∨ ボタン</strong>で1段階ずつ変えるか、<strong>数字をタップ</strong>して一覧から選んでください。</p>
+        <div class="mock" style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
+          <div>
+            <div class="mock-label">時刻ピッカー</div>
+            <div class="mock-picker">
+              <div style="font-size:11px;font-weight:800;color:#9ca3af;margin-bottom:4px">出勤時刻</div>
+              <div class="mock-picker-display">08:30</div>
+              <div class="mock-picker-btns">
+                <div class="mock-picker-btn">∧</div>
+                <div class="mock-picker-sep">:</div>
+                <div class="mock-picker-btn">∧</div>
+              </div>
+              <div class="mock-picker-btns" style="margin-top:4px">
+                <div style="font-size:26px;font-weight:900;color:#1a202c;text-align:center;border-radius:6px;background:#f0fdfe;padding:2px">08</div>
+                <div class="mock-picker-sep"></div>
+                <div style="font-size:26px;font-weight:900;color:#1a202c;text-align:center;border-radius:6px;background:#f0fdfe;padding:2px">30</div>
+              </div>
+              <div class="mock-picker-btns" style="margin-top:4px">
+                <div class="mock-picker-btn">∨</div>
+                <div></div>
+                <div class="mock-picker-btn">∨</div>
+              </div>
+              <div style="font-size:11px;color:#9ca3af;margin-top:8px;text-align:center">数字をタップ→一覧から選べます</div>
+            </div>
+          </div>
+          <div style="flex:1;min-width:160px">
+            <div class="mock-label" style="margin-bottom:10px">操作方法</div>
+            <div style="font-size:13px;color:#4b5563;line-height:2">
+              <div>① 出勤・退勤の枠をタップ</div>
+              <div>② <strong>∧/∨</strong> で5分刻みで変更</div>
+              <div>③ または数字をタップして一覧から選ぶ</div>
+              <div>④ タイムライン上のラインを<strong>左右にドラッグ</strong>しても変更できます</div>
+            </div>
+            <div class="tip">
+              <p>休憩時間（昼・15時・17:45）は出退勤時間から<strong>自動計算</strong>されます。手動での変更も可能です。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 作業追加 -->
+    <div class="step" id="step3">
+      <div class="step-num daily">3</div>
+      <div class="step-body">
+        <h3>作業をタイムラインに追加する</h3>
+        <p>タイムラインの「＋ 作業を追加」バーをタップします。製品名とサンプルフェーズを選んで「保存」を押してください。</p>
+        <div class="mock">
+          <div class="mock-label">作業タイムライン</div>
+          <div class="mock-timeline">
+            <div class="mock-ruler">
+              <span>7:00</span><span>8:00</span><span>9:00</span><span>10:00</span><span>11:00</span><span>12:00</span>
+            </div>
+            <div class="mock-tl-body">
+              <div class="mock-work-bg"></div>
+              <div class="mock-in-line"></div>
+              <div class="mock-in-label">出勤 08:30</div>
+              <div class="mock-out-line"></div>
+              <div class="mock-out-label">退勤 17:45</div>
+              <div class="mock-add-bar">＋ 作業を追加（残り 555分）← ここをタップ</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px">
+          <div class="mock">
+            <div class="mock-label">作業追加モーダル</div>
+            <div class="mock-modal">
+              <div class="mock-modal-ttl"><div class="mock-dot"></div>作業を追加</div>
+              <div class="mock-modal-field">
+                <label>サンプル製品名称</label>
+                <div class="mock-input active">バックパック 組み立て ▼</div>
+              </div>
+              <div class="mock-modal-field">
+                <label>サンプルフェーズ</label>
+                <div class="mock-input">1st ▼</div>
+              </div>
+              <div class="mock-modal-field">
+                <label>メモ（任意）</label>
+                <div class="mock-input" style="text-align:left;color:#9ca3af">作業内容・特記事項</div>
+              </div>
+              <div class="mock-btn-row">
+                <div class="mock-btn primary" style="flex:1">保存</div>
+                <div class="mock-btn outline">キャンセル</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="point">
+          <div class="point-icon">💡</div>
+          <p>作業が複数ある場合は「＋ 作業を追加」を繰り返します。追加した作業は自動で時間が割り振られます。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 時間調整 -->
+    <div class="step" id="step4">
+      <div class="step-num daily">4</div>
+      <div class="step-body">
+        <h3>作業時間を調整する</h3>
+        <p>タイムライン上のバーを操作して実際の時間に合わせます。</p>
+        <div class="mock">
+          <div class="mock-label">タイムライン（作業追加後）</div>
+          <div class="mock-timeline">
+            <div class="mock-ruler">
+              <span>8:00</span><span>9:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span>
+            </div>
+            <div class="mock-tl-body">
+              <div class="mock-work-bg"></div>
+              <div class="mock-in-line"></div>
+              <div class="mock-in-label">出勤 08:30</div>
+              <div class="mock-break" style="left:55%;width:10%"></div>
+              <div class="mock-bar" style="left:15%;width:38%;background:#0BBDC4">バックパック / 1st &nbsp; 200分</div>
+              <div class="mock-bar" style="left:55%;width:22%;background:#C87455;top:10px">ショルダー / 2nd</div>
+            </div>
+          </div>
+        </div>
+        <ul style="font-size:14px;color:#4b5563;line-height:2;margin-top:12px;padding-left:20px">
+          <li><strong>バーの右端をドラッグ</strong> → 時間を伸ばす・縮める（5分刻み）</li>
+          <li><strong>バーをタップ</strong> → 製品名・フェーズの編集・削除</li>
+          <li><strong>出勤ライン・退勤ラインをドラッグ</strong> → 出退勤時刻を変更</li>
+        </ul>
+        <div class="tip">
+          <p>「作業合計」が「実働時間」と一致するまで調整してください。ぴったり合うと ✔ が表示されます。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 提出 -->
+    <div class="step" id="step5">
+      <div class="step-num daily">5</div>
+      <div class="step-body">
+        <h3>日報を提出する</h3>
+        <p>内容を確認したら、画面下部の緑色のボタンを押してください。スプレッドシートに記録されます。</p>
+        <div class="mock" style="text-align:center;padding:20px">
+          <div class="mock-btn green" style="width:100%;padding:18px;font-size:16px;border-radius:12px">✔ 日報を提出する</div>
+        </div>
+        <div class="point">
+          <div class="point-icon">⚠️</div>
+          <p>提出前に「職人名・日付・作業内容」を必ず確認してください。提出後の修正はスプレッドシートから直接行ってください。</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="guide-footer">試作課 日報アプリ 使い方ガイド</div>
+</div>
+</body>
+</html>
