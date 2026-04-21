@@ -143,12 +143,11 @@ tr:active td{background:#f5fbfb}
 .gcal-rows{position:relative}
 .gcal-vgrid{position:absolute;top:0;bottom:0;width:1px;background:#e4eef0;pointer-events:none;z-index:0}
 .gcal-work-bg{position:absolute;top:0;bottom:0;background:rgba(11,189,196,.05);border-left:3px solid rgba(11,189,196,.3);border-right:2px solid rgba(200,116,85,.3);pointer-events:none;z-index:0}
-.gcal-clock-line{position:absolute;top:0;bottom:0;width:12px;margin-left:-6px;cursor:ew-resize;z-index:5;display:flex;justify-content:center}
-.gcal-clock-line::before{content:'';position:absolute;top:0;bottom:0;width:2px;pointer-events:none}
-.gcal-clock-line.in::before{background:#0BBDC4}
-.gcal-clock-line.out::before{background:#C87455}
-.gcal-clock-line.in{background:transparent}
-.gcal-clock-line.out{background:transparent}
+.gcal-clock-line{position:absolute;top:0;bottom:0;width:12px;margin-left:-6px;z-index:5;pointer-events:none}
+.gcal-clock-bar{position:absolute;top:0;bottom:0;left:5px;width:2px;pointer-events:none}
+.gcal-clock-line.in .gcal-clock-bar{background:#0BBDC4}
+.gcal-clock-line.out .gcal-clock-bar{background:#C87455}
+.gcal-clock-drag{position:absolute;top:0;bottom:0;left:1px;width:10px;cursor:ew-resize;pointer-events:auto}
 .gcal-clock-label{position:absolute;top:3px;left:3px;font-size:10px;font-weight:800;padding:2px 6px;border-radius:3px;color:#fff;white-space:nowrap}
 .gcal-clock-line.in .gcal-clock-label{background:#0BBDC4}
 .gcal-clock-line.out .gcal-clock-label{background:#C87455}
@@ -487,7 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ======================== */
 function makeDraggableClockLine(el, pickerId) {
   const onDown = (e) => {
-    e.preventDefault(); e.stopPropagation();
+    e.preventDefault();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const startX   = clientX;
     const startMin = timeToMin(document.getElementById(pickerId).value);
@@ -710,16 +709,16 @@ function renderTimeline() {
   const inLine = document.createElement('div');
   inLine.className  = 'gcal-clock-line in';
   inLine.style.left = clockIn * MIN_PX + 'px';
-  inLine.innerHTML  = `<span class="gcal-clock-label">出勤 ${document.getElementById('r-in-display').textContent}</span>`;
+  inLine.innerHTML  = `<div class="gcal-clock-bar"></div><div class="gcal-clock-drag"></div><span class="gcal-clock-label">出勤 ${document.getElementById('r-in-display').textContent}</span>`;
   rows.appendChild(inLine);
-  makeDraggableClockLine(inLine, 'r-in');
+  makeDraggableClockLine(inLine.querySelector('.gcal-clock-drag'), 'r-in');
 
   const outLine = document.createElement('div');
   outLine.className  = 'gcal-clock-line out';
   outLine.style.left = clockOut * MIN_PX + 'px';
-  outLine.innerHTML  = `<span class="gcal-clock-label">退勤 ${document.getElementById('r-out-display').textContent}</span>`;
+  outLine.innerHTML  = `<div class="gcal-clock-bar"></div><div class="gcal-clock-drag"></div><span class="gcal-clock-label">退勤 ${document.getElementById('r-out-display').textContent}</span>`;
   rows.appendChild(outLine);
-  makeDraggableClockLine(outLine, 'r-out');
+  makeDraggableClockLine(outLine.querySelector('.gcal-clock-drag'), 'r-out');
 
   getActiveBreaks().forEach(brk => {
     const bandEnd = Math.min(brk.end, clockOut + 60);
