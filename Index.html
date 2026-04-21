@@ -73,6 +73,15 @@ tr:active td{background:#f5fbfb}
 .b-or{background:#fff3e8;color:#9a4a1a}
 .b-pp{background:#f0eeff;color:#5e43a0}
 
+/* ===== 設定タブ モノトーン ===== */
+#tab-settings .card{border:1.5px solid #e2e8f0;box-shadow:none}
+#tab-settings .card-ttl{border-bottom-color:#e2e8f0;color:#374151}
+#tab-settings label{color:#374151}
+#tab-settings select,#tab-settings input[type="text"],#tab-settings input[type="number"]{border-color:#cbd5e0;background:#f9fafb}
+#tab-settings select:focus,#tab-settings input:focus{border-color:#4b5563;box-shadow:0 0 0 3px rgba(75,85,99,.1);background:#fff}
+.btn-mono{background:#374151;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.15)}.btn-mono:active{background:#1f2937;transform:scale(.98)}
+.setting-note{font-size:13px;color:#6b7280;background:#f3f4f6;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;margin-bottom:16px;line-height:1.7}
+
 /* 統計カード */
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .sc{border-radius:14px;padding:16px;text-align:center;color:#fff}
@@ -283,41 +292,37 @@ tr:active td{background:#f5fbfb}
         <input type="text" id="c-note" placeholder="担当工程など">
       </div>
     </div>
-    <button class="btn btn-p btn-sm" onclick="addCraftsman()">追加</button>
+    <button class="btn btn-mono btn-sm" onclick="addCraftsman()">追加</button>
     <div id="list-c" style="margin-top:16px" class="ld">読み込み中...</div>
   </div>
 
   <div class="card">
     <div class="card-ttl">👜 製品管理</div>
+    <p class="setting-note">⚠ 製品名を入力する際は、集計時に参照できるよう正式名称またはスケジュール表と完全一致させてください。</p>
+    <div class="row">
+      <div class="fg"><label>シーズン・型振・VMD</label>
+        <input type="text" id="p-season" placeholder="例: 2027SS / VN型振り">
+      </div>
+      <div class="fg"><label>企画名</label>
+        <input type="text" id="p-plan" placeholder="例: 27SS 新メンズライン">
+      </div>
+    </div>
     <div class="row">
       <div class="fg full"><label>サンプル製品名称</label>
         <input type="text" id="p-name" placeholder="例: バックパック 組み立て">
       </div>
     </div>
     <div class="row">
-      <div class="fg w2"><label>シーズン</label>
-        <input type="text" id="p-season" placeholder="2027SS">
-      </div>
-      <div class="fg"><label>型振・VMD</label>
-        <input type="text" id="p-vmd" placeholder="VN型振り など">
-      </div>
-    </div>
-    <div class="row">
       <div class="fg"><label>ブランド</label>
-        <input type="text" id="p-brand" placeholder="TSUCHIYA など">
+        <input type="text" id="p-brand" placeholder="例: TSUCHIYA">
       </div>
-      <div class="fg"><label>企画名</label>
-        <input type="text" id="p-plan" placeholder="27SS 新メンズライン など">
-      </div>
-    </div>
-    <div class="row">
       <div class="fg"><label>ステータス</label>
         <select id="p-status">
           <option>進行中</option><option>完了</option><option>保留</option>
         </select>
       </div>
     </div>
-    <button class="btn btn-p btn-sm" onclick="addSchedule()">追加</button>
+    <button class="btn btn-mono btn-sm" onclick="addSchedule()">追加</button>
     <div id="list-p" style="margin-top:16px" class="ld">読み込み中...</div>
   </div>
 
@@ -331,7 +336,7 @@ tr:active td{background:#f5fbfb}
         <input type="text" id="st-name" placeholder="例: 量産前確認">
       </div>
     </div>
-    <button class="btn btn-p btn-sm" onclick="addStage()">追加</button>
+    <button class="btn btn-mono btn-sm" onclick="addStage()">追加</button>
     <div id="list-st" style="margin-top:16px" class="ld">読み込み中...</div>
   </div>
 
@@ -348,8 +353,7 @@ tr:active td{background:#f5fbfb}
       <!-- 製品情報自動表示 -->
       <div class="prod-info" id="prod-info">
         <span class="badge b-bl" id="pi-season"></span>
-        <span class="badge b-pp" id="pi-vmd"></span>
-        <span class="badge b-gy" id="pi-brand"></span>
+          <span class="badge b-gy" id="pi-brand"></span>
         <div class="prod-info-plan" id="pi-plan"></div>
       </div>
     </div>
@@ -743,14 +747,13 @@ function onProdChange() {
   const sch  = S.schedules.find(s => s.name === name);
   const info = document.getElementById('prod-info');
 
-  if (sch && (sch.season || sch.vmd || sch.brand || sch.plan)) {
+  if (sch && (sch.season || sch.brand || sch.plan)) {
     const setSI = (id, val) => {
       const el = document.getElementById(id);
       el.textContent = val || '';
       el.style.display = val ? '' : 'none';
     };
     setSI('pi-season', sch.season);
-    setSI('pi-vmd',    sch.vmd);
     setSI('pi-brand',  sch.brand);
     const planEl = document.getElementById('pi-plan');
     planEl.textContent = sch.plan || '';
@@ -887,7 +890,7 @@ function addSchedule() {
   if (!name) { toast('製品名を入力してください','err'); return; }
   google.script.run
     .withSuccessHandler(r => { toast(r.message,r.success?'ok':'err'); if(r.success){document.getElementById('p-name').value=''; reload();} })
-    .addSchedule(name, v('p-season'), v('p-vmd'), v('p-brand'), v('p-plan'), v('p-status'));
+    .addSchedule(name, v('p-season'), v('p-brand'), v('p-plan'), v('p-status'));
 }
 
 function addStage() {
@@ -909,11 +912,10 @@ function renderLists() {
 
   document.getElementById('list-p').innerHTML = S.schedules.length
     ? mTable(
-        ['製品名','シーズン','型振・VMD','ブランド','企画名','状態'],
+        ['製品名','シーズン・型振・VMD','ブランド','企画名','状態'],
         S.schedules.map(s => [
           `<strong>${esc(s.name)}</strong>`,
           esc(s.season) || '—',
-          esc(s.vmd)    || '—',
           esc(s.brand)  || '—',
           esc(s.plan)   || '—',
           `<span class="badge ${s.status==='完了'?'b-gn':'b-bl'}">${esc(s.status)}</span>`,
