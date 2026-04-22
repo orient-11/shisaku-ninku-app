@@ -22,9 +22,11 @@ body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f7f
 
 /* ======= 目次 ======= */
 .toc{background:#fff;border-radius:16px;padding:28px 32px;margin-bottom:40px;border:1.5px solid #e5e7eb}
-.toc h2{font-size:13px;font-weight:800;color:#9ca3af;margin-bottom:16px;letter-spacing:.1em;text-transform:uppercase}
-.toc-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.toc-list li a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;text-decoration:none;color:#374151;font-size:14px;font-weight:600;transition:background .15s}
+.toc h2{font-size:13px;font-weight:800;color:#9ca3af;margin-bottom:20px;letter-spacing:.1em;text-transform:uppercase}
+.toc-cols{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.toc-col-label{font-size:11px;font-weight:800;color:#9ca3af;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;padding-left:4px}
+.toc-list{list-style:none;display:flex;flex-direction:column;gap:4px}
+.toc-list li a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;text-decoration:none;color:#374151;font-size:14px;font-weight:600;transition:background .15s}
 .toc-list li a:hover{background:#f3f4f6}
 .toc-part{width:26px;height:26px;border-radius:6px;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .toc-part.admin{background:#e5e7eb;color:#374151}
@@ -154,16 +156,26 @@ body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f7f
 <!-- ===== 目次 ===== -->
 <div class="toc">
   <h2>📋 もくじ</h2>
-  <ul class="toc-list">
-    <li><a href="#admin"><span class="toc-part admin">A</span>初回セットアップ（設定する人）</a></li>
-    <li><a href="#step1"><span class="toc-part daily">1</span>職人名・日付を選ぶ</a></li>
-    <li><a href="#register-craftsman"><span class="toc-part admin">A</span>職人を登録する</a></li>
-    <li><a href="#step2"><span class="toc-part daily">2</span>出勤・退勤を入力する</a></li>
-    <li><a href="#register-product"><span class="toc-part admin">A</span>製品・ステージを登録する</a></li>
-    <li><a href="#step3"><span class="toc-part daily">3</span>作業をタイムラインに追加する</a></li>
-    <li><a href="#step4"><span class="toc-part daily">4</span>時間を調整する</a></li>
-    <li><a href="#step5"><span class="toc-part daily">5</span>日報を提出する</a></li>
-  </ul>
+  <div class="toc-cols">
+    <div>
+      <div class="toc-col-label">⚙️ 設定する人</div>
+      <ul class="toc-list">
+        <li><a href="#admin"><span class="toc-part admin">A1</span>初回セットアップ</a></li>
+        <li><a href="#register-craftsman"><span class="toc-part admin">A2</span>職人を登録する</a></li>
+        <li><a href="#register-product"><span class="toc-part admin">A3</span>製品・ステージを登録する</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="toc-col-label">📝 日報を入れる人</div>
+      <ul class="toc-list">
+        <li><a href="#step1"><span class="toc-part daily">1</span>職人名・日付を選ぶ</a></li>
+        <li><a href="#step2"><span class="toc-part daily">2</span>出勤・退勤を入力する</a></li>
+        <li><a href="#step3"><span class="toc-part daily">3</span>作業をタイムラインに追加する</a></li>
+        <li><a href="#step4"><span class="toc-part daily">4</span>作業時間を調整する</a></li>
+        <li><a href="#step5"><span class="toc-part daily">5</span>日報を提出する</a></li>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <!-- ===== PART A: 設定する人 ===== -->
