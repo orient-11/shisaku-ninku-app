@@ -17,7 +17,8 @@ body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f7f
 .cover h1{font-size:34px;font-weight:900;letter-spacing:-.02em;line-height:1.2;margin-bottom:12px}
 .cover p{font-size:15px;color:#d1d5db;max-width:480px;line-height:1.9}
 .cover-badges{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
-.cover-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 16px;font-size:13px;font-weight:700;color:#e5e7eb}
+.cover-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:8px 20px;font-size:13px;font-weight:700;color:#e5e7eb;text-decoration:none;cursor:pointer;transition:background .15s}
+.cover-badge:hover{background:rgba(255,255,255,.2)}
 
 /* ======= 目次 ======= */
 .toc{background:#fff;border-radius:16px;padding:28px 32px;margin-bottom:40px;border:1.5px solid #e5e7eb}
@@ -145,8 +146,8 @@ body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f7f
   <h1>🧵 試作課 日報アプリ</h1>
   <p>毎日の作業時間をスマホで簡単に記録・提出できるアプリです。このガイドを読めばすぐに使い始められます。</p>
   <div class="cover-badges">
-    <span class="cover-badge">⚙️ 設定する人向け</span>
-    <span class="cover-badge">📝 毎日使う人向け</span>
+    <a class="cover-badge" href="#admin">⚙️ 設定する人向け</a>
+    <a class="cover-badge" href="#step1">📝 日報を入れる人向け</a>
   </div>
 </div>
 
@@ -277,7 +278,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:#f7f
   <div class="part-header daily">
     <div class="part-icon">📝</div>
     <div>
-      <h2>毎日使う人向け</h2>
+      <h2>日報を入れる人向け</h2>
       <p>日報入力の手順です。毎日この流れで入力・提出してください。</p>
     </div>
   </div>
