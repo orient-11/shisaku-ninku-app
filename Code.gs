@@ -86,6 +86,22 @@ function setup() {
   return { success: true, message: 'セットアップ完了しました。' };
 }
 
+// ヘッダー修正用（一度だけ実行してください）
+function fixLogHeaders() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const s  = ss.getSheetByName(SHEETS.LOGS);
+  const headers = [
+    'ID', '日付', '職人名',
+    '出勤時刻', '退勤時刻', '休憩(分)', '実働(分)',
+    '種別', '製品名', 'フェーズ', '作業種別',
+    '作業時間(分)', '人工数', '労務費(円)',
+    'メモ', '提出日時'
+  ];
+  s.getRange(1, 1, 1, headers.length).setValues([headers]);
+  header(s, headers.length);
+  Logger.log('ヘッダーを修正しました');
+}
+
 // ----------------------------------------------------------
 // 初期データ取得
 // ----------------------------------------------------------
