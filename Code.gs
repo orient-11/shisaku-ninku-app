@@ -74,10 +74,11 @@ function setup() {
     s.appendRow([
       'ID', '日付', '職人名',
       '出勤時刻', '退勤時刻', '休憩(分)', '実働(分)',
-      '製品名', 'ステージ', '作業時間(分)', '人工数', '労務費(円)',
+      '種別', '製品名', 'フェーズ', '作業種別',
+      '作業時間(分)', '人工数', '労務費(円)',
       'メモ', '提出日時'
     ]);
-    header(s, 14);
+    header(s, 16);
     [2,3,8,9,13].forEach(c => s.setColumnWidth(c, 120));
     s.setColumnWidth(8, 220);
   }
@@ -148,11 +149,15 @@ function submitReport(craftsmanName, dateStr, clockIn, clockOut, breakMin, rows,
     const min   = Number(row.minutes) || 0;
     const ninku = parseFloat((min / MINUTES_PER_NINKU).toFixed(4));
     const cost  = Math.round(min * RATE_PER_MINUTE);
+    const isSample = (row.type !== 'other');
     sheet.appendRow([
       Utilities.getUuid(),
       dateStr, craftsmanName,
       clockIn||'', clockOut||'', Number(breakMin)||0, actualMin,
-      row.productName||'', row.stageName||'',
+      isSample ? 'サンプル製造' : 'その他',
+      isSample ? (row.productName||'') : '',
+      isSample ? (row.stageName||'')   : '',
+      isSample ? ''                    : (row.workType||''),
       min, ninku, cost,
       row.memo || memo || '',
       submittedAt

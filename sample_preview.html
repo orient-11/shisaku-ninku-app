@@ -193,6 +193,11 @@ tr:active td{background:#f5fbfb}
 .modal-field label{margin-bottom:6px}
 .modal-actions{display:flex;gap:10px;margin-top:20px}
 .modal-actions .btn{flex:1}
+/* 種別トグル */
+.modal-type-btns{display:flex;gap:8px;margin-bottom:18px}
+.modal-type-btn{flex:1;padding:11px 8px;border-radius:10px;border:2px solid #e5e7eb;background:#fff;font-size:14px;font-weight:700;cursor:pointer;color:#9ca3af;transition:all .15s;font-family:inherit}
+.modal-type-btn.active-sample{background:#e0f7f8;border-color:#0BBDC4;color:#0A6B70}
+.modal-type-btn.active-other{background:#f3f4f6;border-color:#374151;color:#374151}
 </style>
 </head>
 <body>
@@ -419,30 +424,58 @@ tr:active td{background:#f5fbfb}
 <div class="modal-bg" id="modal-bg" onclick="bgClose(event)">
   <div class="modal-sheet">
     <div class="modal-ttl"><div class="modal-dot" id="modal-dot"></div><span id="modal-title">作業を追加</span></div>
-    <div class="modal-field">
-      <label>サンプル製品名称</label>
-      <select id="m-prod" onchange="onProdChange()">
-        <option value="">-- 選択 --</option>
-        <option>バックパック 組み立て</option>
-        <option>ミディアムショルダー 組み立て</option>
-        <option>スクエバックパック型修正</option>
-        <option>花粉症ストラップ</option>
-        <option>トート（横）</option>
-      </select>
-      <div class="prod-info" id="prod-info">
-        <span class="badge b-bl" id="pi-season"></span>
-        <span class="badge b-gy" id="pi-brand"></span>
-        <div class="prod-info-plan" id="pi-plan"></div>
+
+    <!-- 種別トグル -->
+    <div class="modal-type-btns">
+      <button class="modal-type-btn active-sample" id="type-btn-sample" onclick="setModalType('sample')">🧵 サンプル製造</button>
+      <button class="modal-type-btn" id="type-btn-other" onclick="setModalType('other')">📋 その他</button>
+    </div>
+
+    <!-- サンプル製造フィールド -->
+    <div id="modal-sample-fields">
+      <div class="modal-field">
+        <label>サンプル製品名称</label>
+        <select id="m-prod" onchange="onProdChange()">
+          <option value="">-- 選択 --</option>
+          <option>バックパック 組み立て</option>
+          <option>ミディアムショルダー 組み立て</option>
+          <option>スクエバックパック型修正</option>
+          <option>花粉症ストラップ</option>
+          <option>トート（横）</option>
+        </select>
+        <div class="prod-info" id="prod-info">
+          <span class="badge b-bl" id="pi-season"></span>
+          <span class="badge b-gy" id="pi-brand"></span>
+          <div class="prod-info-plan" id="pi-plan"></div>
+        </div>
+      </div>
+      <div class="modal-field">
+        <label>フェーズ</label>
+        <select id="m-stage">
+          <option value="">-- 選択 --</option>
+          <option>モック</option><option>1st</option><option>2nd</option>
+          <option>最終（展示会）</option><option>色増し前修正</option>
+        </select>
       </div>
     </div>
-    <div class="modal-field">
-      <label>サンプルフェーズ</label>
-      <select id="m-stage">
-        <option value="">-- 選択 --</option>
-        <option>モック</option><option>1st</option><option>2nd</option>
-        <option>最終（展示会）</option><option>色増し前修正</option>
-      </select>
+
+    <!-- その他フィールド -->
+    <div id="modal-other-fields" style="display:none">
+      <div class="modal-field">
+        <label>作業種別</label>
+        <select id="m-worktype">
+          <option value="">-- 選択 --</option>
+          <option>サンプル製造以外のMTG・面談</option>
+          <option>事務作業</option>
+          <option>社内行事</option>
+          <option>部材確認・荷受け</option>
+          <option>棚卸し</option>
+          <option>その他（メモに入れる）</option>
+        </select>
+      </div>
     </div>
+
+    <!-- 共通 -->
     <div class="modal-field">
       <label>メモ（任意）</label>
       <input type="text" id="m-memo" placeholder="作業内容・特記事項">
@@ -478,9 +511,12 @@ const ROW_H    = 54;
 const MIN_PX   = HOUR_W / 60;
 
 const FIXED_BREAKS = [
-  { start: 720,  end: 780,  label: '昼休憩',   minutes: 60 },
-  { start: 900,  end: 915,  label: '15時休憩', minutes: 15 },
-  { start: 1065, end: 1080, label: '17:45休憩', minutes: 15 },
+  { start: 510,  end: 515,  label: 'ラジオ体操', minutes: 5  },
+  { start: 720,  end: 780,  label: '昼休憩',     minutes: 60 },
+  { start: 900,  end: 915,  label: '15時休憩',   minutes: 15 },
+  { start: 1035, end: 1040, label: '掃除',       minutes: 5  },
+  { start: 1060, end: 1065, label: '日報入力',   minutes: 5  },
+  { start: 1065, end: 1080, label: '17:45休憩',  minutes: 15 },
 ];
 
 /* ======================== */
@@ -754,10 +790,14 @@ function renderTimeline() {
       bar.className     = 'gcal-bar';
       bar.dataset.id    = row.id; bar.dataset.action = 'edit';
       bar.style.cssText = `left:${leftPx}px;width:${widthPx}px;top:${topPx}px;background:${row.color};`;
+      const barLabel = row.type === 'other'
+        ? esc(row.workType || 'その他')
+        : esc(row.productName || '未設定');
+      const barSub = row.type === 'other' ? '' : esc(row.stageName || '—');
       bar.innerHTML = `
         <div class="gcal-bar-body" data-action="edit" data-id="${row.id}">
-          <span class="gcal-bar-name">${esc(row.productName||'未設定')}</span>
-          ${isLast && widthPx>=80  ? `<span class="gcal-bar-stage">/ ${esc(row.stageName||'—')}</span>` : ''}
+          <span class="gcal-bar-name">${barLabel}</span>
+          ${isLast && widthPx>=80  && barSub ? `<span class="gcal-bar-stage">/ ${barSub}</span>` : ''}
           ${isLast && widthPx>=120 ? `<span class="gcal-bar-min">${row.minutes}分</span>` : ''}
         </div>
         <div class="gcal-bar-handle" data-action="resize" data-id="${row.id}"></div>`;
@@ -792,7 +832,10 @@ function renderLegend() {
   leg.innerHTML = tlRows.map(r => `
     <div class="tl-leg-item">
       <div class="tl-leg-dot" style="background:${r.color}"></div>
-      <span>${esc(r.productName||'未設定')} / ${esc(r.stageName||'—')}</span>
+      <span>${r.type === 'other'
+        ? esc(r.workType||'その他')
+        : `${esc(r.productName||'未設定')} / ${esc(r.stageName||'—')}`
+      }</span>
     </div>`).join('');
 }
 
@@ -869,6 +912,16 @@ function onContentClick(e) {
 /* ======================== */
 /* モーダル                 */
 /* ======================== */
+let currentModalType = 'sample';
+
+function setModalType(type) {
+  currentModalType = type;
+  document.getElementById('modal-sample-fields').style.display = type === 'sample' ? '' : 'none';
+  document.getElementById('modal-other-fields').style.display  = type === 'other'  ? '' : 'none';
+  document.getElementById('type-btn-sample').className = 'modal-type-btn' + (type === 'sample' ? ' active-sample' : '');
+  document.getElementById('type-btn-other').className  = 'modal-type-btn' + (type === 'other'  ? ' active-other'  : '');
+}
+
 function onProdChange() {
   const name = document.getElementById('m-prod').value;
   const sch  = DUMMY_SCHEDULES.find(s => s.name === name);
@@ -887,11 +940,13 @@ function onProdChange() {
 
 function openAddModal() {
   editingId = null;
+  setModalType('sample');
   document.getElementById('modal-title').textContent    = '作業を追加';
   document.getElementById('modal-dot').style.background = COLORS[colorIdx % COLORS.length];
-  document.getElementById('m-prod').value  = '';
-  document.getElementById('m-stage').value = '';
-  document.getElementById('m-memo').value  = '';
+  document.getElementById('m-prod').value     = '';
+  document.getElementById('m-stage').value    = '';
+  document.getElementById('m-worktype').value = '';
+  document.getElementById('m-memo').value     = '';
   document.getElementById('modal-del').style.display = 'none';
   document.getElementById('prod-info').classList.remove('show');
   document.getElementById('modal-bg').classList.add('show');
@@ -901,13 +956,15 @@ function openEditModal(id) {
   const row = tlRows.find(r => r.id === id);
   if (!row) return;
   editingId = id;
+  setModalType(row.type || 'sample');
   document.getElementById('modal-title').textContent    = '作業を編集';
   document.getElementById('modal-dot').style.background = row.color;
-  document.getElementById('m-prod').value  = row.productName;
-  document.getElementById('m-stage').value = row.stageName;
-  document.getElementById('m-memo').value  = row.memo || '';
+  document.getElementById('m-prod').value     = row.productName || '';
+  document.getElementById('m-stage').value    = row.stageName   || '';
+  document.getElementById('m-worktype').value = row.workType    || '';
+  document.getElementById('m-memo').value     = row.memo        || '';
   document.getElementById('modal-del').style.display = '';
-  onProdChange();
+  if (row.type !== 'other') onProdChange();
   document.getElementById('modal-bg').classList.add('show');
 }
 
@@ -915,20 +972,34 @@ function closeModal() { document.getElementById('modal-bg').classList.remove('sh
 function bgClose(e)   { if (e.target === document.getElementById('modal-bg')) closeModal(); }
 
 function saveBlock() {
-  const prod  = document.getElementById('m-prod').value.trim();
-  const stage = document.getElementById('m-stage').value.trim();
-  const memo  = document.getElementById('m-memo').value.trim();
-  if (!prod)  { toast('製品名を選択してください','err'); return; }
-  if (!stage) { toast('フェーズを選択してください','err'); return; }
-  if (editingId === null) {
-    const remain = Math.max(5, getJikan() - tlRows.reduce((s,r)=>s+r.minutes,0));
-    const defMin = Math.min(remain, Math.max(5, Math.round(remain/2/5)*5));
-    tlRows.push({ id:nextId++, productName:prod, stageName:stage, minutes:defMin, color:COLORS[colorIdx++%COLORS.length], memo });
-    toast(`追加しました（${defMin}分）`,'ok');
+  const memo = document.getElementById('m-memo').value.trim();
+  const remain = Math.max(5, getJikan() - tlRows.reduce((s,r)=>s+r.minutes,0));
+  const defMin = Math.min(remain, Math.max(5, Math.round(remain/2/5)*5));
+
+  if (currentModalType === 'sample') {
+    const prod  = document.getElementById('m-prod').value.trim();
+    const stage = document.getElementById('m-stage').value.trim();
+    if (!prod)  { toast('製品名を選択してください','err'); return; }
+    if (!stage) { toast('フェーズを選択してください','err'); return; }
+    if (editingId === null) {
+      tlRows.push({ id:nextId++, type:'sample', productName:prod, stageName:stage, workType:'', minutes:defMin, color:COLORS[colorIdx++%COLORS.length], memo });
+      toast(`追加しました（${defMin}分）`,'ok');
+    } else {
+      const row = tlRows.find(r=>r.id===editingId);
+      if (row) Object.assign(row, { type:'sample', productName:prod, stageName:stage, workType:'', memo });
+      toast('更新しました','ok');
+    }
   } else {
-    const row = tlRows.find(r=>r.id===editingId);
-    if (row) { row.productName=prod; row.stageName=stage; row.memo=memo; }
-    toast('更新しました','ok');
+    const workType = document.getElementById('m-worktype').value.trim();
+    if (!workType) { toast('作業種別を選択してください','err'); return; }
+    if (editingId === null) {
+      tlRows.push({ id:nextId++, type:'other', productName:'', stageName:'', workType, minutes:defMin, color:COLORS[colorIdx++%COLORS.length], memo });
+      toast(`追加しました（${defMin}分）`,'ok');
+    } else {
+      const row = tlRows.find(r=>r.id===editingId);
+      if (row) Object.assign(row, { type:'other', productName:'', stageName:'', workType, memo });
+      toast('更新しました','ok');
+    }
   }
   closeModal(); renderTimeline();
 }
